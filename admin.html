@@ -160,9 +160,19 @@
     font-family: inherit;
     cursor: pointer;
     transition: background .2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
   }
 
   .refresh-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .nav-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255,255,255,0.25);
+  }
 
   .logout-btn {
     background: transparent;
@@ -244,6 +254,81 @@
     font-size: 15px;
     font-weight: 700;
     color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── ⓘ 정보 버튼 & 툴팁 ── */
+  .info-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    flex-shrink: 0;
+    position: relative;
+    transition: background .15s, color .15s;
+  }
+
+  .info-btn:hover { background: var(--primary); color: var(--white); }
+
+  .info-tooltip {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-dark);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 10px 14px;
+    border-radius: 8px;
+    width: 240px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    z-index: 999;
+    white-space: normal;
+    text-align: left;
+  }
+
+  .info-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 5px 5px 5px;
+    border-style: solid;
+    border-color: transparent transparent var(--primary-dark) transparent;
+  }
+
+  .info-btn.active { background: var(--primary); color: var(--white); }
+  .info-btn.active .info-tooltip { display: block; }
+
+  /* 통계 카드 섹션 헤더 */
+  .stat-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .stat-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: .5px;
   }
 
   .section-body { padding: 20px 24px; }
@@ -611,6 +696,9 @@
       <div class="top-bar-subtitle">276홀딩스 영업지원팀</div>
     </div>
     <div class="top-bar-right">
+      <a class="refresh-btn" href="FinTech_Book.html" target="_blank">📖 교과서</a>
+      <a class="refresh-btn" href="index.html" target="_blank">📝 퀴즈</a>
+      <div class="nav-divider"></div>
       <button class="refresh-btn" onclick="loadData()">🔄 새로고침</button>
       <button class="logout-btn" onclick="doLogout()">로그아웃</button>
     </div>
@@ -619,6 +707,12 @@
   <div class="main-content">
 
     <!-- 통계 카드 -->
+    <div class="stat-section-header">
+      <div class="stat-section-title">핵심 지표</div>
+      <button class="info-btn" onclick="toggleInfo(this)">ⓘ
+        <div class="info-tooltip">총 응시자 수, 평균 정답수, 평균 점수, 최고 득점자를 한눈에 확인합니다.</div>
+      </button>
+    </div>
     <div class="stat-grid" id="stat-grid">
       <div class="stat-card">
         <div class="stat-label">총 응시자</div>
@@ -648,24 +742,28 @@
       <!-- 등급 분포 -->
       <div class="section">
         <div class="section-header">
-          <div class="section-title">🏆 등급 분포</div>
+          <div class="section-title">🏆 등급 분포
+            <button class="info-btn" onclick="toggleInfo(this)">ⓘ
+              <div class="info-tooltip">S/A/B/C/D 등급별 응시자 비율을 막대 차트로 표시합니다.</div>
+            </button>
+          </div>
         </div>
         <div class="section-body">
-          <div class="mini-bar-wrap" id="grade-chart">
-            <div class="loading-wrap" style="padding:20px 0"><div class="spinner"></div></div>
-          </div>
+          <div class="mini-bar-wrap" id="grade-chart"></div>
         </div>
       </div>
 
       <!-- 점수 분포 -->
       <div class="section">
         <div class="section-header">
-          <div class="section-title">📈 점수 구간 분포</div>
+          <div class="section-title">📈 점수 구간 분포
+            <button class="info-btn" onclick="toggleInfo(this)">ⓘ
+              <div class="info-tooltip">90%대 / 80%대 / 70%대 / 60%대 / 미만 구간별 응시자 수를 시각화합니다.</div>
+            </button>
+          </div>
         </div>
         <div class="section-body">
-          <div class="mini-bar-wrap" id="score-chart">
-            <div class="loading-wrap" style="padding:20px 0"><div class="spinner"></div></div>
-          </div>
+          <div class="mini-bar-wrap" id="score-chart"></div>
         </div>
       </div>
 
@@ -674,13 +772,15 @@
     <!-- 문항별 오답률 -->
     <div class="section" style="margin-bottom:24px">
       <div class="section-header">
-        <div class="section-title">❌ 문항별 오답률</div>
+        <div class="section-title">❌ 문항별 오답률
+          <button class="info-btn" onclick="toggleInfo(this)">ⓘ
+            <div class="info-tooltip">Q1~Q30 각 문항의 오답률을 색상으로 표시합니다. 녹색(쉬움) → 빨간색(어려움).</div>
+          </button>
+        </div>
         <div style="font-size:12px;color:var(--text-secondary)">높을수록 어려운 문항 (붉은색)</div>
       </div>
       <div class="section-body">
-        <div class="error-rate-grid" id="error-rate-grid">
-          <div class="loading-wrap" style="padding:20px 0;grid-column:1/-1"><div class="spinner"></div></div>
-        </div>
+        <div class="error-rate-grid" id="error-rate-grid"></div>
       </div>
     </div>
 
@@ -708,9 +808,7 @@
               <th>상세</th>
             </tr>
           </thead>
-          <tbody id="table-body">
-            <tr><td colspan="7"><div class="loading-wrap"><div class="spinner"></div><span>데이터 로딩 중...</span></div></td></tr>
-          </tbody>
+          <tbody id="table-body"></tbody>
         </table>
       </div>
     </div>
@@ -809,19 +907,45 @@ function doLogout() {
   document.getElementById('login-error').style.display = 'none';
 }
 
+// ── 빈 상태 일괄 표시 ────────────────────────────────────
+function renderAllEmpty(msg) {
+  renderStats([]);
+  renderGradeChart([]);
+  renderScoreChart([]);
+  renderErrorRates([]);
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📭</div>${msg}</div></td></tr>`;
+}
+
 // ── 데이터 로드 ──────────────────────────────────────────
 async function loadData() {
+  // 로딩 스피너 초기화
+  document.getElementById('grade-chart').innerHTML    = '<div class="loading-wrap" style="padding:20px 0"><div class="spinner"></div></div>';
+  document.getElementById('score-chart').innerHTML    = '<div class="loading-wrap" style="padding:20px 0"><div class="spinner"></div></div>';
+  document.getElementById('error-rate-grid').innerHTML = '<div class="loading-wrap" style="padding:20px 0;grid-column:1/-1"><div class="spinner"></div></div>';
+  document.getElementById('table-body').innerHTML     = '<tr><td colspan="7"><div class="loading-wrap"><div class="spinner"></div><span>데이터 로딩 중...</span></div></td></tr>';
+
   try {
-    const res  = await fetch(`${APPS_SCRIPT_URL}?key=${ADMIN_KEY}`);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10000); // 10초 타임아웃
+
+    const res = await fetch(`${APPS_SCRIPT_URL}?key=${ADMIN_KEY}`, { signal: controller.signal });
+    clearTimeout(timer);
+
     const json = await res.json();
 
     if (json.status !== 'ok') {
-      alert('데이터 로드 실패: ' + (json.message || json.status));
+      renderAllEmpty('데이터 없음');
       return;
     }
 
-    allHeaders = json.headers;
-    allRows    = json.rows;
+    allHeaders = json.headers || [];
+    allRows    = json.rows    || [];
+
+    if (allRows.length === 0) {
+      renderAllEmpty('아직 응시 데이터가 없습니다');
+      return;
+    }
 
     renderStats(allRows);
     renderGradeChart(allRows);
@@ -831,8 +955,8 @@ async function loadData() {
 
   } catch (err) {
     console.error(err);
-    document.getElementById('table-body').innerHTML =
-      `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">⚠️</div>데이터를 불러오지 못했습니다.<br><small>${err.message}</small></div></td></tr>`;
+    const msg = err.name === 'AbortError' ? '연결 시간 초과 — 네트워크를 확인하세요' : '데이터 없음';
+    renderAllEmpty(msg);
   }
 }
 
@@ -1083,9 +1207,27 @@ function exportCSV() {
   URL.revokeObjectURL(url);
 }
 
+// ── ⓘ 툴팁 토글 ──────────────────────────────────────────
+function toggleInfo(btn) {
+  const isActive = btn.classList.contains('active');
+  // 이미 열린 툴팁 모두 닫기
+  document.querySelectorAll('.info-btn.active').forEach(b => b.classList.remove('active'));
+  if (!isActive) btn.classList.add('active');
+}
+
+// 툴팁 외부 클릭 시 닫기
+document.addEventListener('click', e => {
+  if (!e.target.closest('.info-btn')) {
+    document.querySelectorAll('.info-btn.active').forEach(b => b.classList.remove('active'));
+  }
+});
+
 // ── 키보드 단축키 ─────────────────────────────────────────
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModalDirect();
+  if (e.key === 'Escape') {
+    closeModalDirect();
+    document.querySelectorAll('.info-btn.active').forEach(b => b.classList.remove('active'));
+  }
 });
 </script>
 </body>
