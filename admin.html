@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>핀테크 퀴즈 관리자 대시보드 — 276홀딩스</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #673AB7;
+    --primary-dark: #4527A0;
+    --primary-light: #EDE7F6;
+    --accent: #FF6F00;
+    --success: #2E7D32;
+    --warning: #F57F17;
+    --danger: #C62828;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #E0E0E0;
+    --bg: #F5F5F5;
+    --white: #FFFFFF;
+    --grade-S: #6A1B9A;
+    --grade-A: #1565C0;
+    --grade-B: #2E7D32;
+    --grade-C: #E65100;
+    --grade-D: #B71C1C;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── 로그인 화면 ── */
+  #login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #4527A0 0%, #673AB7 50%, #9C27B0 100%);
+  }
+
+  .login-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 48px 40px;
+    width: 360px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+
+  .login-logo {
+    font-size: 40px;
+    margin-bottom: 8px;
+  }
+
+  .login-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 4px;
+  }
+
+  .login-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+  }
+
+  .login-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s;
+    margin-bottom: 16px;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+
+  .login-input:focus { border-color: var(--primary); }
+  .login-input.error { border-color: var(--danger); }
+
+  .login-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background .2s;
+  }
+
+  .login-btn:hover { background: var(--primary-dark); }
+
+  .login-error {
+    color: var(--danger);
+    font-size: 13px;
+    margin-top: 10px;
+    display: none;
+  }
+
+  /* ── 메인 레이아웃 ── */
+  #dashboard { display: none; }
+
+  .top-bar {
+    background: var(--primary-dark);
+    color: var(--white);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  .top-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .top-bar-logo {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .top-bar-subtitle {
+    font-size: 13px;
+    opacity: 0.75;
+  }
+
+  .top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .refresh-btn {
+    background: rgba(255,255,255,0.15);
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background .2s;
+  }
+
+  .refresh-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .logout-btn {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    border: none;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .logout-btn:hover { color: var(--white); }
+
+  .main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 24px;
+  }
+
+  /* ── 통계 카드 ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border-left: 4px solid var(--primary);
+  }
+
+  .stat-card.green  { border-left-color: var(--success); }
+  .stat-card.orange { border-left-color: var(--accent); }
+  .stat-card.red    { border-left-color: var(--danger); }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+
+  .stat-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .stat-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  /* ── 섹션 ── */
+  .section {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary-dark);
+  }
+
+  .section-body { padding: 20px 24px; }
+
+  /* ── 응시자 테이블 ── */
+  .table-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .search-input {
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    width: 200px;
+    outline: none;
+  }
+
+  .search-input:focus { border-color: var(--primary); }
+
+  .csv-btn {
+    background: var(--success);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity .2s;
+  }
+
+  .csv-btn:hover { opacity: 0.85; }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .data-table th {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 600;
+    padding: 10px 14px;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+
+  .data-table tbody tr:hover { background: #FAFAFA; }
+
+  .detail-btn {
+    background: var(--primary-light);
+    color: var(--primary);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background .2s;
+  }
+
+  .detail-btn:hover { background: var(--primary); color: var(--white); }
+
+  /* ── 등급 배지 ── */
+  .grade-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .grade-S { background: #F3E5F5; color: var(--grade-S); }
+  .grade-A { background: #E3F2FD; color: var(--grade-A); }
+  .grade-B { background: #E8F5E9; color: var(--grade-B); }
+  .grade-C { background: #FFF3E0; color: var(--grade-C); }
+  .grade-D { background: #FFEBEE; color: var(--grade-D); }
+
+  /* ── 차트 영역 ── */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .mini-bar-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mini-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mini-bar-label {
+    font-size: 12px;
+    font-weight: 600;
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .mini-bar-track {
+    flex: 1;
+    height: 20px;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .mini-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width .6s ease;
+  }
+
+  .mini-bar-count {
+    font-size: 12px;
+    color: var(--text-secondary);
+    width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ── 문항별 오답률 ── */
+  .error-rate-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+  }
+
+  .q-tile {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+    cursor: default;
+    transition: transform .15s;
+  }
+
+  .q-tile:hover { transform: scale(1.05); }
+
+  .q-num {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .q-rate {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .q-bar {
+    height: 4px;
+    border-radius: 2px;
+    margin-top: 5px;
+  }
+
+  /* ── 모달 ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--white);
+    border-radius: 16px;
+    width: 720px;
+    max-width: 95vw;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.3);
+  }
+
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--white);
+    z-index: 10;
+  }
+
+  .modal-title { font-size: 16px; font-weight: 700; }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    line-height: 1;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  .modal-body { padding: 20px 24px; }
+
+  .modal-meta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .modal-meta-item {
+    background: var(--primary-light);
+    border-radius: 8px;
+    padding: 10px 16px;
+    text-align: center;
+    min-width: 90px;
+  }
+
+  .meta-label {
+    font-size: 11px;
+    color: var(--primary);
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .meta-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-dark);
+  }
+
+  .answer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .answer-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+  }
+
+  .answer-row.correct { background: #E8F5E9; }
+  .answer-row.wrong   { background: #FFEBEE; }
+
+  .answer-qnum {
+    font-weight: 700;
+    width: 28px;
+    flex-shrink: 0;
+    color: var(--text-secondary);
+  }
+
+  .answer-given {
+    font-weight: 700;
+    font-size: 14px;
+    width: 18px;
+    flex-shrink: 0;
+  }
+
+  .answer-row.correct .answer-given { color: var(--success); }
+  .answer-row.wrong   .answer-given { color: var(--danger); }
+
+  .answer-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── 로딩 / 빈 상태 ── */
+  .loading-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 0;
+    gap: 16px;
+    color: var(--text-secondary);
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--primary-light);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+  /* ── 반응형 ── */
+  @media (max-width: 768px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .chart-grid { grid-template-columns: 1fr; }
+    .error-rate-grid { grid-template-columns: repeat(5, 1fr); }
+    .answer-grid { grid-template-columns: repeat(2, 1fr); }
+    .top-bar { padding: 0 16px; }
+    .main-content { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     로그인 화면
+════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🔐</div>
+    <div class="login-title">관리자 대시보드</div>
+    <div class="login-subtitle">276홀딩스 · 핀테크 퀴즈 시스템</div>
+    <input type="password" id="admin-key-input" class="login-input"
+           placeholder="관리자 비밀키 입력"
+           onkeydown="if(event.key==='Enter') doLogin()">
+    <button class="login-btn" onclick="doLogin()">로그인</button>
+    <div class="login-error" id="login-error">비밀키가 올바르지 않습니다.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     메인 대시보드
+════════════════════════════════ -->
+<div id="dashboard">
+  <!-- 상단 바 -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <div class="top-bar-logo">📊 핀테크 퀴즈 관리자</div>
+      <div class="top-bar-subtitle">276홀딩스 영업지원팀</div>
+    </div>
+    <div class="top-bar-right">
+      <button class="refresh-btn" onclick="loadData()">🔄 새로고침</button>
+      <button class="logout-btn" onclick="doLogout()">로그아웃</button>
+    </div>
+  </div>
+
+  <div class="main-content">
+
+    <!-- 통계 카드 -->
+    <div class="stat-grid" id="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">총 응시자</div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-sub">누적 응시 인원</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">평균 정답수</div>
+        <div class="stat-value" id="stat-avg">—</div>
+        <div class="stat-sub">30문항 기준</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">평균 점수</div>
+        <div class="stat-value" id="stat-pct">—</div>
+        <div class="stat-sub">백분율</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">최고 득점자</div>
+        <div class="stat-value" id="stat-top">—</div>
+        <div class="stat-sub" id="stat-top-name">—</div>
+      </div>
+    </div>
+
+    <!-- 차트 영역 -->
+    <div class="chart-grid">
+
+      <!-- 등급 분포 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">🏆 등급 분포</div>
+        </div>
+        <div class="section-body">
+          <div class="mini-bar-wrap" id="grade-chart">
+            <div class="loading-wrap" style="padding:20px 0"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 점수 분포 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">📈 점수 구간 분포</div>
+        </div>
+        <div class="section-body">
+          <div class="mini-bar-wrap" id="score-chart">
+            <div class="loading-wrap" style="padding:20px 0"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 문항별 오답률 -->
+    <div class="section" style="margin-bottom:24px">
+      <div class="section-header">
+        <div class="section-title">❌ 문항별 오답률</div>
+        <div style="font-size:12px;color:var(--text-secondary)">높을수록 어려운 문항 (붉은색)</div>
+      </div>
+      <div class="section-body">
+        <div class="error-rate-grid" id="error-rate-grid">
+          <div class="loading-wrap" style="padding:20px 0;grid-column:1/-1"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 응시자 목록 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">👥 응시자 목록</div>
+        <div class="table-controls">
+          <input type="text" class="search-input" id="search-input"
+                 placeholder="🔍 이름 검색..."
+                 oninput="filterTable()">
+          <button class="csv-btn" onclick="exportCSV()">⬇ CSV 내보내기</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>성명</th>
+              <th>응시일시</th>
+              <th>정답수</th>
+              <th>점수</th>
+              <th>등급</th>
+              <th>상세</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <tr><td colspan="7"><div class="loading-wrap"><div class="spinner"></div><span>데이터 로딩 중...</span></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /dashboard -->
+
+<!-- ════════════════════════════════
+     상세 보기 모달
+════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">응시 상세</div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     JavaScript
+════════════════════════════════ -->
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVv93ic_VlKwnQvm2wUYHtNX44AbYBJCH2XiSJRMiWjoY892NCKftniF5ufUgv2B7s/exec';
+const ADMIN_KEY = 'flowpay2026';
+
+// 정답 배열 (Q1~Q30, 0-indexed)
+const CORRECT = [
+  'O','O','X','O','X',  // Q1-Q5
+  'O','X','O','X','X',  // Q6-Q10 (Q10=X: 최대90일)
+  'O','O','X','O','X',  // Q11-Q15
+  'O','X','O','X','O',  // Q16-Q20
+  'O','X','O','X','O',  // Q21-Q25
+  'X','O','X','O','X'   // Q26-Q30
+];
+
+const QUESTIONS = [
+  '핀테크는 금융(Finance)과 기술(Technology)의 합성어다',
+  '간편결제 서비스는 핀테크 결제/송금 영역에 포함된다',
+  '크라우드펀딩은 자산관리 핀테크로 분류된다',
+  '핀테크 기업은 금융위원회의 규제를 받을 수 있다',
+  '금융위원회는 금융사 현장 감독·검사를 직접 수행한다',
+  'SCF는 공급망 전반의 자금흐름을 최적화하는 금융기법이다',
+  'BNPL과 SNPL의 최대 차이는 이용 주체(개인 vs 기업)이다',
+  '외상매입금 조기지급 프로그램은 구매자 주도 SCF 방식이다',
+  '팩토링의 법적 근거는 어음법상 배서 양도이다',
+  '전자어음의 통상 만기는 30일~120일이다',
+  '플로우페이는 B2B 거래에 특화된 SNPL 서비스이다',
+  '플로우페이의 핵심 고객은 중소 제조·도매 기업이다',
+  '플로우페이는 공급업체에 대금을 즉시 지급한다',
+  '플로우페이 이용 시 구매기업은 결제를 최대 90일 유예할 수 있다',
+  '플로우페이 수익은 구매대행 수수료와 금융 마진으로 구성된다',
+  '어음은 일정 금액을 지급하겠다는 유가증권이다',
+  '약속어음은 발행인이 제3자에게 지급을 위탁하는 형식이다',
+  '전자어음은 종이어음과 달리 분실·위변조 위험이 낮다',
+  '어음 할인이란 만기 전 어음을 액면가 그대로 현금화하는 것이다',
+  '어음할인 시 할인료가 높을수록 수취 금액이 줄어든다',
+  '매출채권은 기업이 상품/서비스 제공 후 받을 권리이다',
+  '팩토링은 매출채권의 소유권을 금융기관에 양도한다',
+  '외상매출채권담보대출(외담대)은 팩토링과 달리 채권 소유권이 이전된다',
+  '팩토링은 매출채권 회수 리스크를 금융기관이 부담할 수 있다',
+  '외담대는 담보 제공 방식으로 기존 채권을 활용한다',
+  '플로우페이의 수익 구조는 구매대행 수수료와 상품판매 마진이다',
+  '금융감독원은 금융위원회의 정책 방향에 따라 감독 업무를 수행한다',
+  'P2P 금융은 전통 금융기관 없이 개인 간 자금 중개를 지원한다',
+  '리스크 관리 측면에서 팩토링은 불완전한 채권양도가 가능하다',
+  '인슈어테크는 보험 분야에 IT 기술을 접목한 핀테크 영역이다'
+];
+
+let allRows = [];
+let allHeaders = [];
+
+// ── 로그인 ───────────────────────────────────────────────
+function doLogin() {
+  const key = document.getElementById('admin-key-input').value.trim();
+  const errEl = document.getElementById('login-error');
+  const inputEl = document.getElementById('admin-key-input');
+
+  if (key !== ADMIN_KEY) {
+    errEl.style.display = 'block';
+    inputEl.classList.add('error');
+    inputEl.value = '';
+    return;
+  }
+
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  loadData();
+}
+
+function doLogout() {
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-key-input').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+// ── 데이터 로드 ──────────────────────────────────────────
+async function loadData() {
+  try {
+    const res  = await fetch(`${APPS_SCRIPT_URL}?key=${ADMIN_KEY}`);
+    const json = await res.json();
+
+    if (json.status !== 'ok') {
+      alert('데이터 로드 실패: ' + (json.message || json.status));
+      return;
+    }
+
+    allHeaders = json.headers;
+    allRows    = json.rows;
+
+    renderStats(allRows);
+    renderGradeChart(allRows);
+    renderScoreChart(allRows);
+    renderErrorRates(allRows);
+    renderTable(allRows);
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('table-body').innerHTML =
+      `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">⚠️</div>데이터를 불러오지 못했습니다.<br><small>${err.message}</small></div></td></tr>`;
+  }
+}
+
+// ── 통계 카드 렌더 ────────────────────────────────────────
+function renderStats(rows) {
+  const total = rows.length;
+  if (total === 0) {
+    document.getElementById('stat-total').textContent = '0';
+    document.getElementById('stat-avg').textContent = '—';
+    document.getElementById('stat-pct').textContent = '—';
+    document.getElementById('stat-top').textContent = '—';
+    document.getElementById('stat-top-name').textContent = '—';
+    return;
+  }
+
+  const corrects = rows.map(r => parseInt(r[32]) || 0);
+  const avg = corrects.reduce((a, b) => a + b, 0) / total;
+  const maxScore = Math.max(...corrects);
+  const topRow = rows[corrects.indexOf(maxScore)];
+
+  document.getElementById('stat-total').textContent = total + '명';
+  document.getElementById('stat-avg').textContent = avg.toFixed(1) + '문';
+  document.getElementById('stat-pct').textContent = Math.round(avg / 30 * 100) + '%';
+  document.getElementById('stat-top').textContent = maxScore + '/30';
+  document.getElementById('stat-top-name').textContent = topRow[1] || '—';
+}
+
+// ── 등급 차트 ─────────────────────────────────────────────
+const GRADE_COLORS = {
+  'S': '#9C27B0', 'A': '#1565C0', 'B': '#2E7D32', 'C': '#E65100', 'D': '#B71C1C'
+};
+
+function renderGradeChart(rows) {
+  const counts = { S:0, A:0, B:0, C:0, D:0 };
+  rows.forEach(r => {
+    const g = (r[34] || '').charAt(0);
+    if (counts[g] !== undefined) counts[g]++;
+  });
+
+  const total = rows.length || 1;
+  const el = document.getElementById('grade-chart');
+
+  if (rows.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div>응시 데이터 없음</div>';
+    return;
+  }
+
+  el.innerHTML = Object.entries(counts).map(([grade, cnt]) => {
+    const pct = Math.round(cnt / total * 100);
+    const label = { S:'S등급 탁월', A:'A등급 우수', B:'B등급 양호', C:'C등급 보통', D:'D등급 기초' }[grade];
+    return `
+      <div class="mini-bar-row">
+        <div class="mini-bar-label" style="color:${GRADE_COLORS[grade]}">${grade}</div>
+        <div style="flex:1">
+          <div style="font-size:11px;color:#616161;margin-bottom:2px">${label}</div>
+          <div class="mini-bar-track">
+            <div class="mini-bar-fill" style="width:${pct}%;background:${GRADE_COLORS[grade]}"></div>
+          </div>
+        </div>
+        <div class="mini-bar-count">${cnt}명 (${pct}%)</div>
+      </div>`;
+  }).join('');
+}
+
+// ── 점수 분포 차트 ────────────────────────────────────────
+function renderScoreChart(rows) {
+  const bands = [
+    { label: '90~100%', min:27, max:30, color:'#6A1B9A' },
+    { label: '80~89%',  min:24, max:26, color:'#1565C0' },
+    { label: '70~79%',  min:21, max:23, color:'#2E7D32' },
+    { label: '60~69%',  min:18, max:20, color:'#E65100' },
+    { label: '60% 미만',min:0,  max:17, color:'#B71C1C' },
+  ];
+
+  const counts = bands.map(b => ({
+    ...b,
+    cnt: rows.filter(r => {
+      const s = parseInt(r[32]) || 0;
+      return s >= b.min && s <= b.max;
+    }).length
+  }));
+
+  const total = rows.length || 1;
+  const el = document.getElementById('score-chart');
+
+  if (rows.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📈</div>응시 데이터 없음</div>';
+    return;
+  }
+
+  el.innerHTML = counts.map(b => {
+    const pct = Math.round(b.cnt / total * 100);
+    return `
+      <div class="mini-bar-row">
+        <div class="mini-bar-label" style="font-size:10px;width:50px;color:${b.color}">${b.label}</div>
+        <div class="mini-bar-track" style="flex:1">
+          <div class="mini-bar-fill" style="width:${pct}%;background:${b.color}"></div>
+        </div>
+        <div class="mini-bar-count">${b.cnt}명</div>
+      </div>`;
+  }).join('');
+}
+
+// ── 문항별 오답률 ─────────────────────────────────────────
+function renderErrorRates(rows) {
+  const el = document.getElementById('error-rate-grid');
+
+  if (rows.length === 0) {
+    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">❓</div>응시 데이터 없음</div>';
+    return;
+  }
+
+  const total = rows.length;
+  const rates = Array.from({ length: 30 }, (_, i) => {
+    const col = i + 2; // Q1 = index 2 (col C)
+    const wrong = rows.filter(r => r[col] !== CORRECT[i]).length;
+    return Math.round(wrong / total * 100);
+  });
+
+  el.innerHTML = rates.map((rate, i) => {
+    const hue = Math.round(120 - rate * 1.2); // 120(green) → 0(red)
+    const color = `hsl(${hue}, 70%, 45%)`;
+    const bg    = `hsl(${hue}, 70%, 95%)`;
+    return `
+      <div class="q-tile" title="${QUESTIONS[i]}" style="background:${bg}">
+        <div class="q-num">Q${i+1}</div>
+        <div class="q-rate" style="color:${color}">${rate}%</div>
+        <div class="q-bar" style="background:${color};width:${rate}%;margin:5px auto 0;max-width:100%"></div>
+      </div>`;
+  }).join('');
+}
+
+// ── 응시자 테이블 ─────────────────────────────────────────
+function renderTable(rows) {
+  const tbody = document.getElementById('table-body');
+
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📭</div>아직 응시 데이터가 없습니다.</div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map((r, i) => {
+    const grade = (r[34] || '').charAt(0);
+    const gradeBadge = `<span class="grade-badge grade-${grade}">${r[34] || '—'}</span>`;
+    return `
+      <tr>
+        <td style="color:var(--text-secondary)">${i+1}</td>
+        <td><strong>${r[1] || '—'}</strong></td>
+        <td style="color:var(--text-secondary);font-size:12px">${r[0] || '—'}</td>
+        <td><strong>${r[32] || '—'}</strong> / 30</td>
+        <td><strong>${r[33] || '—'}</strong></td>
+        <td>${gradeBadge}</td>
+        <td><button class="detail-btn" onclick="showDetail(${i})">상세 보기</button></td>
+      </tr>`;
+  }).join('');
+}
+
+// ── 이름 검색 필터 ────────────────────────────────────────
+function filterTable() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const filtered = q
+    ? allRows.filter(r => (r[1] || '').toLowerCase().includes(q))
+    : allRows;
+  renderTable(filtered);
+}
+
+// ── 상세 모달 ─────────────────────────────────────────────
+function showDetail(idx) {
+  const r = allRows[idx];
+  const name = r[1] || '—';
+  const ts   = r[0] || '—';
+  const correct = parseInt(r[32]) || 0;
+  const pct  = r[33] || '—';
+  const grade = r[34] || '—';
+
+  document.getElementById('modal-title').textContent = `${name} 응시 상세`;
+
+  const answers = Array.from({ length: 30 }, (_, i) => r[i + 2] || '—');
+
+  const answerHTML = answers.map((ans, i) => {
+    const isCorrect = ans === CORRECT[i];
+    return `
+      <div class="answer-row ${isCorrect ? 'correct' : 'wrong'}">
+        <span class="answer-qnum">Q${i+1}</span>
+        <span class="answer-given">${ans}</span>
+        <span class="answer-icon">${isCorrect ? '✅' : '❌'}</span>
+        <span style="font-size:11px;color:var(--text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+              title="${QUESTIONS[i]}">${QUESTIONS[i].substring(0,20)}…</span>
+      </div>`;
+  }).join('');
+
+  const gradeColor = GRADE_COLORS[(grade || '').charAt(0)] || '#673AB7';
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-meta">
+      <div class="modal-meta-item">
+        <div class="meta-label">성명</div>
+        <div class="meta-value" style="font-size:15px">${name}</div>
+      </div>
+      <div class="modal-meta-item">
+        <div class="meta-label">정답수</div>
+        <div class="meta-value">${correct}/30</div>
+      </div>
+      <div class="modal-meta-item">
+        <div class="meta-label">점수</div>
+        <div class="meta-value">${pct}</div>
+      </div>
+      <div class="modal-meta-item">
+        <div class="meta-label">등급</div>
+        <div class="meta-value" style="color:${gradeColor}">${grade}</div>
+      </div>
+      <div class="modal-meta-item" style="flex:1;min-width:160px;text-align:left">
+        <div class="meta-label">응시일시</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-top:4px">${ts}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:12px;font-size:13px;font-weight:600;color:var(--text-secondary)">
+      ✅ 정답 ${correct}문항 &nbsp;|&nbsp; ❌ 오답 ${30 - correct}문항
+    </div>
+    <div class="answer-grid">${answerHTML}</div>`;
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+// ── CSV 내보내기 ──────────────────────────────────────────
+function exportCSV() {
+  if (allRows.length === 0) { alert('내보낼 데이터가 없습니다.'); return; }
+
+  const header = allHeaders.length ? allHeaders : ['타임스탬프','성명','Q1~Q30 (30열)','정답수','점수%','등급'];
+  const csv = [header, ...allRows]
+    .map(row => row.map(c => `"${String(c).replace(/"/g,'""')}"`).join(','))
+    .join('\n');
+
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `핀테크퀴즈_응답데이터_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── 키보드 단축키 ─────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModalDirect();
+});
+</script>
+</body>
+</html>
