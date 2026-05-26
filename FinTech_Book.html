@@ -1228,11 +1228,12 @@ async function checkApproval(){
 function showApproved(){
   const pb=document.getElementById('pendingBox');
   pb.classList.add('visible');
-  pb.innerHTML='✅ 승인되었습니다! 아래 버튼으로 퀴즈에 입장하세요.';
+  pb.innerHTML='<div style="margin-bottom:14px">✅ 승인되었습니다! 아래 버튼으로 퀴즈에 입장하세요.</div>'
+    +'<button class="quiz-go-btn visible" onclick="goToQuiz()">🚀 퀴즈 시작하기</button>';
   pb.style.background='#E8F5E9';
   pb.style.border='1px solid #81C784';
-  document.getElementById('requestBtn').style.display='none';
-  document.getElementById('quizGoBtn').classList.add('visible');
+  const rb=document.getElementById('requestBtn');
+  if(rb) rb.style.display='none';
 }
 
 function goToQuiz(){window.location.replace('index.html');}
