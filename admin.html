@@ -361,23 +361,20 @@ async function approveRequest(name,btn){
   if(!confirm(`"${name}" 님의 퀴즈 응시를 승인하시겠습니까?`))return;
   btn.disabled=true;btn.textContent='처리 중...';
   try{
-    const res=await fetch(APPS_SCRIPT_URL,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'approve',name:name,key:ADMIN_KEY})
-    });
+    /* GET 방식 사용 — Apps Script CORS 정책 우회 */
+    const url=APPS_SCRIPT_URL+'?action=approve&name='+encodeURIComponent(name)+'&key='+ADMIN_KEY;
+    const res=await fetch(url);
     const json=await res.json();
     if(json.status==='ok'){
       btn.textContent='✅ 승인 완료';
-      // Update row badge
       const td=btn.closest('tr').querySelector('.req-status');
       if(td){td.textContent='승인';td.className='req-status approved';}
-      alert(`✅ "${name}" 님이 승인되었습니다.`);
+      alert('✅ "'+name+'" 님이 승인되었습니다.');
     }else{
       btn.disabled=false;btn.textContent='✅ 승인';
       alert('오류: '+json.message);
     }
-  }catch(e){btn.disabled=false;btn.textContent='✅ 승인';alert('네트워크 오류');}
+  }catch(e){btn.disabled=false;btn.textContent='✅ 승인';alert('네트워크 오류: '+e.message);}
 }
 
 </script>
