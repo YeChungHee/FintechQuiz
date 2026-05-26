@@ -252,16 +252,6 @@ table.tbl .center{text-align:center;}
 .gc-플로우{background:#E8F5E9;color:#2E7D32;}
 .gc-규제{background:#FFF3E0;color:#E65100;}
 
-/* ── 퀴즈 힌트 배너 ──────────────────────────── */
-.quiz-hint{
-  background:linear-gradient(135deg,#673AB7,#9C27B0);
-  color:white;border-radius:10px;
-  padding:14px 20px;margin:20px 0;
-  font-size:13.5px;
-  display:flex;align-items:center;gap:10px;
-}
-.quiz-hint .icon{font-size:18px;flex-shrink:0;}
-
 /* ── 스크롤 앵커 ──────────────────────────────── */
 .chapter,.section,[id]{scroll-margin-top:72px;}
 
@@ -464,8 +454,8 @@ table.tbl .center{text-align:center;}
   <a class="nav-item sub" href="#ch3-3">3-3. 수익 구조 & 리스크</a>
   <div class="nav-divider"></div>
   <a class="nav-item chapter" href="#ch4">4장. 전자어음</a>
-  <a class="nav-item sub" href="#ch4-1">4-1. 어음과 전자어음</a>
-  <a class="nav-item sub" href="#ch4-2">4-2. 어음할인</a>
+  <a class="nav-item sub" href="#ch4-1">4-1. 개요 및 참여자</a>
+  <a class="nav-item sub" href="#ch4-2">4-2. 핵심 특징</a>
   <div class="nav-divider"></div>
   <a class="nav-item chapter" href="#ch5">5장. 매출채권 금융</a>
   <a class="nav-item sub" href="#ch5-1">5-1. 팩토링</a>
@@ -549,11 +539,7 @@ table.tbl .center{text-align:center;}
           &#x26A0;&#xFE0F; <strong>오픈뱅킹</strong>은 은행의 계좌·이체 API를 핀테크 기업에 개방하는 정책으로, 핀테크 산업 성장을 <strong>촉진</strong>합니다. (저해 ✗)
         </div>
       </div>
-      <div class="quiz-hint">
-        <span class="icon">&#x1F4DD;</span>
-        <span><strong>퀴즈 포인트</strong> — 핀테크 기업이 반드시 은행업 인가를 취득해야 하는 것은 아닙니다. 결제·구매대행 등 서비스 유형에 따라 요구 인허가가 다릅니다.</span>
-      </div>
-    </div>
+</div>
 
     <div class="section" id="ch1-2">
       <div class="section-title">&#x1F3ED; 1-2. 핀테크 산업 분류</div>
@@ -628,11 +614,7 @@ table.tbl .center{text-align:center;}
           <tr><td><strong>금융사(플로우페이)</strong></td><td>—</td><td>구매기업 신용 기반 자금 제공 → 수수료·마진 수취</td></tr>
         </table>
       </div>
-      <div class="quiz-hint">
-        <span class="icon">&#x1F4DD;</span>
-        <span><strong>퀴즈 포인트</strong> — SCF에서 자금 제공의 기반은 <strong>구매기업(바이어)의 신용</strong>입니다. 신용이 낮은 공급업체도 구매기업의 신용 덕분에 유리하게 자금을 조달할 수 있습니다.</span>
-      </div>
-    </div>
+</div>
 
     <div class="section" id="ch2-2">
       <div class="section-title">&#x1F4B3; 2-2. BNPL vs SNPL 비교</div>
@@ -718,11 +700,7 @@ table.tbl .center{text-align:center;}
           </div>
         </div>
       </div>
-      <div class="quiz-hint">
-        <span class="icon">&#x1F4DD;</span>
-        <span><strong>퀴즈 포인트</strong> — 고객사가 공급사에 <strong>직접</strong> 결제하지 않습니다. <strong>플로우페이가 공급사에 먼저 결제</strong>하고, 고객사는 나중에 플로우페이에 납부합니다. 공급사는 납품 즉시 대금 수령 가능합니다.</span>
-      </div>
-    </div>
+</div>
 
     <div class="section" id="ch3-3">
       <div class="section-title">&#x1F4B0; 3-3. 수익 구조 & 리스크 관리</div>
@@ -760,45 +738,62 @@ table.tbl .center{text-align:center;}
     <div class="chapter-border"></div>
 
     <div class="section" id="ch4-1">
-      <div class="section-title">&#x1F4C4; 4-1. 어음과 전자어음</div>
+      <div class="section-title">&#x1F4C4; 4-1. 전자어음 개요 및 참여자</div>
       <div class="box-key">
-        <div class="box-label">어음이란?</div>
-        <strong>어음(Bill of Exchange)</strong>은 발행인(구매자)이 수취인(공급자)에게 일정 금액을 미래의 특정일(만기일)에 지급하겠다고 약속하는 <strong>유가증권</strong>입니다.
+        <div class="box-label">핵심 정의</div>
+        <strong>전자어음</strong>이란 약속어음을 전자화한 지급수단으로, <strong>발행인</strong>이 <strong>수취인</strong>에게 일정 금액을 <strong>만기일</strong>에 지급하겠다고 약속하는 유가증권입니다.<br>
+        <span style="font-size:13px;color:#555;margin-top:4px;display:block;">관리기관: <strong>금융결제원(KFTC)</strong> · 법적 근거: <strong>전자어음의 발행 및 유통에 관한 법률</strong></span>
       </div>
       <div class="tbl-wrap">
         <table class="tbl">
-          <tr><th>항목</th><th>종이 어음</th><th>전자어음 ★</th></tr>
-          <tr><td>발행 방식</td><td>종이 증서</td><td>전자적 방식</td></tr>
-          <tr><td>관리기관</td><td>—</td><td><strong>금융결제원</strong> (전자어음관리기관)</td></tr>
-          <tr><td>분실·위조</td><td>위험 있음</td><td><span class="badge-o">위험 없음</span></td></tr>
-          <tr><td>분할 양도</td><td>불가</td><td><span class="badge-o">가능 ✓</span></td></tr>
-          <tr><td>통상 만기</td><td>—</td><td><strong>30일 ~ 최대 90일</strong></td></tr>
-          <tr><td>법적 근거</td><td colspan="2">어음법</td></tr>
-          <tr><td>양도 방식</td><td colspan="2">배서(背書) — 뒷면 서명으로 제3자에 권리 양도</td></tr>
+          <tr><th>구분</th><th>발행인 (Issuer)</th><th>수취인 (Payee)</th></tr>
+          <tr><td>역할</td><td>어음을 발행하는 주체 (구매자)</td><td>어음을 받는 주체 (공급자)</td></tr>
+          <tr><td>자격</td><td>당좌계좌 보유 <strong>법인·개인사업자</strong></td><td><strong>법인, 개인, 개인사업자</strong> 모두 가능</td></tr>
+          <tr><td>결제 의무</td><td>만기일 16:00까지 발행계좌에 <strong>어음금 입금</strong></td><td>만기일에 수취계좌로 <strong>자동 입금 수령</strong></td></tr>
         </table>
-      </div>
-      <div class="box-warning">
-        &#x26A0;&#xFE0F; <strong>전자어음 최대 만기는 90일</strong>입니다. 120일은 잘못된 정보입니다.<br>
-        전자어음은 <strong>분할 양도가 가능</strong>합니다. (불가능 ✗)
       </div>
     </div>
 
     <div class="section" id="ch4-2">
-      <div class="section-title">&#x2702;&#xFE0F; 4-2. 어음할인 (Bill Discounting)</div>
-      <div class="box-key">
-        <div class="box-label">핵심 정의</div>
-        <strong>만기 전</strong> 어음을 금융기관에 매도하여 즉시 현금을 수령하는 방식입니다. 운전자금이 필요한 공급업체가 활용합니다.
-      </div>
-      <div class="box-formula">
-        <div class="formula">수령금액 = 액면가 × (1 − 할인율 × 잔존일수 ÷ 365)</div>
-        <div class="example">
-          예시: 액면가 1,000만 원 / 잔존 60일 / 연 할인율 5%<br>
-          → 10,000,000 × (1 − 0.05 × 60/365) = <strong>약 9,917,808원</strong>
+      <div class="section-title">&#x2728; 4-2. 핵심 특징 4가지</div>
+      <div class="card">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">①</div>
+            <div class="step-body">
+              <div class="step-title">최장 만기 90일 (3개월)</div>
+              <div class="step-desc">발행일 익일부터 기산. 2021년 이후 현행 최장 만기 기준.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">②</div>
+            <div class="step-body">
+              <div class="step-title">만기일 자동 결제</div>
+              <div class="step-desc">소지인이 별도로 지급제시할 필요 없음 — <strong>금융결제원이 만기일에 자동 지급제시</strong>. 발행인이 미입금 시 즉시 부도 처리.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">③</div>
+            <div class="step-body">
+              <div class="step-title">분할배서 가능 (최초 수취인 한정)</div>
+              <div class="step-desc"><strong>최초 수취인만</strong> 어음 금액을 나누어 최대 4회 분할 가능 → 최대 5건으로 분리. 분할된 어음은 각각 독립된 별개 어음으로 취급.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">④</div>
+            <div class="step-body">
+              <div class="step-title">어음할인 — 만기 전 현금화</div>
+              <div class="step-desc">어음 소지인이 만기 전에 금융기관에 어음을 매도하여 즉시 현금을 수령하는 방식. 할인율만큼 수령금액이 감소.</div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="box-warning">
-        &#x274C; <strong>어음할인 ≠ 만기 후 교환</strong> — 어음할인은 반드시 <strong>만기 전</strong>에 이루어집니다.<br>
-        &#x274C; 할인율이 높을수록 수령금액이 <strong>줄어듭니다</strong>. (많아진다 ✗)
+        &#x26A0;&#xFE0F; <strong>어음할인은 반드시 만기 전</strong>에 이루어집니다. (만기 후 ✗)<br>
+        &#x26A0;&#xFE0F; <strong>일부결제 불인정</strong> — 자금이 부족하면 전액 부도 처리됩니다.
+      </div>
+      <div class="box-tip" style="margin-top:12px;">
+        &#x1F4D6; 어음할인 계산 공식, 배서 세부 규칙, 부도 처리 절차 등은 <strong>심화학습</strong>에서 다룹니다.
       </div>
     </div>
   <div class="summary-wrap">
@@ -850,11 +845,7 @@ table.tbl .center{text-align:center;}
         &#x274C; <strong>팩토링의 법적 근거는 어음법이 아닙니다.</strong> → <strong>민법 채권양도</strong> 규정이 근거입니다.<br>
         &#x274C; Recourse 팩토링에서 금융기관은 <strong>채무자뿐 아니라 매도인(공급업체)에게도</strong> 청구 가능합니다.
       </div>
-      <div class="quiz-hint">
-        <span class="icon">&#x1F4DD;</span>
-        <span><strong>회계 처리</strong> — 팩토링으로 채권을 매각하면 해당 채권이 재무상태표에서 <strong>제거</strong>됩니다. 현금이 증가하고 채권이 사라집니다.</span>
-      </div>
-    </div>
+</div>
 
     <div class="section" id="ch5-2">
       <div class="section-title">&#x1F3E6; 5-2. 외상매출채권담보대출 (외담대)</div>
