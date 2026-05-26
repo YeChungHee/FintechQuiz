@@ -1203,6 +1203,7 @@ function submitQuizRequest(){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({action:'quiz_request',name:studentName})
   }).catch(()=>{});
+  try{localStorage.setItem('quiz_requested','1');}catch(e){}
   document.getElementById('pendingBox').classList.add('visible');
   btn.style.display='none';
 }
@@ -1210,21 +1211,30 @@ function submitQuizRequest(){
 /* ═══ 승인 확인 ═══ */
 async function checkApproval(){
   const btn=document.getElementById('checkBtn');
-  btn.disabled=true;btn.textContent='확인 중...';
+  if(btn){btn.disabled=true;btn.textContent='확인 중...';}
   try{
     const res=await fetch(APPS_SCRIPT_URL+'?action=check_approval&name='+encodeURIComponent(studentName));
     const json=await res.json();
     if(json.approved){
-      document.getElementById('quizGoBtn').classList.add('visible');
-      document.getElementById('pendingBox').innerHTML='✅ 승인되었습니다! 아래 버튼으로 퀴즈에 입장하세요.';
-      document.getElementById('pendingBox').style.background='#E8F5E9';
-      document.getElementById('pendingBox').style.border='1px solid #81C784';
+      try{localStorage.setItem('quiz_approved','1');}catch(e){}
+      showApproved();
     } else {
-      btn.disabled=false;btn.textContent='🔍 퀴즈 입장 확인';
-      alert('아직 승인 대기 중입니다.\n관리자 승인 후 다시 확인해주세요.');
+      if(btn){btn.disabled=false;btn.textContent='🔍 퀴즈 입장 확인';}
+      if(btn)alert('아직 승인 대기 중입니다.\n관리자 승인 후 다시 확인해주세요.');
     }
-  }catch(e){btn.disabled=false;btn.textContent='🔍 퀴즈 입장 확인';}
+  }catch(e){if(btn){btn.disabled=false;btn.textContent='🔍 퀴즈 입장 확인';}}
 }
+
+function showApproved(){
+  const pb=document.getElementById('pendingBox');
+  pb.classList.add('visible');
+  pb.innerHTML='✅ 승인되었습니다! 아래 버튼으로 퀴즈에 입장하세요.';
+  pb.style.background='#E8F5E9';
+  pb.style.border='1px solid #81C784';
+  document.getElementById('requestBtn').style.display='none';
+  document.getElementById('quizGoBtn').classList.add('visible');
+}
+
 function goToQuiz(){window.location.replace('index.html');}
 
 /* ═══ 사이드바 + 용어 검색 ═══ */
@@ -1257,6 +1267,18 @@ window.addEventListener('DOMContentLoaded',function(){
   document.getElementById('requestNameDisplay').textContent='👤 '+(studentName||'이름 미입력');
   if(completedChapters.length===5){
     document.getElementById('quizRequestSection').classList.add('visible');
+    // 이미 승인된 경우 → 바로 퀴즈 버튼 표시
+    try{
+      if(localStorage.getItem('quiz_approved')==='1'){
+        showApproved(); return;
+      }
+      // 신청했지만 승인 대기 중인 경우 → pendingBox 복원 후 자동 승인 확인
+      if(localStorage.getItem('quiz_requested')==='1'){
+        document.getElementById('requestBtn').style.display='none';
+        document.getElementById('pendingBox').classList.add('visible');
+        checkApproval();
+      }
+    }catch(e){}
   }
 });
 </script>
