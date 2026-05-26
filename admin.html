@@ -127,6 +127,27 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .empty-state { text-align: center; padding: 60px 0; color: var(--text-secondary); font-size: 14px; }
   .empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+  /* ── 진도/신청 섹션 공통 ── */
+  .prog-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .prog-table th { background:#1565C0; color:#fff; padding:9px 14px; text-align:left; font-weight:600; }
+  .prog-table td { padding:9px 14px; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
+  .prog-table tr:nth-child(even) td { background:#F3F8FF; }
+  .prog-table tr:hover td { background:#E8EAF6; }
+  .ch-dot { display:inline-flex; align-items:center; justify-content:center;
+    width:24px; height:24px; border-radius:50%; font-size:11px; font-weight:700;
+    background:#E0E0E0; color:#666; margin-right:3px; }
+  .ch-dot.done { background:#43A047; color:#fff; }
+  .req-status { display:inline-block; padding:3px 10px; border-radius:4px;
+    font-size:12px; font-weight:700; }
+  .req-status.waiting { background:#FFF8E1; color:#F57F17; }
+  .req-status.approved { background:#E8F5E9; color:#2E7D32; }
+  .approve-btn { padding:6px 16px; background:linear-gradient(135deg,#2E7D32,#43A047);
+    color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:700;
+    cursor:pointer; font-family:inherit; }
+  .approve-btn:disabled { background:#bdbdbd; cursor:not-allowed; }
+  .prog-empty { text-align:center; padding:32px; color:#bbb; font-size:14px; }
+
   .page-footer { text-align: center; padding: 20px 0 32px; font-size: 11px; color: #bbb; }
 
   @media (max-width: 768px) {
@@ -149,7 +170,7 @@
     <input type="password" id="admin-key-input" class="login-input" placeholder="관리자 비밀키 입력" onkeydown="if(event.key==='Enter') doLogin()">
     <button class="login-btn" onclick="doLogin()">로그인</button>
     <div class="login-error" id="login-error">비밀키가 올바르지 않습니다.</div>
-    <div class="login-version">v1.3 · 2026-05-25 · 276홀딩스</div>
+    <div class="login-version">v1.4 · 2026-05-26 · 276홀딩스</div>
   </div>
 </div>
 
@@ -220,7 +241,29 @@
       </div>
     </div>
 
-    <div class="page-footer">v1.3 &nbsp;·&nbsp; 276홀딩스 영업지원팀 핀테크 퀴즈 시스템 &nbsp;·&nbsp; 2026-05-25</div>
+    <div class="section" id="section-progress">
+      <div class="section-header">
+        <div class="section-title">📚 학습 진도 현황
+          <button class="info-btn" onclick="toggleInfo(this)">ⓘ<div class="info-tooltip">학습자가 각 장의 [핵심 요약 완료]를 클릭할 때마다 기록됩니다. 1~5장 완료 현황을 확인하세요.</div></button>
+        </div>
+      </div>
+      <div class="section-body" id="progress-section-body">
+        <div class="prog-empty">데이터 로딩 중...</div>
+      </div>
+    </div>
+
+    <div class="section" id="section-requests">
+      <div class="section-header">
+        <div class="section-title">📩 퀴즈 응시 신청 목록
+          <button class="info-btn" onclick="toggleInfo(this)">ⓘ<div class="info-tooltip">학습자가 5장 완료 후 퀴즈 응시를 신청하면 여기에 표시됩니다. [승인] 버튼을 누르면 해당 학습자의 퀴즈 입장이 허용됩니다.</div></button>
+        </div>
+      </div>
+      <div class="section-body" id="request-section-body">
+        <div class="prog-empty">데이터 로딩 중...</div>
+      </div>
+    </div>
+
+    <div class="page-footer">v1.4 &nbsp;·&nbsp; 276홀딩스 영업지원팀 핀테크 퀴즈 시스템 &nbsp;·&nbsp; 2026-05-25</div>
   </div>
 </div>
 
@@ -233,12 +276,12 @@ const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwVv93ic_VlKwnQvm
 const ADMIN_KEY='flowpay2026';
 const CORRECT=['O','O','X','O','X','O','X','O','X','X','O','O','X','O','X','O','X','O','X','O','O','X','O','X','O','X','O','X','O','X'];
 const QUESTIONS=['핀테크는 금융(Finance)과 기술(Technology)의 합성어다','간편결제 서비스는 핀테크 결제/송금 영역에 포함된다','크라우드펀딩은 자산관리 핀테크로 분류된다','핀테크 기업은 금융위원회의 규제를 받을 수 있다','금융위원회는 금융사 현장 감독·검사를 직접 수행한다','SCF는 공급망 전반의 자금흐름을 최적화하는 금융기법이다','BNPL과 SNPL의 최대 차이는 이용 주체(개인 vs 기업)이다','외상매입금 조기지급 프로그램은 구매자 주도 SCF 방식이다','팩토링의 법적 근거는 어음법상 배서 양도이다','전자어음의 통상 만기는 30일~120일이다','플로우페이는 B2B 거래에 특화된 SNPL 서비스이다','플로우페이의 핵심 고객은 중소 제조·도매 기업이다','플로우페이는 공급업체에 대금을 즉시 지급한다','플로우페이 이용 시 구매기업은 결제를 최대 90일 유예할 수 있다','플로우페이 수익은 구매대행 수수료와 금융 마진으로 구성된다','어음은 일정 금액을 지급하겠다는 유가증권이다','약속어음은 발행인이 제3자에게 지급을 위탁하는 형식이다','전자어음은 종이어음과 달리 분실·위변조 위험이 낮다','어음 할인이란 만기 전 어음을 액면가 그대로 현금화하는 것이다','어음할인 시 할인료가 높을수록 수취 금액이 줄어든다','매출채권은 기업이 상품/서비스 제공 후 받을 권리이다','팩토링은 매출채권의 소유권을 금융기관에 양도한다','외상매출채권담보대출(외담대)은 팩토링과 달리 채권 소유권이 이전된다','팩토링은 매출채권 회수 리스크를 금융기관이 부담할 수 있다','외담대는 담보 제공 방식으로 기존 채권을 활용한다','플로우페이의 수익 구조는 구매대행 수수료와 상품판매 마진이다','금융감독원은 금융위원회의 정책 방향에 따라 감독 업무를 수행한다','P2P 금융은 전통 금융기관 없이 개인 간 자금 중개를 지원한다','리스크 관리 측면에서 팩토링은 불완전한 채권양도가 가능하다','인슈어테크는 보험 분야에 IT 기술을 접목한 핀테크 영역이다'];
-let allRows=[],allHeaders=[];
+let allRows=[],allHeaders=[],allProgress=[],allRequests=[];
 
 function doLogin(){const k=document.getElementById('admin-key-input').value.trim();if(k!==ADMIN_KEY){document.getElementById('login-error').style.display='block';document.getElementById('admin-key-input').classList.add('error');document.getElementById('admin-key-input').value='';return;}document.getElementById('login-screen').style.display='none';document.getElementById('dashboard').style.display='block';loadData();}
 function doLogout(){document.getElementById('dashboard').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('admin-key-input').value='';document.getElementById('login-error').style.display='none';}
 
-function renderAllEmpty(msg){renderStats([]);renderGradeChart([]);renderScoreChart([]);renderErrorRates([]);document.getElementById('table-body').innerHTML=`<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📭</div>${msg}</div></td></tr>`;}
+function renderAllEmpty(msg){renderStats([]);renderGradeChart([]);renderScoreChart([]);renderErrorRates([]);document.getElementById('table-body').innerHTML=`<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📭</div>${msg}</div></td></tr>`;renderProgressSection([]);renderRequestSection([]);}
 
 async function loadData(){
   ['grade-chart','score-chart'].forEach(id=>document.getElementById(id).innerHTML='<div class="loading-wrap" style="padding:20px 0"><div class="spinner"></div></div>');
@@ -252,8 +295,11 @@ async function loadData(){
     if(json.status==='unauthorized'){renderAllEmpty('인증 실패 — 비밀키를 확인하세요');return;}
     if(json.status!=='ok'){renderAllEmpty('데이터 없음');return;}
     allHeaders=json.headers||[];allRows=json.rows||[];
-    if(!allRows.length){renderAllEmpty('아직 응시 데이터가 없습니다');return;}
-    renderStats(allRows);renderGradeChart(allRows);renderScoreChart(allRows);renderErrorRates(allRows);renderTable(allRows);
+    allProgress=json.progress||[];allRequests=json.requests||[];
+    if(!allRows.length){renderAllEmpty('아직 응시 데이터가 없습니다');}
+    else{renderStats(allRows);renderGradeChart(allRows);renderScoreChart(allRows);renderErrorRates(allRows);renderTable(allRows);}
+    renderProgressSection(allProgress);
+    renderRequestSection(allRequests);
   }catch(err){renderAllEmpty(err.name==='AbortError'?'연결 시간 초과 — 네트워크를 확인하세요':'데이터 없음');}
 }
 
@@ -271,6 +317,69 @@ function exportCSV(){if(!allRows.length){alert('내보낼 데이터가 없습니
 function toggleInfo(btn){const on=btn.classList.contains('active');document.querySelectorAll('.info-btn.active').forEach(b=>b.classList.remove('active'));if(!on)btn.classList.add('active');}
 document.addEventListener('click',e=>{if(!e.target.closest('.info-btn'))document.querySelectorAll('.info-btn.active').forEach(b=>b.classList.remove('active'));});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModalDirect();document.querySelectorAll('.info-btn.active').forEach(b=>b.classList.remove('active'));}});
+
+function renderProgressSection(progressRows){
+  const el=document.getElementById('progress-section-body');
+  if(!progressRows||!progressRows.length){
+    el.innerHTML='<div class="prog-empty">📭 아직 학습 진도 데이터가 없습니다.</div>';return;
+  }
+  // Group by name, track which chapters completed
+  const byName={};
+  progressRows.forEach(r=>{
+    const name=r[1]||'?', ch=parseInt(r[2])||0;
+    if(!byName[name])byName[name]={chapters:[],times:[]};
+    if(!byName[name].chapters.includes(ch))byName[name].chapters.push(ch);
+    byName[name].times.push(r[0]||'');
+  });
+  const rows=Object.entries(byName).map(([name,d])=>{
+    const dots=[1,2,3,4,5].map(i=>`<span class="ch-dot${d.chapters.includes(i)?' done':''}">${d.chapters.includes(i)?'✓':i}</span>`).join('');
+    const cnt=d.chapters.length;
+    const last=d.times[d.times.length-1]||'—';
+    return`<tr><td><strong>${name}</strong></td><td>${dots}</td><td style="text-align:center"><strong style="color:${cnt===5?'#2E7D32':'#F57F17'}">${cnt}/5</strong></td><td style="font-size:12px;color:#888">${last}</td></tr>`;
+  }).join('');
+  el.innerHTML=`<table class="prog-table"><thead><tr><th>성명</th><th>챕터 완료</th><th style="text-align:center">진도</th><th>최근 활동</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderRequestSection(requestRows){
+  const el=document.getElementById('request-section-body');
+  if(!requestRows||!requestRows.length){
+    el.innerHTML='<div class="prog-empty">📭 아직 퀴즈 응시 신청이 없습니다.</div>';return;
+  }
+  const rows=requestRows.map((r,i)=>{
+    const name=r[1]||'?', status=r[2]||'대기중', ts=r[0]||'—';
+    const isApproved=status==='승인';
+    const badge=`<span class="req-status ${isApproved?'approved':'waiting'}">${status}</span>`;
+    const btn=isApproved
+      ?`<button class="approve-btn" disabled>✅ 승인 완료</button>`
+      :`<button class="approve-btn" onclick="approveRequest('${name}',this)">✅ 승인</button>`;
+    return`<tr><td style="color:#888;font-size:12px">${i+1}</td><td><strong>${name}</strong></td><td style="font-size:12px;color:#888">${ts}</td><td>${badge}</td><td>${btn}</td></tr>`;
+  }).join('');
+  el.innerHTML=`<table class="prog-table"><thead><tr><th>#</th><th>성명</th><th>신청일시</th><th>상태</th><th>승인</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+async function approveRequest(name,btn){
+  if(!confirm(`"${name}" 님의 퀴즈 응시를 승인하시겠습니까?`))return;
+  btn.disabled=true;btn.textContent='처리 중...';
+  try{
+    const res=await fetch(APPS_SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'approve',name:name,key:ADMIN_KEY})
+    });
+    const json=await res.json();
+    if(json.status==='ok'){
+      btn.textContent='✅ 승인 완료';
+      // Update row badge
+      const td=btn.closest('tr').querySelector('.req-status');
+      if(td){td.textContent='승인';td.className='req-status approved';}
+      alert(`✅ "${name}" 님이 승인되었습니다.`);
+    }else{
+      btn.disabled=false;btn.textContent='✅ 승인';
+      alert('오류: '+json.message);
+    }
+  }catch(e){btn.disabled=false;btn.textContent='✅ 승인';alert('네트워크 오류');}
+}
+
 </script>
 </body>
 </html>
