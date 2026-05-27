@@ -146,7 +146,23 @@
     color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:700;
     cursor:pointer; font-family:inherit; }
   .approve-btn:disabled { background:#bdbdbd; cursor:not-allowed; }
+  .delete-req-btn { padding:5px 10px; background:transparent; color:#C62828; border:1px solid #C62828;
+    border-radius:6px; font-size:12px; cursor:pointer; font-family:inherit; transition:.2s; }
+  .delete-req-btn:hover { background:#C62828; color:#fff; }
+  .delete-req-btn:disabled { opacity:.4; cursor:not-allowed; }
   .prog-empty { text-align:center; padding:32px; color:#bbb; font-size:14px; }
+
+  /* 답안 상세 테이블 */
+  .detail-answer-table { width:100%; border-collapse:collapse; font-size:13px; margin-top:16px; }
+  .detail-answer-table th { background:#4527A0; color:#fff; padding:9px 12px; text-align:center; font-weight:600; position:sticky; top:0; }
+  .detail-answer-table th:nth-child(2) { text-align:left; }
+  .detail-answer-table td { padding:9px 12px; border-bottom:1px solid #f0f0f0; vertical-align:middle; text-align:center; }
+  .detail-answer-table td:nth-child(2) { text-align:left; font-size:12px; color:#333; }
+  .detail-answer-table tr.wrong-row { background:#fff5f5; }
+  .detail-answer-table tr.wrong-row td:nth-child(2) { color:#B71C1C; }
+  .ans-cell { font-size:16px; font-weight:700; }
+  .ans-correct { color:#2E7D32; }
+  .ans-wrong   { color:#C62828; }
 
   .page-footer { text-align: center; padding: 20px 0 32px; font-size: 11px; color: #bbb; }
 
@@ -310,7 +326,40 @@ function renderScoreChart(rows){const el=document.getElementById('score-chart');
 function renderErrorRates(rows){const el=document.getElementById('error-rate-grid');if(!rows.length){el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">❓</div>응시 데이터 없음</div>';return;}const t=rows.length;el.innerHTML=Array.from({length:30},(_,i)=>{const w=rows.filter(r=>r[i+2]!==CORRECT[i]).length,rate=Math.round(w/t*100),hue=Math.round(120-rate*1.2),col=`hsl(${hue},70%,45%)`,bg=`hsl(${hue},70%,95%)`;return`<div class="q-tile" title="${QUESTIONS[i]}" style="background:${bg}"><div class="q-num">Q${i+1}</div><div class="q-rate" style="color:${col}">${rate}%</div><div class="q-bar" style="background:${col};width:${rate}%;margin:5px auto 0;max-width:100%"></div></div>`;}).join('');}
 function renderTable(rows){const tb=document.getElementById('table-body');if(!rows.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📭</div>아직 응시 데이터가 없습니다.</div></td></tr>`;return;}tb.innerHTML=rows.map((r,i)=>{const g=(r[34]||'').charAt(0);return`<tr><td style="color:var(--text-secondary)">${i+1}</td><td><strong>${r[1]||'—'}</strong></td><td style="color:var(--text-secondary);font-size:12px">${r[0]||'—'}</td><td><strong>${r[32]||'—'}</strong> / 30</td><td><strong>${r[33]||'—'}</strong></td><td><span class="grade-badge grade-${g}">${r[34]||'—'}</span></td><td><button class="detail-btn" onclick="showDetail(${i})">상세 보기</button></td></tr>`;}).join('');}
 function filterTable(){const q=document.getElementById('search-input').value.toLowerCase();renderTable(q?allRows.filter(r=>(r[1]||'').toLowerCase().includes(q)):allRows);}
-function showDetail(idx){const r=allRows[idx],name=r[1]||'—',ts=r[0]||'—',correct=parseInt(r[32])||0,pct=r[33]||'—',grade=r[34]||'—';document.getElementById('modal-title').textContent=`${name} 응시 상세`;const aH=Array.from({length:30},(_,i)=>{const ans=r[i+2]||'—',ok=ans===CORRECT[i];return`<div class="answer-row ${ok?'correct':'wrong'}"><span class="answer-qnum">Q${i+1}</span><span class="answer-given">${ans}</span><span class="answer-icon">${ok?'✅':'❌'}</span><span style="font-size:11px;color:var(--text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${QUESTIONS[i]}">${QUESTIONS[i].substring(0,20)}…</span></div>`;}).join('');const gc=GC[(grade||'').charAt(0)]||'#673AB7';document.getElementById('modal-body').innerHTML=`<div class="modal-meta"><div class="modal-meta-item"><div class="meta-label">성명</div><div class="meta-value" style="font-size:15px">${name}</div></div><div class="modal-meta-item"><div class="meta-label">정답수</div><div class="meta-value">${correct}/30</div></div><div class="modal-meta-item"><div class="meta-label">점수</div><div class="meta-value">${pct}</div></div><div class="modal-meta-item"><div class="meta-label">등급</div><div class="meta-value" style="color:${gc}">${grade}</div></div><div class="modal-meta-item" style="flex:1;min-width:160px;text-align:left"><div class="meta-label">응시일시</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-top:4px">${ts}</div></div></div><div style="margin-bottom:12px;font-size:13px;font-weight:600;color:var(--text-secondary)">✅ 정답 ${correct}문항 &nbsp;|&nbsp; ❌ 오답 ${30-correct}문항</div><div class="answer-grid">${aH}</div>`;document.getElementById('modal-overlay').classList.add('open');}
+function showDetail(idx){
+  const r=allRows[idx], name=r[1]||'—', ts=r[0]||'—';
+  const correct=parseInt(r[32])||0, pct=r[33]||'—', grade=r[34]||'—';
+  const gc=GC[(grade||'').charAt(0)]||'#673AB7';
+  document.getElementById('modal-title').textContent=`${name} 응시 상세`;
+  const tRows=Array.from({length:30},(_,i)=>{
+    const ans=r[i+2]||'—', ok=ans===CORRECT[i];
+    const rowCls=ok?'':'wrong-row';
+    const ansCls=ok?'ans-correct':'ans-wrong';
+    return`<tr class="${rowCls}">
+      <td style="color:#888;font-weight:600">Q${i+1}</td>
+      <td>${QUESTIONS[i]}</td>
+      <td><span class="ans-cell ${ansCls}">${ans}</span></td>
+      <td><span class="ans-cell ans-correct">${CORRECT[i]}</span></td>
+      <td style="font-size:18px">${ok?'✅':'❌'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-meta">
+      <div class="modal-meta-item"><div class="meta-label">성명</div><div class="meta-value" style="font-size:15px">${name}</div></div>
+      <div class="modal-meta-item"><div class="meta-label">정답수</div><div class="meta-value">${correct}/30</div></div>
+      <div class="modal-meta-item"><div class="meta-label">점수</div><div class="meta-value">${pct}</div></div>
+      <div class="modal-meta-item"><div class="meta-label">등급</div><div class="meta-value" style="color:${gc}">${grade}</div></div>
+      <div class="modal-meta-item" style="flex:1;min-width:160px;text-align:left"><div class="meta-label">응시일시</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-top:4px">${ts}</div></div>
+    </div>
+    <div style="margin-bottom:12px;font-size:13px;font-weight:600;color:var(--text-secondary)">
+      ✅ 정답 ${correct}문항 &nbsp;|&nbsp; ❌ 오답 ${30-correct}문항
+    </div>
+    <table class="detail-answer-table">
+      <thead><tr><th style="width:48px">#</th><th>문항</th><th style="width:64px">응시자</th><th style="width:64px">정답</th><th style="width:48px">결과</th></tr></thead>
+      <tbody>${tRows}</tbody>
+    </table>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
 function closeModal(e){if(e.target===document.getElementById('modal-overlay'))closeModalDirect();}
 function closeModalDirect(){document.getElementById('modal-overlay').classList.remove('open');}
 function exportCSV(){if(!allRows.length){alert('내보낼 데이터가 없습니다.');return;}const h=allHeaders.length?allHeaders:['타임스탬프','성명','Q1~Q30','정답수','점수%','등급'];const csv=[h,...allRows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));a.download=`핀테크퀴즈_응답데이터_${new Date().toISOString().slice(0,10)}.csv`;a.click();}
@@ -349,12 +398,13 @@ function renderRequestSection(requestRows){
     const name=r[1]||'?', status=r[2]||'대기중', ts=r[0]||'—';
     const isApproved=status==='승인';
     const badge=`<span class="req-status ${isApproved?'approved':'waiting'}">${status}</span>`;
-    const btn=isApproved
+    const appBtn=isApproved
       ?`<button class="approve-btn" disabled>✅ 승인 완료</button>`
       :`<button class="approve-btn" onclick="approveRequest('${name}',this)">✅ 승인</button>`;
-    return`<tr><td style="color:#888;font-size:12px">${i+1}</td><td><strong>${name}</strong></td><td style="font-size:12px;color:#888">${ts}</td><td>${badge}</td><td>${btn}</td></tr>`;
+    const delBtn=`<button class="delete-req-btn" onclick="deleteRequest('${name}','${ts}',this)" title="삭제">🗑️</button>`;
+    return`<tr><td style="color:#888;font-size:12px">${i+1}</td><td><strong>${name}</strong></td><td style="font-size:12px;color:#888">${ts}</td><td>${badge}</td><td>${appBtn}</td><td>${delBtn}</td></tr>`;
   }).join('');
-  el.innerHTML=`<table class="prog-table"><thead><tr><th>#</th><th>성명</th><th>신청일시</th><th>상태</th><th>승인</th></tr></thead><tbody>${rows}</tbody></table>`;
+  el.innerHTML=`<table class="prog-table"><thead><tr><th>#</th><th>성명</th><th>신청일시</th><th>상태</th><th>승인</th><th>삭제</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 async function approveRequest(name,btn){
@@ -375,6 +425,23 @@ async function approveRequest(name,btn){
       alert('오류: '+json.message);
     }
   }catch(e){btn.disabled=false;btn.textContent='✅ 승인';alert('네트워크 오류: '+e.message);}
+}
+
+async function deleteRequest(name,ts,btn){
+  if(!confirm(`"${name}" 님의 신청 내역을 삭제하시겠습니까?
+이 작업은 되돌릴 수 없습니다.`))return;
+  btn.disabled=true;btn.textContent='삭제 중...';
+  try{
+    const url=APPS_SCRIPT_URL+'?action=delete_request&name='+encodeURIComponent(name)+'&ts='+encodeURIComponent(ts)+'&key='+ADMIN_KEY;
+    const res=await fetch(url);
+    const json=await res.json();
+    if(json.status==='ok'){
+      btn.closest('tr').remove();
+    }else{
+      btn.disabled=false;btn.textContent='🗑️';
+      alert('삭제 실패: '+(json.message||'알 수 없는 오류'));
+    }
+  }catch(e){btn.disabled=false;btn.textContent='🗑️';alert('네트워크 오류: '+e.message);}
 }
 
 </script>
