@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLOWPAY 신입사원 교육자료 | 276 HOLDINGS</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "맑은 고딕", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  }
+
+  :root {
+    --primary: #1a3a6c;
+    --primary-light: #2c5aa0;
+    --accent: #4a90e2;
+    --gold: #c9a961;
+    --dark: #0f1f3d;
+    --light-bg: #f4f7fb;
+    --text-dark: #1a2332;
+    --text-mid: #4a5568;
+    --text-light: #718096;
+    --border: #d8e0ec;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #1a2332;
+  }
+
+  body {
+    color: var(--text-dark);
+    line-height: 1.5;
+    /* 1vw 기준 폰트 - 화면 너비에 따라 자동 스케일 */
+    font-size: 1vw;
+  }
+
+  /* 슬라이드 - 화면 가득 채움 */
+  .page {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    overflow: hidden;
+    position: relative;
+    flex-direction: column;
+  }
+
+  .page.active {
+    display: flex;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* 네비게이션 */
+  .nav-controls {
+    position: fixed;
+    bottom: 1.5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: rgba(15, 31, 61, 0.95);
+    color: white;
+    padding: 0.6vh 1.2vw;
+    border-radius: 3vh;
+    box-shadow: 0 0.4vh 2vh rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    font-size: 0.9vw;
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-controls button {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 2.5vh;
+    height: 2.5vh;
+    min-width: 24px;
+    min-height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.85vw;
+    transition: all 0.2s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-controls button:hover:not(:disabled) {
+    background: rgba(255,255,255,0.4);
+  }
+
+  .nav-controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .page-indicator { font-weight: bold; min-width: 4vw; text-align: center; font-size: 0.95vw; }
+  .fullscreen-btn { background: rgba(74, 144, 226, 0.5) !important; }
+
+  /* ========== 헤더 ========== */
+  .page-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+    color: white;
+    padding: 2.2vh 3vw;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .page-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -3%;
+    width: 25vw;
+    height: 25vw;
+    background: radial-gradient(circle, rgba(74, 144, 226, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    color: #c8dbf2;
+    padding: 0.4vh 1vw;
+    border-radius: 2vh;
+    font-size: 0.75vw;
+    font-weight: bold;
+    letter-spacing: 0.15vw;
+    margin-bottom: 0.5vh;
+    backdrop-filter: blur(10px);
+  }
+
+  .page-title {
+    font-size: 1.8vw;
+    font-weight: bold;
+    margin-bottom: 0.3vh;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    font-size: 0.95vw;
+    color: #c8dbf2;
+    line-height: 1.3;
+  }
+
+  .header-logo {
+    font-size: 0.85vw;
+    color: #c8dbf2;
+    letter-spacing: 0.2vw;
+    font-weight: bold;
+  }
+
+  /* ========== 본문 - 화면을 꽉 채움 ========== */
+  .page-body {
+    padding: 2.5vh 3vw;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+  }
+
+  .page-footer {
+    background: #f4f7fb;
+    padding: 1vh 3vw;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-light);
+    font-size: 0.75vw;
+    flex-shrink: 0;
+  }
+
+  /* ========== 표지 ========== */
+  .cover-page {
+    background: linear-gradient(135deg, #0f1f3d 0%, #1a3a6c 50%, #2c5aa0 100%);
+    color: white;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding: 5vh 5vw;
+  }
+
+  .cover-page.active { display: flex; }
+
+  .cover-page::before {
+    content: '';
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(74, 144, 226, 0.3) 0%, transparent 60%);
+    border-radius: 50%;
+    top: -30vw;
+    right: -20vw;
+  }
+
+  .cover-page::after {
+    content: '';
+    position: absolute;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, rgba(74, 144, 226, 0.2) 0%, transparent 60%);
+    border-radius: 50%;
+    bottom: -20vw;
+    left: -15vw;
+  }
+
+  .cover-logo {
+    font-size: 1vw;
+    letter-spacing: 0.4vw;
+    color: #c8dbf2;
+    margin-bottom: 3vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-awards {
+    display: flex;
+    gap: 1.5vw;
+    margin-bottom: 4vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  .award-badge {
+    background: rgba(201, 169, 97, 0.18);
+    border: 1.5px solid var(--gold);
+    color: var(--gold);
+    padding: 1vh 1.5vw;
+    border-radius: 3vh;
+    font-size: 0.95vw;
+    font-weight: bold;
+  }
+
+  .cover-title {
+    font-size: 8vw;
+    font-weight: 900;
+    letter-spacing: -0.3vw;
+    margin-bottom: 1.5vh;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, #ffffff 0%, #c8dbf2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .cover-subtitle {
+    font-size: 2.2vw;
+    margin-bottom: 5vh;
+    position: relative;
+    z-index: 1;
+    color: #e0e8f5;
+    font-weight: 300;
+  }
+
+  .cover-description {
+    font-size: 1.3vw;
+    max-width: 60vw;
+    line-height: 1.8;
+    color: #c8dbf2;
+    margin-bottom: 5vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-info {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 1vh;
+    padding: 2vh 3vw;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-info-label {
+    font-size: 0.85vw;
+    color: #c8dbf2;
+    letter-spacing: 0.2vw;
+    margin-bottom: 0.5vh;
+  }
+
+  .cover-info-text {
+    font-size: 1.2vw;
+    color: white;
+    font-weight: 500;
+  }
+
+  /* ========== 섹션 ========== */
+  .section-title {
+    font-size: 1.15vw;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 1vh;
+    padding-bottom: 0.5vh;
+    border-bottom: 2px solid var(--accent);
+    display: inline-block;
+  }
+
+  .section-description {
+    font-size: 0.95vw;
+    color: var(--text-mid);
+    margin-bottom: 1vh;
+    line-height: 1.6;
+  }
+
+  /* ========== 컨텐츠 영역 ========== */
+  .content-row {
+    display: flex;
+    gap: 2vw;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .content-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+    min-width: 0;
+  }
+
+  .col-1-1 > .content-col { flex: 1; }
+  .col-1-2 > .content-col:first-child { flex: 1; }
+  .col-1-2 > .content-col:last-child { flex: 2; }
+  .col-2-1 > .content-col:first-child { flex: 2; }
+  .col-2-1 > .content-col:last-child { flex: 1; }
+  .col-2-3 > .content-col:first-child { flex: 2; }
+  .col-2-3 > .content-col:last-child { flex: 3; }
+  .col-3-2 > .content-col:first-child { flex: 3; }
+  .col-3-2 > .content-col:last-child { flex: 2; }
+
+  .section-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8vh;
+  }
+
+  .section-block.fill {
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ========== 그리드 ========== */
+  .grid {
+    display: grid;
+    gap: 1vh 1vw;
+  }
+
+  .grid.fill {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-5 { grid-template-columns: repeat(5, 1fr); }
+  .grid-6 { grid-template-columns: repeat(6, 1fr); }
+
+  /* ========== 정보 카드 ========== */
+  .info-card {
+    background: var(--light-bg);
+    border-radius: 0.8vh;
+    padding: 1.5vh 1.2vw;
+    border-left: 4px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .info-card-title {
+    font-size: 1vw;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 0.5vh;
+  }
+
+  .info-card-text {
+    font-size: 0.9vw;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* ========== 강조 박스 ========== */
+  .highlight-box {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e8f1fc 100%);
+    border: 2px solid var(--accent);
+    border-radius: 0.8vh;
+    padding: 1.8vh 1.5vw;
+  }
+
+  .highlight-title {
+    font-size: 1.1vw;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 0.6vh;
+  }
+
+  .highlight-text {
+    font-size: 0.95vw;
+    color: var(--text-dark);
+    line-height: 1.7;
+  }
+
+  /* ========== 프로세스 ========== */
+  .process-flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0.8vw;
+  }
+
+  .process-step {
+    flex: 1;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 0.8vh;
+    padding: 1.5vh 1vw;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .process-number {
+    width: 2.5vw;
+    height: 2.5vw;
+    min-width: 32px;
+    min-height: 32px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 1vh;
+    font-size: 1vw;
+  }
+
+  .process-title {
+    font-size: 0.95vw;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 0.4vh;
+  }
+
+  .process-text {
+    font-size: 0.8vw;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+
+  /* ========== 통계 ========== */
+  .stat-card {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    padding: 2vh 1vw;
+    border-radius: 0.8vh;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .stat-number {
+    font-size: 2.3vw;
+    font-weight: 900;
+    margin-bottom: 0.4vh;
+    background: linear-gradient(135deg, #ffffff 0%, #c8dbf2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.8vw;
+    color: #c8dbf2;
+    line-height: 1.4;
+  }
+
+  .stat-card.gold {
+    background: linear-gradient(135deg, #8b6f3a 0%, var(--gold) 100%);
+  }
+
+  .stat-card.gold .stat-number {
+    background: linear-gradient(135deg, #ffffff 0%, #f0e0c0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-card.gold .stat-label { color: #f0e0c0; }
+
+  /* ========== 테이블 ========== */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 0.6vh;
+    overflow: hidden;
+    box-shadow: 0 0.2vh 0.8vh rgba(0,0,0,0.06);
+  }
+
+  .info-table th {
+    background: var(--primary);
+    color: white;
+    padding: 1vh 1vw;
+    text-align: left;
+    font-weight: bold;
+    font-size: 0.9vw;
+  }
+
+  .info-table td {
+    padding: 0.9vh 1vw;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dark);
+    font-size: 0.9vw;
+    line-height: 1.5;
+  }
+
+  .info-table tr:last-child td { border-bottom: none; }
+
+  /* ========== 체크리스트 ========== */
+  .check-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .check-list li {
+    padding: 0.7vh 0 0.7vh 2vw;
+    position: relative;
+    font-size: 0.9vw;
+    color: var(--text-dark);
+    border-bottom: 1px dashed var(--border);
+    line-height: 1.5;
+  }
+
+  .check-list li:last-child { border-bottom: none; }
+
+  .check-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 1vh;
+    width: 1.3vw;
+    height: 1.3vw;
+    min-width: 16px;
+    min-height: 16px;
+    background: var(--success);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7vw;
+    font-weight: bold;
+  }
+
+  /* ========== 경고 박스 ========== */
+  .warning-box {
+    background: #fef3c7;
+    border-left: 4px solid var(--warning);
+    padding: 1.2vh 1.2vw;
+    border-radius: 0.5vh;
+  }
+
+  .warning-title {
+    font-weight: bold;
+    color: #92400e;
+    margin-bottom: 0.3vh;
+    font-size: 0.95vw;
+  }
+
+  .warning-text {
+    color: #78350f;
+    font-size: 0.85vw;
+    line-height: 1.6;
+  }
+
+  /* ========== FAQ ========== */
+  .faq-item {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 0.6vh;
+    margin-bottom: 0.6vh;
+    overflow: hidden;
+  }
+
+  .faq-question {
+    padding: 1vh 1.2vw;
+    background: var(--light-bg);
+    font-weight: bold;
+    color: var(--primary);
+    font-size: 0.95vw;
+    display: flex;
+    align-items: center;
+  }
+
+  .faq-question::before {
+    content: 'Q.';
+    color: var(--accent);
+    margin-right: 0.6vw;
+    font-weight: 900;
+  }
+
+  .faq-answer {
+    padding: 1vh 1.2vw;
+    color: var(--text-mid);
+    line-height: 1.6;
+    font-size: 0.85vw;
+    border-top: 1px solid var(--border);
+  }
+
+  .faq-answer::before {
+    content: 'A. ';
+    color: var(--success);
+    font-weight: 900;
+    margin-right: 0.3vw;
+  }
+
+  /* ========== 비교 ========== */
+  .comparison-card {
+    padding: 1.5vh 1.2vw;
+    border-radius: 0.8vh;
+  }
+
+  .comparison-card.before {
+    background: #fef2f2;
+    border: 2px solid #fecaca;
+  }
+
+  .comparison-card.after {
+    background: #f0fdf4;
+    border: 2px solid #86efac;
+  }
+
+  .comparison-title {
+    font-size: 1vw;
+    font-weight: bold;
+    margin-bottom: 0.8vh;
+  }
+
+  .comparison-card.before .comparison-title { color: #991b1b; }
+  .comparison-card.after .comparison-title { color: #166534; }
+
+  .comparison-card ul {
+    list-style: none;
+    padding: 0;
+    font-size: 0.9vw;
+    line-height: 2;
+  }
+
+  /* ========== 학습 목표 ========== */
+  .learning-goal {
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+    border-radius: 0.8vh;
+    padding: 1.5vh 1.5vw;
+    border: 1px solid #bae6fd;
+  }
+
+  .learning-goal-title {
+    font-size: 0.8vw;
+    color: var(--accent);
+    font-weight: bold;
+    letter-spacing: 0.15vw;
+    margin-bottom: 0.5vh;
+  }
+
+  .learning-goal-text {
+    font-size: 0.95vw;
+    color: var(--text-dark);
+    line-height: 1.6;
+  }
+
+  /* ========== 인물 카드 ========== */
+  .person-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 0.8vh;
+    padding: 1.5vh 1.2vw;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .person-name {
+    font-size: 1.3vw;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 0.2vh;
+  }
+
+  .person-role {
+    font-size: 0.85vw;
+    color: var(--accent);
+    font-weight: bold;
+    margin-bottom: 0.8vh;
+  }
+
+  .person-career {
+    font-size: 0.8vw;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 0.8vh;
+    padding-bottom: 0.8vh;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .person-key {
+    font-size: 0.85vw;
+    color: var(--text-dark);
+    line-height: 1.8;
+  }
+
+  /* ========== 타임라인 ========== */
+  .timeline-year {
+    background: var(--primary);
+    color: white;
+    padding: 1vh 1vw;
+    border-radius: 0.6vh;
+    margin-bottom: 0.8vh;
+    text-align: center;
+  }
+
+  .timeline-year-num {
+    font-size: 1.2vw;
+    font-weight: bold;
+  }
+
+  .timeline-content {
+    background: var(--light-bg);
+    padding: 1.2vh 1.2vw;
+    border-radius: 0.6vh;
+    font-size: 0.85vw;
+    line-height: 1.7;
+    color: var(--text-dark);
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .timeline-content strong {
+    color: var(--primary);
+  }
+
+  /* ========== 시나리오 ========== */
+  .scenario-box {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 0.8vh;
+    padding: 1.2vh 1.2vw;
+  }
+
+  .scenario-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8vw;
+    margin-bottom: 0.6vh;
+    padding-bottom: 0.6vh;
+    border-bottom: 1.5px solid var(--light-bg);
+  }
+
+  .scenario-tag {
+    background: var(--accent);
+    color: white;
+    padding: 0.3vh 0.8vw;
+    border-radius: 1vh;
+    font-size: 0.75vw;
+    font-weight: bold;
+  }
+
+  .scenario-name {
+    font-weight: bold;
+    font-size: 1vw;
+    color: var(--primary);
+  }
+
+  .scenario-body {
+    font-size: 0.9vw;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  .scenario-result {
+    margin-top: 0.6vh;
+    padding: 0.8vh 1vw;
+    background: var(--light-bg);
+    border-radius: 0.4vh;
+    font-size: 0.85vw;
+  }
+
+  .scenario-result strong { color: var(--success); }
+
+  /* ========== 산업 카드 ========== */
+  .industry-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 0.6vh;
+    padding: 1.2vh 1vw;
+  }
+
+  .industry-title {
+    font-size: 0.95vw;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 0.3vh;
+  }
+
+  .industry-sub {
+    font-size: 0.75vw;
+    color: var(--text-light);
+    margin-bottom: 0.6vh;
+  }
+
+  .industry-list {
+    font-size: 0.78vw;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* ========== 어워드 카드 ========== */
+  .award-card {
+    background: #fffbeb;
+    border: 1.5px solid #fde68a;
+    border-radius: 0.6vh;
+    padding: 1.2vh 1vw;
+  }
+
+  .award-year {
+    font-size: 0.8vw;
+    color: #b45309;
+    font-weight: bold;
+  }
+
+  .award-org {
+    font-size: 0.75vw;
+    color: var(--text-light);
+    float: right;
+  }
+
+  .award-name {
+    font-size: 0.95vw;
+    font-weight: bold;
+    color: var(--text-dark);
+    margin-top: 0.4vh;
+  }
+
+  /* ========== 솔루션 노드 ========== */
+  .solution-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5vw;
+    flex: 1;
+  }
+
+  .solution-node {
+    width: 10vw;
+    height: 10vw;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 1vh;
+    box-shadow: 0 0.5vh 1.5vh rgba(0,0,0,0.2);
+  }
+
+  .solution-node.point { background: linear-gradient(135deg, #d4a843 0%, #b88c2e 100%); }
+  .solution-node.score { background: linear-gradient(135deg, #6b9bd1 0%, #4a7ab4 100%); }
+  .solution-node.pay { background: linear-gradient(135deg, #2c5aa0 0%, #1a3a6c 100%); }
+
+  .solution-icon {
+    font-size: 1.8vw;
+    margin-bottom: 0.3vh;
+  }
+
+  .solution-node-name {
+    font-size: 1vw;
+    font-weight: bold;
+    margin-bottom: 0.2vh;
+  }
+
+  .solution-node-desc {
+    font-size: 0.75vw;
+    opacity: 0.9;
+  }
+
+  /* ========== 조직도 ========== */
+  .org-chart {
+    background: var(--light-bg);
+    padding: 1.5vh 1.2vw;
+    border-radius: 0.8vh;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8vh;
+    justify-content: center;
+  }
+
+  .org-box {
+    background: white;
+    padding: 0.8vh 0.6vw;
+    border-radius: 0.4vh;
+    text-align: center;
+    font-size: 0.85vw;
+    font-weight: bold;
+    color: var(--primary);
+    border: 1px solid var(--border);
+  }
+
+  .org-box.head {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    font-size: 0.95vw;
+    padding: 1vh 0.6vw;
+  }
+
+  .org-box.dept {
+    background: #cbd5e0;
+    color: var(--primary);
+  }
+
+  .org-row {
+    display: grid;
+    gap: 0.5vw;
+  }
+
+  /* ========== 키워드 ========== */
+  .keyword-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5vw;
+  }
+
+  .keyword-tag {
+    background: white;
+    border: 1.5px solid var(--accent);
+    color: var(--primary);
+    padding: 0.5vh 1vw;
+    border-radius: 2vh;
+    font-size: 0.85vw;
+    font-weight: 500;
+  }
+
+  /* 매우 작은 화면 대응 */
+  @media (max-width: 800px) {
+    body { font-size: 8px; }
+  }
+
+  /* 인쇄 */
+  @media print {
+    .nav-controls { display: none; }
+    .page { display: flex !important; page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-controls">
+  <button onclick="prevPage()" id="prevBtn">◀</button>
+  <span class="page-indicator"><span id="currentPage">1</span> / <span id="totalPages">15</span></span>
+  <button onclick="nextPage()" id="nextBtn">▶</button>
+  <button onclick="toggleFullscreen()" class="fullscreen-btn" title="전체화면">⛶</button>
+</div>
+
+<!-- ========================= 1. 표지 ========================= -->
+<div class="page cover-page active" data-page="1">
+  <div class="cover-logo">276 HOLDINGS · NEW EMPLOYEE TRAINING</div>
+  <div class="cover-awards">
+    <span class="award-badge">🏆 2024 과기부장관상</span>
+    <span class="award-badge">🏆 2025·2026 중기부장관상</span>
+    <span class="award-badge">🏆 2026 서민금융진흥원장상</span>
+  </div>
+  <div class="cover-title">FLOW</div>
+  <div class="cover-subtitle">SME를 위한 금융 인프라 슈퍼앱</div>
+  <div class="cover-description">
+    매출채권 전자화 · AI 신용평가 · 구매대행 선지급<br>
+    신입사원을 위한 종합 교육 자료
+  </div>
+  <div class="cover-info">
+    <div class="cover-info-label">EDUCATION MATERIAL · 2026</div>
+    <div class="cover-info-text">276 HOLDINGS · FLOWPAY 완벽 가이드</div>
+  </div>
+</div>
+
+<!-- ========================= 2. 목차 ========================= -->
+<div class="page" data-page="2">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CONTENTS</div>
+        <h1 class="page-title">교육 과정 안내</h1>
+        <p class="page-subtitle">FLOWPAY 신입사원 교육의 전체 흐름</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="learning-goal">
+      <div class="learning-goal-title">LEARNING OBJECTIVES · 학습 목표</div>
+      <div class="learning-goal-text">
+        본 교육을 마치면 신입사원은 276홀딩스의 비즈니스 구조와 FLOWPAY 서비스의 핵심 개념을 이해하고, 고객에게 정확하게 설명할 수 있으며, 타 금융 상품과의 차별점을 명확히 전달할 수 있습니다.
+      </div>
+    </div>
+
+    <div class="content-row col-1-1" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">PART 1. 기업 이해</h2>
+          <table class="info-table">
+            <thead><tr><th style="width:5vw;">CH</th><th style="width:10vw;">주제</th><th>핵심 내용</th></tr></thead>
+            <tbody>
+              <tr><td><strong>01</strong></td><td>회사 소개</td><td>276홀딩스 기업 개요 및 비전</td></tr>
+              <tr><td><strong>02</strong></td><td>경영진 및 조직</td><td>핵심 인력 4인 및 조직 구성</td></tr>
+              <tr><td><strong>03</strong></td><td>회사 연혁</td><td>2019~2026 주요 마일스톤</td></tr>
+              <tr><td><strong>04</strong></td><td>성과 및 수상</td><td>국내·해외 실적 및 기관 인증</td></tr>
+              <tr><td><strong>05</strong></td><td>솔루션 개요</td><td>FLOW 슈퍼앱 3대 솔루션</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">PART 2. FLOWPAY 실무</h2>
+          <table class="info-table">
+            <thead><tr><th style="width:5vw;">CH</th><th style="width:10vw;">주제</th><th>핵심 내용</th></tr></thead>
+            <tbody>
+              <tr><td><strong>06</strong></td><td>FLOW POINT</td><td>매출채권 전자화 플랫폼</td></tr>
+              <tr><td><strong>07</strong></td><td>FLOW SCORE</td><td>AI 기반 동적 신용평가</td></tr>
+              <tr><td><strong>08</strong></td><td>FLOW PAY 정의</td><td>구매대행 선지급 솔루션</td></tr>
+              <tr><td><strong>09</strong></td><td>차별성 및 수수료</td><td>대출과의 차이 및 운영 조건</td></tr>
+              <tr><td><strong>10</strong></td><td>고객 산업군 분석</td><td>1,100+ 파트너 산업별 분포</td></tr>
+              <tr><td><strong>11</strong></td><td>FAQ 및 마무리</td><td>응대 가이드 및 핵심 정리</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 02</span></div>
+</div>
+
+<!-- ========================= 3. 회사소개 ========================= -->
+<div class="page" data-page="3">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 01 · COMPANY</div>
+        <h1 class="page-title">276홀딩스 회사 소개</h1>
+        <p class="page-subtitle">SME를 위한 금융 인프라 슈퍼앱 기업</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="content-row col-2-3" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block">
+          <h2 class="section-title">기업 정체성</h2>
+          <p class="section-description">
+            276홀딩스는 <strong>'유통 기반 솔루션 기업'</strong>으로서, 중소기업이 자금 부족으로 사업 기회를 놓치지 않도록 실질적인 운영 구조를 제공합니다.
+          </p>
+        </div>
+
+        <div class="highlight-box">
+          <div class="highlight-title">기업 비전</div>
+          <div class="highlight-text">
+            "276홀딩스는 기업의 거래가 발생하는 곳마다 자연스럽게 연결되는 <strong>금융 인프라</strong>가 됩니다."<br>
+            <span style="color:var(--text-light); font-size:0.85vw;">— INFRA-LEVEL FINANCIAL SOLUTION</span>
+          </div>
+        </div>
+
+        <div class="section-block fill">
+          <h2 class="section-title">3대 핵심 가치</h2>
+          <div class="grid grid-3 fill">
+            <div class="info-card">
+              <div class="info-card-title">📊 Digitization</div>
+              <div class="info-card-text">매출채권 전자화로 거래 데이터 자산화</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">🤖 Credit Scoring</div>
+              <div class="info-card-text">AI 기반 동적 신용평가 시스템</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">💸 Pre-payment</div>
+              <div class="info-card-text">구매대행 선지급 솔루션 운영</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">기업 기본 정보</h2>
+          <table class="info-table" style="height:100%;">
+            <tbody>
+              <tr><td style="width:30%;"><strong>회사명</strong></td><td>276 HOLDINGS (276홀딩스)</td></tr>
+              <tr><td><strong>대표이사</strong></td><td>신인근</td></tr>
+              <tr><td><strong>설립일</strong></td><td>2019년 12월</td></tr>
+              <tr><td><strong>사업자등록번호</strong></td><td>732-86-01599</td></tr>
+              <tr><td><strong>본사 (인천)</strong></td><td>연수구 컨벤시아대로 204, 인천스타트업파크 인스타2 2층 213호</td></tr>
+              <tr><td><strong>서울 연구소</strong></td><td>영등포구 의사당대로 83, 오투타워 19층 104호</td></tr>
+              <tr><td><strong>전북 지사</strong></td><td>전주시 덕진구 기린대로 886</td></tr>
+              <tr><td><strong>대표 연락처</strong></td><td>02-785-7080 | contact@276holdings.com</td></tr>
+              <tr><td><strong>홈페이지</strong></td><td>276holdings.com / flowpoint.kr / flowpay.kr</td></tr>
+              <tr><td><strong>총 인원</strong></td><td>14명 (2026년 기준, AI파트·운영부 확충 예정)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 03</span></div>
+</div>
+
+<!-- ========================= 4. 경영진 ========================= -->
+<div class="page" data-page="4">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 02 · LEADERSHIP</div>
+        <h1 class="page-title">경영진 및 조직 구성</h1>
+        <p class="page-subtitle">금융 전문성 · 비즈니스 실행력 · 기술 기반 리스크 통제의 균형</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="section-block">
+      <h2 class="section-title">핵심 인력 4인</h2>
+      <div class="grid grid-4">
+        <div class="person-card">
+          <div class="person-name">신인근 <span style="font-size:0.85vw; color:var(--text-light);">CEO</span></div>
+          <div class="person-role">경영 총괄 · Founder</div>
+          <div class="person-career">한국어음중개 전략이사 | 포스코인터내셔널 | 한화 무역 | 중앙대 법학</div>
+          <div class="person-key">
+            · 종합상사·금융권 10년 구조화 금융<br>
+            · 비즈니스 모델 설계 및 실행<br>
+            · 주요 금융기관 파트너십 구축
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="person-name">박진용 <span style="font-size:0.85vw; color:var(--text-light);">CSO</span></div>
+          <div class="person-role">전략/영업 · Co-Founder</div>
+          <div class="person-career">한국어음중개 영업총괄 | 코스콤 장운용 UI/UX | 데이콤MI 클라우드</div>
+          <div class="person-key">
+            · 투자 유치(Fundraising) 및 IR<br>
+            · 국내 B2B 영업망 구축<br>
+            · 플랫폼 및 서비스 기획 총괄
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="person-name">송인탁 <span style="font-size:0.85vw; color:var(--text-light);">COO</span></div>
+          <div class="person-role">재무·리스크 · Co-Founder</div>
+          <div class="person-career">한국어음중개 기업심사 팀장 | 우리투자증권 | LG이노텍 | 성균관대 경제학</div>
+          <div class="person-key">
+            · 구조적 리스크 통제 시스템 설계<br>
+            · 운영 프로세스 최적화·자동화<br>
+            · 채권 관리 및 정산 시스템 총괄
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="person-name">임지훈 <span style="font-size:0.85vw; color:var(--text-light);">CIO</span></div>
+          <div class="person-role">해외사업·AI개발</div>
+          <div class="person-career">핀테크/에듀테크 창업 2회 | Data Science 석사 | 신사업 담당</div>
+          <div class="person-key">
+            · AI 기반 동적 리스크 스코어링<br>
+            · 해외 사업 및 R&D 총괄<br>
+            · 기술 혁신 로드맵 수립
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-row col-3-2" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">조직 구조 (Organization Structure)</h2>
+          <div class="org-chart">
+            <div class="org-row" style="grid-template-columns:1fr; justify-items:center;">
+              <div class="org-box head" style="width:30%;">CEO · 사내이사</div>
+            </div>
+            <div class="org-row" style="grid-template-columns:repeat(4,1fr);">
+              <div class="org-box dept">기술연구소</div>
+              <div class="org-box dept">운영부</div>
+              <div class="org-box dept">영업부</div>
+              <div class="org-box dept">경영전략부</div>
+            </div>
+            <div class="org-row" style="grid-template-columns:repeat(4,1fr);">
+              <div>
+                <div class="org-box" style="margin-bottom:0.4vh;">Flatform</div>
+                <div class="org-box">AI</div>
+              </div>
+              <div>
+                <div class="org-box" style="margin-bottom:0.4vh;">사업운영</div>
+                <div class="org-box">리스크 관리</div>
+              </div>
+              <div></div>
+              <div>
+                <div class="org-box" style="margin-bottom:0.4vh;">사업기획</div>
+                <div class="org-box">서비스기획</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">인력 구성 (Total 14명)</h2>
+          <table class="info-table">
+            <tbody>
+              <tr><td><strong>🟣 개발 (R&D)</strong></td><td style="text-align:right;"><strong>5명</strong></td></tr>
+              <tr><td><strong>🟢 기획 및 운영</strong></td><td style="text-align:right;"><strong>4명</strong></td></tr>
+              <tr><td><strong>🔵 사내이사</strong></td><td style="text-align:right;"><strong>3명</strong></td></tr>
+              <tr><td><strong>⚫ 대표이사</strong></td><td style="text-align:right;"><strong>1명</strong></td></tr>
+              <tr><td><strong>⚪ 영업</strong></td><td style="text-align:right;"><strong>1명</strong></td></tr>
+            </tbody>
+          </table>
+          <div class="warning-box">
+            <div class="warning-text">⚠ 2026년 기준 AI 파트 및 운영부 인력 확충 예정</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 04</span></div>
+</div>
+
+<!-- ========================= 5. 회사 연혁 ========================= -->
+<div class="page" data-page="5">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 03 · HISTORY</div>
+        <h1 class="page-title">회사 연혁 (Company History)</h1>
+        <p class="page-subtitle">2019년 설립부터 2026년까지의 주요 마일스톤</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="grid grid-4 fill">
+      <div style="display:flex; flex-direction:column;">
+        <div class="timeline-year"><div class="timeline-year-num">2019~2020</div></div>
+        <div class="timeline-content">
+          <strong>2019.12</strong> (주)276홀딩스 법인 설립<br><br>
+          <strong>2020.01</strong> 벤처기업확인서 획득<br><br>
+          <strong>2020.07</strong> 전자어음 담보 사모펀드(37.5억원) 유치<br><br>
+          <strong>2020.11</strong> MetLife Inclusion Plus 2.0 Top3<br><br>
+          <strong>2020.12</strong> 초기창업패키지 / 중소기업 자금 중개 실적 <strong>1,000억원 달성</strong> / Seed 투자(마그나인베스트먼트, 한국사회투자)
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column;">
+        <div class="timeline-year"><div class="timeline-year-num">2021~2022</div></div>
+        <div class="timeline-content">
+          <strong>2022.02</strong> 276홀딩스 <strong>기업부설연구소 설립</strong><br><br>
+          <strong>2022.05</strong> 기업용 BNPL 서비스 <strong>플로우페이 출시</strong><br><br>
+          <strong>2022.07</strong> 프리A 투자 유치 (인포뱅크 & 소풍벤처스)<br><br>
+          <strong>2022.09</strong> 한국일보 제18회 디지털 이노베이션 대상 선정
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column;">
+        <div class="timeline-year"><div class="timeline-year-num">2023~2024</div></div>
+        <div class="timeline-content">
+          <strong>2023.07</strong> 온라인 매출채권 플랫폼 오픈 (기업 1,063개사, 채권 13,953건, 누적 중개액 <strong>6,662억원</strong>)<br><br>
+          <strong>2023.11</strong> 프롭핀테크 게임체인저2 신기술상<br><br>
+          <strong>2024.05~07</strong> 프리A 브릿지 투자 / 데이터스타즈 / 글로벌 엑셀러레이팅<br><br>
+          <strong>2024.12</strong> <strong>중기부 TIPS 대상</strong> / 🏆 <strong>과기부 장관상</strong>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column;">
+        <div class="timeline-year"><div class="timeline-year-num">2025~2026</div></div>
+        <div class="timeline-content">
+          <strong>2025.02~07</strong> 글로벌창업사관학교 / Most Innovative Wealth Mgmt(UK) / 시리즈 A 투자 (한국투자, HG, KB투자증권, 마그나, 빅베이슨캐피탈)<br><br>
+          <strong>2025.08~11</strong> 핀커넥트 데모데이 최우수상 / 🏆 <strong>중기부 장관상</strong> / ESG 최우수기업<br><br>
+          <strong>2026.01~02</strong> 한중 공급망 협업 발표(상해) / 2026 혁신IT 대상 / 🏆 <strong>서민금융진흥원장상</strong> / 🏆 <strong>중기부 장관상</strong> (2년 연속)
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <div class="highlight-text">
+        <strong>"계속 선택받았다는 것, 그리고 이제는 다음이 예상되는 단계"</strong> — 어느새 우리의 기록은 큰 글씨로 담기 어려울 만큼 빽빽해졌습니다. 그만큼 더 많은 현장에서, 더 자주 선택받았음을 입증합니다.
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 05</span></div>
+</div>
+
+<!-- ========================= 6. 성과 및 수상 ========================= -->
+<div class="page" data-page="6">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 04 · PERFORMANCE</div>
+        <h1 class="page-title">국내 시장 검증 완료, 해외 실적 본격화</h1>
+        <p class="page-subtitle">핵심 성과 지표 및 대외 수상·기관 인증 내역</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="section-block">
+      <h2 class="section-title">핵심 성과 지표 (Performance Highlights)</h2>
+      <div class="grid grid-6">
+        <div class="stat-card">
+          <div class="stat-number">6,890억+</div>
+          <div class="stat-label">누적 매출채권 중개액</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1,100</div>
+          <div class="stat-label">누적 회원사 (공급+수요)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">97억</div>
+          <div class="stat-label">2025 연 매출액 (+230%)</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-number">37억</div>
+          <div class="stat-label">Global Revenue (3개국)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">월간</div>
+          <div class="stat-label">BEP 달성 (2025년말)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">65%+</div>
+          <div class="stat-label">재구매 고객 비중</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-row col-1-1" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block">
+          <h2 class="section-title">글로벌 거래 실적</h2>
+          <table class="info-table">
+            <thead><tr><th>구분</th><th>내용</th><th style="width:7vw; text-align:right;">금액</th></tr></thead>
+            <tbody>
+              <tr><td><strong>인도 수출('24)</strong></td><td>아모레퍼시픽 제품 등 인도 대형 체인 공급</td><td style="text-align:right;"><strong>21억원</strong></td></tr>
+              <tr><td><strong>미국 수출('25)</strong></td><td>K뷰티 제품 아마존 판매향 공급</td><td style="text-align:right;"><strong>20억원</strong></td></tr>
+              <tr><td><strong>중국 수입('25)</strong></td><td>비료 제조용 원료 국내 기업 공급</td><td style="text-align:right;"><strong>1억원</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section-block fill">
+          <h2 class="section-title">대표 기관 인증</h2>
+          <div class="grid grid-4 fill">
+            <div class="info-card" style="text-align:center;">
+              <div style="font-size:1.8vw;">🏅</div>
+              <div class="info-card-title" style="margin-top:0.4vh;">벤처기업 인증</div>
+            </div>
+            <div class="info-card" style="text-align:center;">
+              <div style="font-size:1.8vw;">🔬</div>
+              <div class="info-card-title" style="margin-top:0.4vh;">기업부설연구소</div>
+            </div>
+            <div class="info-card" style="text-align:center;">
+              <div style="font-size:1.8vw;">⭐</div>
+              <div class="info-card-title" style="margin-top:0.4vh;">이노비즈 인증</div>
+            </div>
+            <div class="info-card" style="text-align:center;">
+              <div style="font-size:1.8vw;">🏆</div>
+              <div class="info-card-title" style="margin-top:0.4vh;">기술우수기업</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">주요 수상 내역 (Excellence Awards)</h2>
+          <div class="grid grid-2 fill">
+            <div class="award-card">
+              <span class="award-year">2024</span><span class="award-org">과기정통부</span>
+              <div class="award-name">🏆 과기부 장관상</div>
+            </div>
+            <div class="award-card">
+              <span class="award-year">2025·2026</span><span class="award-org">중기부</span>
+              <div class="award-name">🏆 중기부 장관상 (2년 연속)</div>
+            </div>
+            <div class="award-card">
+              <span class="award-year">2026</span><span class="award-org">서민금융진흥원</span>
+              <div class="award-name">서민금융대상 진흥원장상</div>
+            </div>
+            <div class="award-card">
+              <span class="award-year">2026</span><span class="award-org">중앙일보</span>
+              <div class="award-name">2026 상반기 혁신IT 대상</div>
+            </div>
+            <div class="award-card">
+              <span class="award-year">2025</span><span class="award-org">GFM Review (UK)</span>
+              <div class="award-name">Most Innovative Wealth Mgmt</div>
+            </div>
+            <div class="award-card">
+              <span class="award-year">2025</span><span class="award-org">서울경제진흥원</span>
+              <div class="award-name">ESG경영 최우수기업</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 06</span></div>
+</div>
+
+<!-- ========================= 7. 솔루션 개요 ========================= -->
+<div class="page" data-page="7">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 05 · SOLUTION OVERVIEW</div>
+        <h1 class="page-title">공급망의 혈류를 되살리는 3단계 인프라</h1>
+        <p class="page-subtitle">중소기업 종합 금융솔루션 슈퍼앱으로의 진화</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="content-row col-1-1" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">FLOW Super APP 구조</h2>
+          <div class="solution-circle">
+            <div class="solution-node point">
+              <div class="solution-icon">📊</div>
+              <div class="solution-node-name">FLOW POINT</div>
+              <div class="solution-node-desc">Data Input</div>
+            </div>
+            <div class="solution-node score">
+              <div class="solution-icon">🤖</div>
+              <div class="solution-node-name">FLOW SCORE</div>
+              <div class="solution-node-desc">Processing</div>
+            </div>
+            <div class="solution-node pay">
+              <div class="solution-icon">💸</div>
+              <div class="solution-node-name">FLOW PAY</div>
+              <div class="solution-node-desc">Profit Out</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <h2 class="section-title">Future Lineup (확장 로드맵)</h2>
+          <div class="grid grid-2">
+            <div class="info-card">
+              <div class="info-card-title">📦 Inventory · 재고금융</div>
+              <div class="info-card-text">재고 자산 기반 유동성 공급</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">🚢 Import/Export · 수출입채권</div>
+              <div class="info-card-text">글로벌 거래 채권 유동화</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">📋 Supply · 공급물품 선제안</div>
+              <div class="info-card-text">AI 기반 공급 매칭 서비스</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">🔗 API · 플랫폼 연계</div>
+              <div class="info-card-text">외부 시스템 통합 인프라</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">Core Solutions 3종</h2>
+          
+          <div class="scenario-box" style="border-left:4px solid var(--gold);">
+            <div class="scenario-header">
+              <span class="scenario-tag" style="background:var(--gold);">01</span>
+              <span class="scenario-name">FLOW POINT — 매출채권 전자화</span>
+            </div>
+            <div class="scenario-body">
+              매출채권 전자화 및 정산 데이터 축적. 기업 간 실거래 데이터를 <strong>디지털 자산으로 전환</strong>합니다.
+            </div>
+          </div>
+
+          <div class="scenario-box" style="border-left:4px solid var(--accent);">
+            <div class="scenario-header">
+              <span class="scenario-tag">02</span>
+              <span class="scenario-name">FLOW SCORE — AI 신용평가</span>
+            </div>
+            <div class="scenario-body">
+              AI 기반 동적 신용평가(Dynamic Scoring). 행동 데이터 분석으로 <strong>리스크 사전 감지</strong>합니다.
+            </div>
+          </div>
+
+          <div class="scenario-box" style="border-left:4px solid var(--primary);">
+            <div class="scenario-header">
+              <span class="scenario-tag" style="background:var(--primary);">03</span>
+              <span class="scenario-name">FLOW PAY — 구매대행 선지급</span>
+            </div>
+            <div class="scenario-body">
+              구매대행 기반 선지급 솔루션. 평가된 한도 내 <strong>즉시 결제 및 수수료 수익 창출</strong>.
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <div class="highlight-title">슈퍼앱 진화 방향</div>
+            <div class="highlight-text">
+              ● 핵심 3종 솔루션 → ● <strong>통합 금융 생태계 확장</strong>으로 단순 결제를 넘어선 SME 금융 슈퍼앱으로 진화합니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 07</span></div>
+</div>
+
+<!-- ========================= 8. FLOW POINT ========================= -->
+<div class="page" data-page="8">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 06 · FLOW POINT</div>
+        <h1 class="page-title">종이 계약서에서 전자 매출채권까지</h1>
+        <p class="page-subtitle">매출계약서 등록·통합관리·전자화·양수도·유동화 활용 플랫폼</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="highlight-box">
+      <div class="highlight-text">
+        <strong>FLOW POINT = </strong>매출계약서를 온라인에서 등록·통합관리하고, 전자화하여 양수도(거래) 및 자금 활용까지 연결하는 플랫폼
+      </div>
+    </div>
+
+    <div class="content-row col-1-1" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">Market Pain Point (시장 문제)</h2>
+          <div class="scenario-box" style="border-left:4px solid var(--danger);">
+            <div class="info-card-title" style="color:var(--danger);">📄 Paper Handling</div>
+            <div class="scenario-body">종이 계약서 주고받기 번거롭고 분실·위변조·버전관리가 어렵다</div>
+          </div>
+          <div class="scenario-box" style="border-left:4px solid var(--danger);">
+            <div class="info-card-title" style="color:var(--danger);">⏰ Pay Timing</div>
+            <div class="scenario-body">납품 후 외상 회수인데 매입은 선현금 요구 (현금흐름 단절)</div>
+          </div>
+          <div class="scenario-box" style="border-left:4px solid var(--danger);">
+            <div class="info-card-title" style="color:var(--danger);">🔒 Asset for Securities</div>
+            <div class="scenario-body">담보로 잡을 자산이 부족해 운전자금(마중물) 조달이 막힌다</div>
+          </div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">Key Features (핵심 기능)</h2>
+          <div class="scenario-box" style="border-left:4px solid var(--success);">
+            <div class="info-card-title" style="color:var(--success);">📁 계약서 등록·보관·검색</div>
+            <div class="scenario-body">계약서가 흩어지지 않고 한 눈에 관리 (Digital Archive)</div>
+          </div>
+          <div class="scenario-box" style="border-left:4px solid var(--success);">
+            <div class="info-card-title" style="color:var(--success);">💾 전자화 (Asset Digitalization)</div>
+            <div class="scenario-body">단순 종이 계약을 온라인 자산(전자채권)으로 전환</div>
+          </div>
+          <div class="scenario-box" style="border-left:4px solid var(--success);">
+            <div class="info-card-title" style="color:var(--success);">🔗 거래처 전달 + 온라인 양수도 연결</div>
+            <div class="scenario-body">계약서를 거래 프로세스에 직접 연결, 즉시 자금 활용 옵션으로 확장</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <h2 class="section-title">Service Flow (서비스 흐름 5단계)</h2>
+      <div class="process-flow">
+        <div class="process-step"><div class="process-number">1</div><div class="process-title">계약서 작성 등록</div></div>
+        <div class="process-step"><div class="process-number">2</div><div class="process-title">통합 관리</div><div class="process-text">과거·현재·미래</div></div>
+        <div class="process-step"><div class="process-number">3</div><div class="process-title">전자 매출채권 전환</div><div class="process-text">Asset Digitization</div></div>
+        <div class="process-step"><div class="process-number">4</div><div class="process-title">거래처 전달/양수도</div></div>
+        <div class="process-step"><div class="process-number">5</div><div class="process-title">유동화 활용</div><div class="process-text">Liquidity</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 08</span></div>
+</div>
+
+<!-- ========================= 9. FLOW SCORE ========================= -->
+<div class="page" data-page="9">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 07 · FLOW SCORE</div>
+        <h1 class="page-title">10년 노하우의 매출채권 전문 평가시스템</h1>
+        <p class="page-subtitle">'지금 이 순간의 거래 안정성'을 평가하는 단기 매출채권 부실 평가 정보 서비스</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="content-row col-1-1" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block">
+          <h2 class="section-title">왜 FLOW SCORE인가?</h2>
+          <table class="info-table">
+            <thead><tr><th>구분</th><th>기존 신용평가</th><th style="background:var(--accent);">FLOW SCORE</th></tr></thead>
+            <tbody>
+              <tr><td><strong>데이터</strong></td><td>재무제표 중심, 과거 지표</td><td><strong>실시간 거래 흐름</strong></td></tr>
+              <tr><td><strong>대상</strong></td><td>기업 전체 장기 안정성</td><td><strong>단기 매출채권 단위</strong></td></tr>
+              <tr><td><strong>주기</strong></td><td>연 1회 갱신</td><td><strong>거래 발생 단위 누적</strong></td></tr>
+              <tr><td><strong>질문</strong></td><td>"괜찮은 회사인가?"</td><td><strong>"지금 이 거래, 안전한가?"</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section-block fill">
+          <h2 class="section-title">핵심 제공 정보</h2>
+          <div class="scenario-box">
+            <div class="info-card-title">01. 실시간 매출 분석 정보</div>
+            <div class="scenario-body">중소기업 간 사업관계·거래 추이 기반 비재무 데이터 (거래의 지속성·집중도·변화 패턴 분석)</div>
+          </div>
+          <div class="scenario-box">
+            <div class="info-card-title">02. 매출채권 유동화 관점 정보</div>
+            <div class="scenario-body">채권 유동화 시 시장 추정 할인금리 / 채권 매입·투자 판단을 위한 가격 가이드 지표</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">AI 기반 고도화 (In Progress)</h2>
+          <ul class="check-list" style="background:linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); padding:1.5vh 1.2vw; border-radius:0.8vh; border:1px solid #86efac;">
+            <li>실시간 등록되는 상거래 흐름 데이터 학습</li>
+            <li>거래의 진위성·안정성·영속성을 누적 판단</li>
+            <li>투자 채권 등급화·선별 기준점으로 활용</li>
+            <li>거래 관계에서 이상 징후 모니터링</li>
+            <li>산업 트렌드 반영 가중평균 계수 자동 조정</li>
+          </ul>
+
+          <h2 class="section-title">평가 모델 구성 (How It Works)</h2>
+          <div class="grid grid-5">
+            <div class="info-card" style="text-align:center; padding:1vh 0.5vw;">
+              <div style="font-size:1.5vw;">💼</div>
+              <div class="info-card-title" style="font-size:0.8vw;">비재무+재무</div>
+              <div class="info-card-text" style="font-size:0.7vw;">거래흐름 × 재무</div>
+            </div>
+            <div class="info-card" style="text-align:center; padding:1vh 0.5vw;">
+              <div style="font-size:1.5vw;">🔄</div>
+              <div class="info-card-title" style="font-size:0.8vw;">정량+정성</div>
+              <div class="info-card-text" style="font-size:0.7vw;">시뮬레이션</div>
+            </div>
+            <div class="info-card" style="text-align:center; padding:1vh 0.5vw;">
+              <div style="font-size:1.5vw;">📊</div>
+              <div class="info-card-title" style="font-size:0.8vw;">통계 기반</div>
+              <div class="info-card-text" style="font-size:0.7vw;">P-VALUE</div>
+            </div>
+            <div class="info-card" style="text-align:center; padding:1vh 0.5vw;">
+              <div style="font-size:1.5vw;">💻</div>
+              <div class="info-card-title" style="font-size:0.8vw;">채권 단위</div>
+              <div class="info-card-text" style="font-size:0.7vw;">채권별 평가</div>
+            </div>
+            <div class="info-card" style="text-align:center; padding:1vh 0.5vw;">
+              <div style="font-size:1.5vw;">🤖</div>
+              <div class="info-card-title" style="font-size:0.8vw;">AI 고도화</div>
+              <div class="info-card-text" style="font-size:0.7vw;">자동 탐지</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 09</span></div>
+</div>
+
+<!-- ========================= 10. FLOW PAY 정의 ========================= -->
+<div class="page" data-page="10">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 08 · FLOW PAY</div>
+        <h1 class="page-title">'멈춤'의 순간을 '기회'로 바꿔주는 유통 기반 구매대행</h1>
+        <p class="page-subtitle">SNPL (Supply Now, Pay Later) · 원자재는 지금 조달, 대금은 납품 이후 정산</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="highlight-box">
+      <div class="highlight-text">
+        <strong>FLOW PAY = </strong>기업이 생산에 필요한 원·부자재를 <strong>대신 결제하여 먼저 공급</strong>하고, 고객사는 <strong>나중에 대금을 정산</strong>하는 서비스. 중소기업이 가장 많이 겪는 자금 공백을 유통의 구조로 해결합니다.
+      </div>
+    </div>
+
+    <div class="section-block">
+      <h2 class="section-title">Service Flow (6단계 프로세스)</h2>
+      <div class="process-flow">
+        <div class="process-step"><div class="process-number">1</div><div class="process-title">고객사 발주 신청</div><div class="process-text">원자재·상품 발주 요청 접수</div></div>
+        <div class="process-step"><div class="process-number">2</div><div class="process-title">FlowScore 심사</div><div class="process-text">매출채권·거래 리스크 평가</div></div>
+        <div class="process-step"><div class="process-number">3</div><div class="process-title">보증보험 연계</div><div class="process-text">2차 안전장치 위험 분산</div></div>
+        <div class="process-step"><div class="process-number">4</div><div class="process-title">276홀딩스 선결제</div><div class="process-text">조달처에 즉시 현금 구매</div></div>
+        <div class="process-step"><div class="process-number">5</div><div class="process-title">원자재 선공급</div><div class="process-text">고객사 생산 납품 정상 진행</div></div>
+        <div class="process-step"><div class="process-number">6</div><div class="process-title">대금 회수(정산)</div><div class="process-text">납품 완료 후 정산 주기 회수</div></div>
+      </div>
+    </div>
+
+    <div class="content-row col-1-1" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">Service 혁신 구조 (3대 차별점)</h2>
+          <div class="scenario-box">
+            <div class="info-card-title">⚡ 원자재 즉시 구매·선공급</div>
+            <div class="scenario-body">생산 및 납품 우선 진행으로 매출 기회 확보</div>
+          </div>
+          <div class="scenario-box">
+            <div class="info-card-title">📋 유통 기반 구매대행</div>
+            <div class="scenario-body">대출이 아닌 상거래 방식으로 부채 부담 없음 (매입/매출 계산서 발행)</div>
+          </div>
+          <div class="scenario-box">
+            <div class="info-card-title">📊 거래·매출 기반 심사</div>
+            <div class="scenario-body">FlowScore로 실거래 데이터 정밀 분석</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">4대 핵심 가치 (Why FLOW PAY)</h2>
+          <div class="grid grid-2 fill">
+            <div class="info-card">
+              <div class="info-card-title">🎯 빈번한 문제 해결</div>
+              <div class="info-card-text">원자재 구매↔매출 회수 사이의 <strong>자금 단절 구간(Death Valley)</strong>을 완벽 해소</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">🏦 금융 아닌 유통</div>
+              <div class="info-card-text">부채로 잡히는 대출이 아닌 <strong>구매대행+정산</strong> 구조로 재무 건전성 유지</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">🛡️ 리스크 관리 내재화</div>
+              <div class="info-card-text"><strong>FlowScore 심사+보증보험 연계</strong>의 이중 안전장치로 위험 통제</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">📈 성장 친화적 구조</div>
+              <div class="info-card-text">자금이 부족해도 <strong>수주를 포기할 필요 없이</strong> 매출 확장 가능</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 10</span></div>
+</div>
+
+<!-- ========================= 11. FLOW PAY 차별성 ========================= -->
+<div class="page" data-page="11">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 09 · DIFFERENTIATION</div>
+        <h1 class="page-title">FLOW PAY 핵심 BENEFIT 및 수수료 구조</h1>
+        <p class="page-subtitle">대출과의 본질적 차이 및 운영 조건 이해</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="content-row col-1-1">
+      <div class="content-col">
+        <div class="section-block">
+          <h2 class="section-title">대출과의 본질적 차이</h2>
+          <div class="grid grid-2">
+            <div class="comparison-card before">
+              <div class="comparison-title">✗ 일반 대출</div>
+              <ul>
+                <li>· 고객 통장에 현금 입금</li>
+                <li>· 부채로 잡혀 신용 영향</li>
+                <li>· 은행 한도 차감</li>
+                <li>· 이자 부담·담보 요구</li>
+              </ul>
+            </div>
+            <div class="comparison-card after">
+              <div class="comparison-title">✓ FLOW PAY</div>
+              <ul>
+                <li>· 조달처에 직접 결제</li>
+                <li>· 구매 대행 (부채 0%)</li>
+                <li>· 은행 거래 영향 없음</li>
+                <li>· 유통 수수료 방식</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="section-block">
+          <h2 class="section-title">3대 핵심 BENEFIT</h2>
+          <div class="scenario-box">
+            <div class="scenario-header">
+              <span class="scenario-tag">BENEFIT 01</span>
+              <span class="scenario-name">재무제표 방어</span>
+            </div>
+            <div class="scenario-body">구매 대행 구조 · 부채 영향 0% · 신용등급 하락 걱정 없음</div>
+          </div>
+          <div class="scenario-box">
+            <div class="scenario-header">
+              <span class="scenario-tag">BENEFIT 02</span>
+              <span class="scenario-name">마이너스 통장형 회전 운용</span>
+            </div>
+            <div class="scenario-body">1년 한도 유지 · 쓰고 갚고 다시 쓰는 무한 회전 · 즉시 유동성</div>
+          </div>
+          <div class="scenario-box">
+            <div class="scenario-header">
+              <span class="scenario-tag">BENEFIT 03</span>
+              <span class="scenario-name">수주 포기 대신 이익 실현</span>
+            </div>
+            <div class="scenario-body">5% 내외 수수료로 협의 조정 · 미수주 0원보다 확실한 수익</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-row col-1-1" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">수수료 체계 핵심 지표</h2>
+          <div class="grid grid-3">
+            <div class="stat-card"><div class="stat-number">3.5~5%</div><div class="stat-label">건당 유통 수수료</div></div>
+            <div class="stat-card"><div class="stat-number">2주</div><div class="stat-label">최초 한도 확정</div></div>
+            <div class="stat-card"><div class="stat-number">1년</div><div class="stat-label">한도 유지 기간</div></div>
+          </div>
+          <div class="highlight-box">
+            <div class="highlight-text">
+              결제 기간별 유통 수수료가 발생하지만, <strong>수주를 포기해 날리는 기회비용</strong>을 생각하면 마진 내에서 감당하고 확실한 이익을 남기는 <strong>기회 창출 비용</strong>입니다.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">한도 운영 방식</h2>
+          <table class="info-table">
+            <tbody>
+              <tr><td style="width:30%;"><strong>한도 산정</strong></td><td>재무 + 발주서 + 납품처 신용도 종합 심사</td></tr>
+              <tr><td><strong>한도 형태</strong></td><td>마이너스 통장형 회전 한도</td></tr>
+              <tr><td><strong>1회 공급</strong></td><td>제한 없음, 신청사별 한도 부과</td></tr>
+              <tr><td><strong>유지 기간</strong></td><td>최초 확정 시 1년 유지</td></tr>
+              <tr><td><strong>갱신</strong></td><td>1년 단위 재심사 통한 갱신</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 11</span></div>
+</div>
+
+<!-- ========================= 12. 고객 산업군 ========================= -->
+<div class="page" data-page="12">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 10 · TRACTION & PORTFOLIO</div>
+        <h1 class="page-title">다양한 산업군을 관통하는 실물 경제 인프라</h1>
+        <p class="page-subtitle">경기 침체기에도 거래가 지속되는 안정적 실물 경제 · Total 1,100+ Partners</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="content-row col-3-2" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">주요 고객 산업군 (7대 영역)</h2>
+          <div class="grid grid-2 fill">
+            <div class="industry-card">
+              <div class="industry-title">🍱 식음료(F&B)</div>
+              <div class="industry-sub">원자재 수급, 가공식품 유통</div>
+              <div class="industry-list">청춘닭꼬치 가공 원재료 · 홈쇼핑용 밀키트 · 스탁키퍼 한우 유통 · 냉동 새우 식자재</div>
+            </div>
+            <div class="industry-card">
+              <div class="industry-title">💊 의료·헬스케어</div>
+              <div class="industry-sub">의약품 도매, 의료기기</div>
+              <div class="industry-list">한독약품 케토톱 제조 원사 · 삼성의료원 수술 용품 · 서울대병원 의료 소모품</div>
+            </div>
+            <div class="industry-card">
+              <div class="industry-title">⚙️ 금속·부품</div>
+              <div class="industry-sub">산업용 원자재, 기계 부품</div>
+              <div class="industry-list">현대제철 스크랩 철강 · 백광산업 특수금속 제조 부품</div>
+            </div>
+            <div class="industry-card">
+              <div class="industry-title">💡 전기·전자·반도체</div>
+              <div class="industry-sub">전자 부품, IT 기기 유통</div>
+              <div class="industry-list">음성인식 비상벨 공공납품 · 화재 경보장치 부품 · AI CCTV 제조 부품</div>
+            </div>
+            <div class="industry-card">
+              <div class="industry-title">🌾 지역 생산품</div>
+              <div class="industry-sub">지역 특산품, 농업용 소비재</div>
+              <div class="industry-list">해남 농가 특산물 가공 식품 · 남해화학 비료 제조용 원료</div>
+            </div>
+            <div class="industry-card">
+              <div class="industry-title">📦 일상 소비재</div>
+              <div class="industry-sub">포장재, 소모품</div>
+              <div class="industry-list">쿠팡 배송용 포장재 · GS25 편의점 라면 용기 · 본도시락 용기 제조 원료</div>
+            </div>
+            <div class="industry-card" style="grid-column:span 2;">
+              <div class="industry-title">💄 뷰티·럭셔리 (K뷰티 수출, 명품 유통)</div>
+              <div class="industry-list">미국/인도 K뷰티 상품 수출 · 롯데카드 온라인몰 명품 판매 · 롯데백화점/신한카드 명품 행사 · 모던하우스 핸드크림 유통</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-col">
+        <div class="section-block">
+          <h2 class="section-title">고객 충성도 (Loyalty)</h2>
+          <div class="stat-card">
+            <div class="stat-number">65%+</div>
+            <div class="stat-label">높은 재구매 고객 비중</div>
+          </div>
+          <div class="highlight-box">
+            <div class="highlight-text">
+              <strong>"한 번 연결된 공급망은 쉽게 끊어지지 않습니다."</strong> 실물 거래 기반 Lock-in 효과로 경기 변동에도 안정적 거래량 유지.
+            </div>
+          </div>
+          <div class="grid grid-2">
+            <div class="info-card" style="text-align:center;">
+              <div style="font-size:1.8vw; font-weight:bold; color:var(--primary);">12회</div>
+              <div class="info-card-title">평균 거래 건수</div>
+            </div>
+            <div class="info-card" style="text-align:center;">
+              <div style="font-size:1.8vw; font-weight:bold; color:var(--primary);">1.6년</div>
+              <div class="info-card-title">평균 거래 기간</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block fill">
+          <h2 class="section-title">대표 성공 사례</h2>
+          <div class="scenario-box">
+            <div class="info-card-title">더포스 · 매출 200% 증가</div>
+            <div class="scenario-body">센서 반도체 1억원 부족 → 공공기관 납품 완료 · 기보 10억 보증 체결</div>
+          </div>
+          <div class="scenario-box">
+            <div class="info-card-title">리메세 · 인도 시장 점유율 확대</div>
+            <div class="scenario-body">한도 초과 상황에서 K뷰티 수출 대규모 물량 소화</div>
+          </div>
+          <div class="scenario-box">
+            <div class="info-card-title">청춘닭꼬치 · 18회 회전 결제</div>
+            <div class="scenario-body">회전형 한도 운용으로 가맹점 확장 견인</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 12</span></div>
+</div>
+
+<!-- ========================= 13. FAQ ========================= -->
+<div class="page" data-page="13">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 11-1 · FAQ</div>
+        <h1 class="page-title">고객 질문 응대 가이드</h1>
+        <p class="page-subtitle">현장에서 가장 자주 받는 질문과 표준 답변</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="content-row col-1-1" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block fill">
+          <h2 class="section-title">주요 FAQ 5선</h2>
+          <div class="faq-item">
+            <div class="faq-question">수수료가 비싸지 않나요?</div>
+            <div class="faq-answer">결제 기간 따른 유통 수수료(3.5~5%)가 발생합니다. 수주 포기 기회비용을 생각하면 마진 내에서 감당하고 확실한 이익을 남기는 기회 창출 비용입니다.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">기존 은행 대출 한도가 깎이나요?</div>
+            <div class="faq-answer">깎이지 않습니다. FLOW PAY는 대출이 아닌 구매 대행 구조이므로 부채로 잡히지 않습니다. 기존 은행 거래 영향 0%이며 보증보험 별도 한도 활용 구조입니다.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">신용등급이 낮아도 가능한가요?</div>
+            <div class="faq-answer">가능합니다. 신용등급보다 발주서 신뢰도와 납품처(원청) 결제 능력을 중점 봅니다. FlowScore가 실거래 데이터를 정밀 분석하여 거래 단위로 평가합니다.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">원청(발주처)에 통보되나요?</div>
+            <div class="faq-answer">원청에 별도 통보되지 않습니다. 고객사와 276홀딩스 간의 구매 대행 계약 구조이므로 원청은 정상 거래 흐름만 인지하면 됩니다.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">우리 회사 통장으로 현금 입금을 받을 수 있나요?</div>
+            <div class="faq-answer">FLOW PAY는 현금 입금 방식이 아닙니다. 276홀딩스가 조달처에 직접 결제하는 구매 대행 구조이며, 이 점이 일반 대출과의 본질적 차이입니다.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-col">
+        <div class="section-block">
+          <h2 class="section-title">상담 시 주의해야 할 표현</h2>
+          <div class="grid grid-2">
+            <div class="comparison-card before">
+              <div class="comparison-title">✗ 피해야 할 표현</div>
+              <ul>
+                <li>· "대출해 드립니다"</li>
+                <li>· "이자율은 ~%입니다"</li>
+                <li>· "신용으로 빌려드립니다"</li>
+                <li>· "단기 차입금처럼 사용"</li>
+              </ul>
+            </div>
+            <div class="comparison-card after">
+              <div class="comparison-title">✓ 권장 표현</div>
+              <ul>
+                <li>· "원자재를 먼저 공급해 드립니다"</li>
+                <li>· "유통 수수료는 ~%입니다"</li>
+                <li>· "구매를 대행해 드립니다"</li>
+                <li>· "자금 흐름을 앞당기는 구조"</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block fill">
+          <h2 class="section-title">상담 5단계 응대 프로세스</h2>
+          <ul class="check-list">
+            <li><strong>STEP 1.</strong> 고객의 문제(Pain Point)를 먼저 정확히 짚어준다</li>
+            <li><strong>STEP 2.</strong> 구매대행 구조의 본질을 명확히 설명한다</li>
+            <li><strong>STEP 3.</strong> 수수료를 기회비용 관점에서 안내한다</li>
+            <li><strong>STEP 4.</strong> 동종 업계 성공 사례를 매칭하여 인용한다</li>
+            <li><strong>STEP 5.</strong> 한도 확인 신청으로 자연스럽게 연결한다</li>
+          </ul>
+          <div class="warning-box">
+            <div class="warning-title">⚠ 상담 핵심 원칙</div>
+            <div class="warning-text">'대출' 단어는 절대 사용 금지. '구매 대행', '유통 수수료', '선공급·후정산' 표현을 정확히 사용해야 함</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 13</span></div>
+</div>
+
+<!-- ========================= 14. 핵심 정리 ========================= -->
+<div class="page" data-page="14">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <div class="page-badge">CHAPTER 11-2 · WRAP-UP</div>
+        <h1 class="page-title">교육 마무리 및 핵심 정리</h1>
+        <p class="page-subtitle">신입사원이 반드시 기억해야 할 핵심 사항</p>
+      </div>
+      <div class="header-logo">276 HOLDINGS</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="content-row col-1-1" style="flex:1;">
+      <div class="content-col">
+        <div class="section-block">
+          <h2 class="section-title">반드시 기억해야 할 7가지</h2>
+          <table class="info-table">
+            <thead><tr><th style="width:4vw;">NO</th><th>핵심 포인트</th></tr></thead>
+            <tbody>
+              <tr><td><strong>01</strong></td><td><strong>276홀딩스 = SME 금융 인프라 슈퍼앱</strong> (FLOW POINT·SCORE·PAY 3종)</td></tr>
+              <tr><td><strong>02</strong></td><td><strong>과기부·중기부 장관상</strong> 다수 수상 검증된 기업</td></tr>
+              <tr><td><strong>03</strong></td><td><strong>누적 중개액 6,890억+ · 회원사 1,100+</strong> (3개국 거래)</td></tr>
+              <tr><td><strong>04</strong></td><td><strong>FLOW PAY는 대출이 아닌 구매 대행</strong> (부채로 잡히지 않음)</td></tr>
+              <tr><td><strong>05</strong></td><td><strong>6단계 프로세스 + 2주 내 한도 확정</strong></td></tr>
+              <tr><td><strong>06</strong></td><td><strong>수수료 3.5~5%</strong> · 수주 포기 기회비용 대비 이익 창출</td></tr>
+              <tr><td><strong>07</strong></td><td><strong>Supply Now, Pay Later (SNPL)</strong> 슬로건의 본질</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section-block fill">
+          <h2 class="section-title">3대 차별점 압축 요약</h2>
+          <div class="grid grid-3 fill">
+            <div class="info-card" style="text-align:center;">
+              <div class="info-card-title">10년 노하우</div>
+              <div class="info-card-text">한국어음중개 출신 핵심 인력</div>
+            </div>
+            <div class="info-card" style="text-align:center;">
+              <div class="info-card-title">AI + 보증보험</div>
+              <div class="info-card-text">FlowScore 이중 안전장치</div>
+            </div>
+            <div class="info-card" style="text-align:center;">
+              <div class="info-card-title">65% 재구매율</div>
+              <div class="info-card-text">실물 기반 Lock-in 효과</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-col">
+        <div class="section-block">
+          <h2 class="section-title">연락처 및 자료 안내</h2>
+          <div class="grid grid-2">
+            <div class="info-card">
+              <div class="info-card-title">📞 Consulting Hotline</div>
+              <div class="info-card-text">02-785-7080<br>전화 상담</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">✉ Email</div>
+              <div class="info-card-text">contact@276holdings.com</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">🌐 Website</div>
+              <div class="info-card-text">flowpoint.kr / flowpay.kr</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">⭐ 핵심 약속</div>
+              <div class="info-card-text">2주 내 한도 확정 · 즉시 조달</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <h2 class="section-title">사무소 안내</h2>
+          <table class="info-table">
+            <tbody>
+              <tr><td style="width:25%;"><strong>본사 (인천)</strong></td><td>연수구 컨벤시아대로 204, 인천스타트업파크 2층 213호</td></tr>
+              <tr><td><strong>서울 (연구소)</strong></td><td>영등포구 의사당대로 83, 오투타워 19층 104호</td></tr>
+              <tr><td><strong>전북 (지사)</strong></td><td>전주시 덕진구 기린대로 886</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="highlight-box">
+          <div class="highlight-title">맺음말</div>
+          <div class="highlight-text">
+            신입사원 여러분은 단순한 금융 상품이 아니라, <strong>중소기업의 성장 기회를 살리는 운영 파트너</strong>로서 고객을 만나게 됩니다. 276홀딩스의 비전과 함께 자신감 있게 활약해 주세요.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer"><span>276 HOLDINGS · FLOWPAY 신입사원 교육자료</span><span>Page 14</span></div>
+</div>
+
+<!-- ========================= 15. 종료 ========================= -->
+<div class="page cover-page" data-page="15">
+  <div class="cover-logo">END OF TRAINING · THANK YOU</div>
+  <div class="cover-title" style="font-size:6vw;">FLOW</div>
+  <div class="cover-subtitle">교육 수료를 환영합니다</div>
+  <div class="cover-description">
+    276홀딩스는 기업의 거래가 발생하는 곳마다<br>
+    자연스럽게 연결되는 <strong>금융 인프라</strong>가 됩니다.<br><br>
+    <span style="font-size:0.95vw; color:#94b4d6;">INFRA-LEVEL FINANCIAL SOLUTION</span>
+  </div>
+  <div class="cover-info">
+    <div class="cover-info-label">CONTACT</div>
+    <div class="cover-info-text">02-785-7080 · contact@276holdings.com · 276holdings.com</div>
+  </div>
+</div>
+
+<script>
+  let currentPageNum = 1;
+  const pages = document.querySelectorAll('.page');
+  const totalPages = pages.length;
+  document.getElementById('totalPages').textContent = totalPages;
+
+  function showPage(num) {
+    pages.forEach((p, idx) => {
+      p.classList.toggle('active', idx + 1 === num);
+    });
+    document.getElementById('currentPage').textContent = num;
+    document.getElementById('prevBtn').disabled = num === 1;
+    document.getElementById('nextBtn').disabled = num === totalPages;
+  }
+
+  function nextPage() {
+    if (currentPageNum < totalPages) {
+      currentPageNum++;
+      showPage(currentPageNum);
+    }
+  }
+
+  function prevPage() {
+    if (currentPageNum > 1) {
+      currentPageNum--;
+      showPage(currentPageNum);
+    }
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextPage(); }
+    if (e.key === 'ArrowLeft') prevPage();
+    if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+    if (e.key === 'Escape' && document.fullscreenElement) document.exitFullscreen();
+  });
+
+  showPage(1);
+</script>
+
+</body>
+</html>

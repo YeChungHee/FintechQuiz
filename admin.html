@@ -41,6 +41,24 @@
   .nav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.25); }
   .logout-btn { background: transparent; color: rgba(255,255,255,0.7); border: none; font-size: 13px; font-family: inherit; cursor: pointer; }
   .logout-btn:hover { color: var(--white); }
+
+  /* 교육자료집 드롭다운 */
+  .dropdown-wrap { position: relative; }
+  .dropdown-menu { display: none; position: absolute; top: calc(100% + 8px); right: 0;
+    background: var(--white); border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    min-width: 260px; z-index: 300; overflow: hidden; border: 1px solid var(--border); }
+  .dropdown-wrap:hover .dropdown-menu,
+  .dropdown-wrap.open .dropdown-menu { display: block; }
+  .dropdown-section { padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .dropdown-section:last-child { border-bottom: none; }
+  .dropdown-label { font-size: 10px; font-weight: 700; color: #9e9e9e; letter-spacing: 1px;
+    text-transform: uppercase; padding: 6px 16px 4px; }
+  .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px;
+    font-size: 13px; color: var(--text); text-decoration: none; transition: background .15s; cursor: pointer; }
+  .dropdown-item:hover { background: var(--primary-light); color: var(--white); }
+  .dropdown-item .item-icon { font-size: 16px; flex-shrink: 0; }
+  .dropdown-item .item-sub { font-size: 11px; color: #9e9e9e; display: block; margin-top: 1px; }
+  .dropdown-item:hover .item-sub { color: rgba(255,255,255,0.7); }
   .main-content { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
 
   .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
@@ -204,8 +222,35 @@
       <span class="version-badge">v1.4</span>
     </div>
     <div class="top-bar-right">
-      <a class="refresh-btn" href="FinTech_Book.html" target="_blank">📖 교과서</a>
-      <a class="refresh-btn" href="index.html" target="_blank">📝 퀴즈</a>
+      <div class="dropdown-wrap">
+        <button class="refresh-btn" onclick="this.closest('.dropdown-wrap').classList.toggle('open')">
+          📚 교육자료집 ▾
+        </button>
+        <div class="dropdown-menu">
+          <div class="dropdown-section">
+            <div class="dropdown-label">교과서</div>
+            <a class="dropdown-item" href="FinTech_Book.html" target="_blank">
+              <span class="item-icon">📖</span>
+              <span><strong>핀테크 도메인 교과서</strong><span class="item-sub">FinTech_Book.html — 5장 구성</span></span>
+            </a>
+            <a class="dropdown-item" href="FLOWPAY_신입사원_교육자료_2026.html" target="_blank">
+              <span class="item-icon">🏢</span>
+              <span><strong>FlowPay 신입사원 교육자료</strong><span class="item-sub">276홀딩스 플로우페이 실무 가이드</span></span>
+            </a>
+            <a class="dropdown-item" href="training_fi3.html" target="_blank">
+              <span class="item-icon">📑</span>
+              <span><strong>교통·통신·금융 발달과 경제성장</strong><span class="item-sub">금융 인프라 교육자료</span></span>
+            </a>
+          </div>
+          <div class="dropdown-section">
+            <div class="dropdown-label">퀴즈 / 평가</div>
+            <a class="dropdown-item" href="index.html" target="_blank">
+              <span class="item-icon">📝</span>
+              <span><strong>핀테크 O/X 퀴즈</strong><span class="item-sub">30문항 · Google Sheets 연동</span></span>
+            </a>
+          </div>
+        </div>
+      </div>
       <div class="nav-divider"></div>
       <button class="refresh-btn" onclick="loadData()">🔄 새로고침</button>
       <button class="logout-btn" onclick="doLogout()">로그아웃</button>
@@ -445,7 +490,10 @@ function closeModal(e){if(e.target===document.getElementById('modal-overlay'))cl
 function closeModalDirect(){document.getElementById('modal-overlay').classList.remove('open');}
 function exportCSV(){if(!allRows.length){alert('내보낼 데이터가 없습니다.');return;}const h=allHeaders.length?allHeaders:['타임스탬프','성명','Q1~Q30','정답수','점수%','등급'];const csv=[h,...allRows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));a.download=`핀테크퀴즈_응답데이터_${new Date().toISOString().slice(0,10)}.csv`;a.click();}
 function toggleInfo(btn){const on=btn.classList.contains('active');document.querySelectorAll('.info-btn.active').forEach(b=>b.classList.remove('active'));if(!on)btn.classList.add('active');}
-document.addEventListener('click',e=>{if(!e.target.closest('.info-btn'))document.querySelectorAll('.info-btn.active').forEach(b=>b.classList.remove('active'));});
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.info-btn'))document.querySelectorAll('.info-btn.active').forEach(b=>b.classList.remove('active'));
+  if(!e.target.closest('.dropdown-wrap'))document.querySelectorAll('.dropdown-wrap.open').forEach(d=>d.classList.remove('open'));
+});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModalDirect();document.querySelectorAll('.info-btn.active').forEach(b=>b.classList.remove('active'));}});
 
 function renderProgressSection(progressRows){

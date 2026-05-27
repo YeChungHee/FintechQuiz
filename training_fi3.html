@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>신입사원 교육자료 | 교통·통신·금융의 발달과 경제성장</title>
+<style>
+  :root {
+    --navy: #1a2847;
+    --navy-deep: #0f1a35;
+    --navy-light: #2d3e6b;
+    --blue: #2563eb;
+    --blue-soft: #3b82f6;
+    --blue-light: #dbeafe;
+    --accent: #f59e0b;
+    --accent-soft: #fbbf24;
+    --coral: #ef4444;
+    --cream: #faf7f2;
+    --paper: #f5f1ea;
+    --ink: #1c1917;
+    --ink-soft: #44403c;
+    --muted: #78716c;
+    --line: #e7e2d8;
+    --gold: #b8924a;
+    --green: #10b981;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    font-family: "맑은 고딕", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    background: #2a2a2a;
+    color: var(--ink);
+    line-height: 1.7;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ============ 페이지 컨테이너 ============ */
+  .presentation {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--cream);
+    display: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 60px 80px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .slide.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .slide-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* ============ 표지 슬라이드 ============ */
+  .slide-cover {
+    background:
+      radial-gradient(ellipse at top left, rgba(245, 158, 11, 0.08), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(37, 99, 235, 0.12), transparent 50%),
+      linear-gradient(180deg, var(--navy-deep) 0%, var(--navy) 100%);
+    color: var(--cream);
+    padding: 80px 100px;
+    position: relative;
+  }
+
+  .slide-cover::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .cover-tag {
+    font-size: 13px;
+    letter-spacing: 0.4em;
+    color: var(--accent-soft);
+    margin-bottom: 30px;
+    font-weight: bold;
+    position: relative;
+  }
+
+  .cover-tag::before {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background: var(--accent-soft);
+    vertical-align: middle;
+    margin-right: 16px;
+  }
+
+  .cover-title {
+    font-size: 72px;
+    font-weight: bold;
+    line-height: 1.15;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .cover-title .accent {
+    color: var(--accent);
+  }
+
+  .cover-sub {
+    font-size: 22px;
+    color: rgba(250, 247, 242, 0.7);
+    max-width: 700px;
+    margin-bottom: 60px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 50px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    max-width: 700px;
+    position: relative;
+  }
+
+  .meta-item { flex: 1; }
+
+  .meta-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: rgba(250, 247, 242, 0.5);
+    margin-bottom: 8px;
+  }
+
+  .meta-value {
+    font-size: 16px;
+    color: var(--cream);
+    font-weight: bold;
+  }
+
+  /* ============ 목차 슬라이드 ============ */
+  .slide-toc {
+    background: linear-gradient(135deg, var(--paper) 0%, var(--cream) 100%);
+  }
+
+  .toc-header {
+    margin-bottom: 50px;
+    text-align: center;
+  }
+
+  .toc-label {
+    font-size: 13px;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    margin-bottom: 16px;
+    font-weight: bold;
+  }
+
+  .toc-title {
+    font-size: 56px;
+    color: var(--navy);
+    font-weight: bold;
+  }
+
+  .toc-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .toc-item {
+    background: white;
+    padding: 24px 28px;
+    border-radius: 6px;
+    border-left: 4px solid var(--blue);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .toc-item:hover {
+    transform: translateX(6px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    border-left-color: var(--accent);
+  }
+
+  .toc-num {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--navy);
+    min-width: 50px;
+  }
+
+  .toc-text {
+    flex: 1;
+  }
+
+  .toc-text-title {
+    font-size: 18px;
+    color: var(--navy);
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .toc-text-sub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ============ 일반 콘텐츠 슬라이드 ============ */
+  .slide-section {
+    background:
+      radial-gradient(ellipse at top right, rgba(37, 99, 235, 0.15), transparent 60%),
+      linear-gradient(180deg, var(--navy-deep) 0%, var(--navy) 100%);
+    color: var(--cream);
+  }
+
+  .section-num-large {
+    font-size: 16px;
+    letter-spacing: 0.4em;
+    color: var(--accent);
+    margin-bottom: 30px;
+    font-weight: bold;
+  }
+
+  .section-title-large {
+    font-size: 80px;
+    color: white;
+    font-weight: bold;
+    line-height: 1.1;
+    margin-bottom: 30px;
+  }
+
+  .section-subtitle-large {
+    font-size: 24px;
+    color: rgba(250, 247, 242, 0.7);
+    max-width: 800px;
+    line-height: 1.5;
+  }
+
+  .section-keywords {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+  }
+
+  .keyword-tag {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-size: 15px;
+    color: var(--cream);
+    font-weight: bold;
+  }
+
+  /* ============ 콘텐츠 슬라이드 공통 ============ */
+  .slide-content {
+    background: var(--cream);
+  }
+
+  .content-header {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid var(--navy);
+  }
+
+  .content-meta {
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .content-title {
+    font-size: 44px;
+    color: var(--navy);
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  /* ============ 콘셉트 박스 ============ */
+  .concept-box {
+    background: white;
+    border: 1px solid var(--line);
+    padding: 32px 36px;
+    margin: 20px 0;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+
+  .concept-label {
+    display: inline-block;
+    background: var(--navy);
+    color: var(--cream);
+    padding: 5px 14px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    margin-bottom: 16px;
+    font-weight: bold;
+  }
+
+  .concept-box h3 {
+    font-size: 24px;
+    color: var(--navy);
+    margin-bottom: 14px;
+    font-weight: bold;
+  }
+
+  .concept-box p {
+    color: var(--ink-soft);
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .concept-box strong {
+    color: var(--coral);
+    font-weight: bold;
+  }
+
+  /* ============ 비유 박스 ============ */
+  .analogy {
+    background: linear-gradient(135deg, #fef3e7 0%, #fdf5e6 100%);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin: 20px 0;
+    border: 1px dashed var(--accent);
+  }
+
+  .analogy-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 14px;
+  }
+
+  .analogy h4 {
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 12px;
+    font-weight: bold;
+  }
+
+  .analogy p {
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .analogy strong {
+    color: var(--coral);
+    background: rgba(239, 68, 68, 0.08);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+  }
+
+  /* ============ 타임라인 ============ */
+  .timeline {
+    position: relative;
+    padding: 10px 0;
+    margin: 20px 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 26px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--navy), var(--accent));
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-left: 80px;
+    padding-bottom: 24px;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: 16px;
+    top: 6px;
+    width: 22px;
+    height: 22px;
+    background: white;
+    border: 3px solid var(--navy);
+    border-radius: 50%;
+  }
+
+  .timeline-year {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+
+  .timeline-event {
+    font-size: 17px;
+    color: var(--navy);
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .timeline-desc {
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ============ 통계 그리드 ============ */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 30px 0;
+  }
+
+  .stat-card {
+    background: white;
+    border: 1px solid var(--line);
+    padding: 24px 20px;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--blue);
+  }
+
+  .stat-card:nth-child(2)::before { background: var(--accent); }
+  .stat-card:nth-child(3)::before { background: var(--coral); }
+  .stat-card:nth-child(4)::before { background: var(--gold); }
+
+  .stat-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+
+  .stat-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* ============ 핵심 메모 ============ */
+  .key-point {
+    background: white;
+    border-top: 3px solid var(--blue);
+    padding: 20px 24px;
+    margin: 20px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border-radius: 0 0 6px 6px;
+  }
+
+  .key-point-label {
+    font-size: 11px;
+    color: var(--blue);
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+  }
+
+  .key-point p {
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  .key-point strong {
+    color: var(--navy);
+    font-weight: bold;
+    background: var(--blue-light);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  /* ============ 흐름 표시 ============ */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0;
+    padding: 24px;
+    background: var(--paper);
+    border-radius: 6px;
+  }
+
+  .flow-step {
+    background: white;
+    padding: 14px 22px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .flow-step small {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: normal;
+    margin-top: 2px;
+  }
+
+  .flow-arrow {
+    color: var(--accent);
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  /* ============ 비교 테이블 ============ */
+  .comparison-table {
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    margin: 20px 0;
+  }
+
+  .comparison-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .comparison-table th {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+  }
+
+  .comparison-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--ink-soft);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .comparison-table tr:hover { background: var(--paper); }
+
+  .country-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 12px;
+  }
+
+  .tag-uk { background: #1e40af; color: white; }
+  .tag-us { background: #dc2626; color: white; }
+  .tag-de { background: #059669; color: white; }
+  .tag-jp { background: #ea580c; color: white; }
+
+  /* ============ 인사이트 카드 ============ */
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .insight-card {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 26px 28px;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .insight-card::after {
+    content: attr(data-num);
+    position: absolute;
+    bottom: -25px;
+    right: -8px;
+    font-size: 100px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.05);
+    line-height: 1;
+  }
+
+  .insight-card h4 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--accent-soft);
+    position: relative;
+    z-index: 1;
+  }
+
+  .insight-card p {
+    font-size: 14px;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+    color: rgba(250, 247, 242, 0.85);
+  }
+
+  /* ============ 실무 박스 ============ */
+  .practice-box {
+    background: var(--navy-deep);
+    color: var(--cream);
+    padding: 36px 40px;
+    margin: 20px 0;
+    border-radius: 6px;
+    position: relative;
+  }
+
+  .practice-box::before {
+    content: '실무 연결';
+    position: absolute;
+    top: -12px;
+    left: 30px;
+    background: var(--accent);
+    color: var(--navy-deep);
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+  }
+
+  .practice-box h3 {
+    font-size: 22px;
+    margin-bottom: 14px;
+    font-weight: bold;
+  }
+
+  .practice-box p {
+    font-size: 15px;
+    color: rgba(250, 247, 242, 0.85);
+    line-height: 1.8;
+  }
+
+  .practice-box strong {
+    color: var(--accent-soft);
+    font-weight: bold;
+  }
+
+  /* ============ 환영 메시지 ============ */
+  .welcome-slide {
+    background: linear-gradient(135deg, #fff8ee 0%, var(--paper) 100%);
+  }
+
+  .welcome-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .welcome-icon-big {
+    font-size: 80px;
+    margin-bottom: 30px;
+  }
+
+  .welcome-title {
+    font-size: 52px;
+    color: var(--navy);
+    font-weight: bold;
+    margin-bottom: 24px;
+    line-height: 1.2;
+  }
+
+  .welcome-text {
+    font-size: 19px;
+    color: var(--ink-soft);
+    line-height: 2;
+  }
+
+  .welcome-text strong {
+    color: var(--coral);
+    background: rgba(239, 68, 68, 0.08);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: bold;
+  }
+
+  /* ============ 마무리 슬라이드 ============ */
+  .slide-end {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%);
+    color: var(--cream);
+    text-align: center;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slide-end.active {
+    display: flex;
+  }
+
+  .end-content {
+    max-width: 800px;
+    padding: 60px;
+  }
+
+  .end-icon {
+    font-size: 60px;
+    margin-bottom: 30px;
+  }
+
+  .end-quote {
+    font-size: 34px;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--accent-soft);
+    margin-bottom: 40px;
+  }
+
+  .end-thanks {
+    font-size: 18px;
+    color: rgba(250, 247, 242, 0.7);
+    letter-spacing: 0.1em;
+  }
+
+  /* ============ 네비게이션 컨트롤 ============ */
+  .nav-controls {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(15, 26, 53, 0.95);
+    padding: 12px 24px;
+    border-radius: 50px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--cream);
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-btn:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .nav-counter {
+    color: var(--cream);
+    font-size: 14px;
+    padding: 0 12px;
+    font-weight: bold;
+    min-width: 70px;
+    text-align: center;
+  }
+
+  .nav-counter .current {
+    color: var(--accent-soft);
+    font-size: 16px;
+  }
+
+  .nav-home {
+    background: var(--accent);
+    color: var(--navy-deep);
+    padding: 8px 14px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-home:hover {
+    background: var(--accent-soft);
+  }
+
+  /* ============ 진행률 바 ============ */
+  .progress-track {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(0,0,0,0.1);
+    z-index: 99;
+  }
+
+  .progress-indicator {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--accent));
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* ============ 키보드 안내 ============ */
+  .keyboard-hint {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(15, 26, 53, 0.9);
+    color: var(--cream);
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    z-index: 100;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+
+  .keyboard-hint kbd {
+    background: rgba(255,255,255,0.2);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 11px;
+    margin: 0 2px;
+  }
+
+  .keyboard-hint:hover { opacity: 1; }
+
+  /* 큰 제목 sub */
+  .slide-h3 {
+    font-size: 22px;
+    color: var(--navy);
+    margin: 24px 0 14px;
+    font-weight: bold;
+    padding-left: 12px;
+    border-left: 4px solid var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-track">
+  <div class="progress-indicator" id="progressBar"></div>
+</div>
+
+<div class="keyboard-hint">
+  <kbd>←</kbd> <kbd>→</kbd> 또는 <kbd>Space</kbd> 키로 이동
+</div>
+
+<div class="presentation">
+
+  <!-- ============ 슬라이드 1: 표지 ============ -->
+  <div class="slide slide-cover active">
+    <div class="slide-inner">
+      <div class="cover-tag">NEW EMPLOYEE ORIENTATION · 2026</div>
+      <h1 class="cover-title">문명을 움직인 세 가지 힘<br><span class="accent">교통 · 통신 · 금융</span></h1>
+      <p class="cover-sub">산업혁명부터 디지털 초연결 시대까지, 인프라가 어떻게 경제를 키워왔는지 — 신입사원이 꼭 알아야 할 비즈니스 인사이트</p>
+      <div class="cover-meta">
+        <div class="meta-item">
+          <div class="meta-label">대상</div>
+          <div class="meta-value">2026년 신입사원</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">학습 시간</div>
+          <div class="meta-value">약 60분</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">구성</div>
+          <div class="meta-value">7개 파트 + 평가</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 2: 환영 ============ -->
+  <div class="slide welcome-slide">
+    <div class="slide-inner">
+      <div class="welcome-content">
+        <div class="welcome-icon-big">👋</div>
+        <h2 class="welcome-title">입사를 환영합니다</h2>
+        <p class="welcome-text">
+          여러분이 앞으로 마주할 모든 비즈니스는 결국 <strong>"연결"의 게임</strong>입니다.<br>
+          300년 전 영국이 철도와 은행으로 세계를 연결했고,<br>
+          100년 전 미국이 통신으로 시장을 통합했으며,<br>
+          오늘 우리는 5G와 핀테크로 새로운 연결의 시대를 살고 있습니다.<br><br>
+          이 자료는 그 거대한 흐름 속에서 <strong>여러분의 일이 어디에 위치하는지</strong> 이해하는 첫 번째 지도입니다.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 3: 목차 ============ -->
+  <div class="slide slide-toc">
+    <div class="slide-inner">
+      <div class="toc-header">
+        <div class="toc-label">CONTENTS</div>
+        <h2 class="toc-title">목차</h2>
+      </div>
+      <div class="toc-list">
+        <div class="toc-item" onclick="goToSlide(4)">
+          <div class="toc-num">01</div>
+          <div class="toc-text">
+            <div class="toc-text-title">금융 시스템의 발달</div>
+            <div class="toc-text-sub">자본이 모이고 흐르는 통로</div>
+          </div>
+        </div>
+        <div class="toc-item" onclick="goToSlide(7)">
+          <div class="toc-num">02</div>
+          <div class="toc-text">
+            <div class="toc-text-title">교통 발달과 시장 통합</div>
+            <div class="toc-text-sub">철도가 만든 전국 시장</div>
+          </div>
+        </div>
+        <div class="toc-item" onclick="goToSlide(10)">
+          <div class="toc-num">03</div>
+          <div class="toc-text">
+            <div class="toc-text-title">통신 발달과 정보 혁명</div>
+            <div class="toc-text-sub">정보 비대칭 해소의 역사</div>
+          </div>
+        </div>
+        <div class="toc-item" onclick="goToSlide(13)">
+          <div class="toc-num">04</div>
+          <div class="toc-text">
+            <div class="toc-text-title">디지털 시대의 확장</div>
+            <div class="toc-text-sub">5G·핀테크·자율주행</div>
+          </div>
+        </div>
+        <div class="toc-item" onclick="goToSlide(15)">
+          <div class="toc-num">05</div>
+          <div class="toc-text">
+            <div class="toc-text-title">국가별 산업화 경로</div>
+            <div class="toc-text-sub">영국·미국·독일·일본 비교</div>
+          </div>
+        </div>
+        <div class="toc-item" onclick="goToSlide(17)">
+          <div class="toc-num">06</div>
+          <div class="toc-text">
+            <div class="toc-text-title">네트워크 효과의 비밀</div>
+            <div class="toc-text-sub">메트칼프 법칙과 승자독식</div>
+          </div>
+        </div>
+        <div class="toc-item" onclick="goToSlide(19)" style="grid-column: span 2;">
+          <div class="toc-num">07</div>
+          <div class="toc-text">
+            <div class="toc-text-title">핵심 통찰 및 결론</div>
+            <div class="toc-text-sub">생산 → 연결 → 초연결로의 패러다임 전환</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 4: PART 1 인트로 ============ -->
+  <div class="slide slide-section">
+    <div class="slide-inner">
+      <div class="section-num-large">PART 01</div>
+      <h2 class="section-title-large">금융 시스템의 발달</h2>
+      <p class="section-subtitle-large">돈이 모이고 흐르는 통로가 만들어지자, 경제는 폭발했다</p>
+      <div class="section-keywords">
+        <span class="keyword-tag">중앙은행</span>
+        <span class="keyword-tag">자본시장</span>
+        <span class="keyword-tag">위험 분산</span>
+        <span class="keyword-tag">유동성</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 5: 금융의 개념 + 비유 ============ -->
+  <div class="slide slide-content">
+    <div class="slide-inner">
+      <div class="content-header">
+        <div class="content-meta">PART 01 · 핵심 개념</div>
+        <h2 class="content-title">금융은 왜 "경제의 혈관"인가?</h2>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-label">핵심 개념</span>
+        <h3>금융 = 경제를 움직이는 파이프라인</h3>
+        <p>몸에 피가 돌아야 살 수 있듯, 경제도 돈이 돌아야 작동합니다. 금융 시스템은 흩어진 돈을 모아 필요한 곳에 보내는 <strong>"파이프라인"</strong>입니다. 이 파이프가 막히면 아무리 좋은 아이디어가 있어도 공장은 못 짓고, 사람은 못 뽑고, 제품은 못 만듭니다.</p>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-tag">💡 쉽게 이해하기</div>
+        <h4>은행 = 동네 저금통의 진화형</h4>
+        <p>
+          100명이 각자 1만원씩 모은 100만원과, 한 사람이 가진 100만원은 액수는 같지만 쓸 수 있는 일이 완전히 다릅니다.
+          100명의 1만원은 흩어져 있으면 그냥 용돈이지만, <strong>은행이 모아주면 공장 하나를 지을 자본</strong>이 됩니다.
+          1694년 영국의 잉글랜드 은행(세계 최초 중앙은행)이 한 일이 바로 이것입니다.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 6: 금융 타임라인 + 역할 ============ -->
+  <div class="slide slide-content">
+    <div class="slide-inner">
+      <div class="content-header">
+        <div class="content-meta">PART 01 · 역사적 흐름</div>
+        <h2 class="content-title">금융 발달의 주요 이정표</h2>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">1694년</div>
+          <div class="timeline-event">영국 잉글랜드 은행 설립</div>
+          <div class="timeline-desc">세계 최초의 중앙은행. 국가 차원의 돈 관리 시스템이 탄생했습니다.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">18세기</div>
+          <div class="timeline-event">전국 은행망 + SOC 자금조달</div>
+          <div class="timeline-desc">도로·운하·철도 같은 거대 인프라에 돈을 댈 수 있게 됨. "기획금융"의 시작.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">1880~1910년</div>
+          <div class="timeline-event">자본시장 폭발적 성장</div>
+          <div class="timeline-desc">30년간 전 세계 자본시장의 절반 이상이 이 시기에 생겼습니다.</div>
+        </div>
+      </div>
+
+      <div class="key-point">
+        <div class="key-point-label">⭐ 꼭 기억하기</div>
+        <p>금융의 4가지 핵심 역할: <strong>① 자본 집중 ② 위험 분산 ③ 유동성 공급 ④ 가격 발견</strong>. 이 네 가지가 작동하지 않으면 어떤 산업도 크지 못합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 7: PART 2 인트로 ============ -->
+  <div class="slide slide-section">
+    <div class="slide-inner">
+      <div class="section-num-large">PART 02</div>
+      <h2 class="section-title-large">교통 발달과<br>시장 통합</h2>
+      <p class="section-subtitle-large">철도 한 줄이 깔리자, 지역 시장이 국가 시장으로 바뀌었다</p>
+      <div class="section-keywords">
+        <span class="keyword-tag">철도</span>
+        <span class="keyword-tag">운송비 감소</span>
+        <span class="keyword-tag">시장 통합</span>
+        <span class="keyword-tag">대량 운송</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 8: 교통 비유 + 통계 ============ -->
+  <div class="slide slide-content">
+    <div class="slide-inner">
+      <div class="content-header">
+        <div class="content-meta">PART 02 · 철도 혁명의 충격</div>
+        <h2 class="content-title">철도가 바꾼 모든 것</h2>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-tag">💡 쉽게 이해하기</div>
+        <h4>철도 이전 vs 이후 — 어묵 한 박스로 비교</h4>
+        <p>
+          철도 이전: 부산 어묵을 서울에서 먹으려면 마차로 며칠. 도착할 땐 상해서 못 먹습니다. → <strong>"지역 시장"만 존재</strong><br><br>
+          철도 이후: 부산 어묵이 하루 만에 서울 식탁에. 부산 회사는 전국에 팔 수 있고, 서울 소비자는 선택지가 늘어남. → <strong>"전국 시장" 탄생</strong>
+        </p>
+      </div>
+
+      <h3 class="slide-h3">📊 영국 철도 혁명의 숫자</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">최초 상업 운행</div>
+          <div class="stat-value">1825년</div>
+          <div class="stat-desc">스티븐슨 '로케트호'</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">1831 상반기 승객</div>
+          <div class="stat-value">188,726명</div>
+          <div class="stat-desc">하루 평균 약 1,040명</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">화물 운송량</div>
+          <div class="stat-value">35,800톤</div>
+          <div class="stat-desc">대량 운송 시대 개막</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">미국 운송비 절감</div>
+          <div class="stat-value">약 80%</div>
+          <div class="stat-desc">마차 대비 비용 급락</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 9: 교통 선순환 + 핵심 ============ -->
+  <div class="slide slide-content">
+    <div class="slide-inner">
+      <div class="content-header">
+        <div class="content-meta">PART 02 · 경제적 메커니즘</div>
+        <h2 class="content-title">교통 발달의 선순환</h2>
+      </div>
+
+      <h3 class="slide-h3">🔄 운송 혁명이 만든 가치 사슬</h3>
+      <div class="flow">
+        <div class="flow-step">대량 운송<small>철도 도입</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">단가 하락<small>규모의 경제</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">가격 인하<small>소비자 혜택</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">수요 확대<small>시장 성장</small></div>
+        <div class="flow-arrow">↻</div>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-label">사회적 파급효과</span>
+        <h3>철도가 만든 3가지 사회 변화</h3>
+        <p>
+          <strong>① 표준시 도입(1840년대):</strong> 기차 시간표를 맞추려고 전국의 시계를 통일했습니다.<br>
+          <strong>② 도시화 가속:</strong> 철도 거점 중심으로 인구와 산업이 집중됐습니다.<br>
+          <strong>③ 전국 시장 형성:</strong> 지역 시장이 국가·국제 시장으로 확장됐습니다.
+        </p>
+      </div>
+
+      <div class="key-point">
+        <div class="key-point-label">⭐ 꼭 기억하기</div>
+        <p>철도는 단순한 운송 수단이 아니라 <strong>사회 전체의 작동 방식</strong>을 바꿨습니다. 인프라 하나가 시간 개념·도시 구조·시장 범위까지 모두 재편한 것입니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 10: PART 3 인트로 ============ -->
+  <div class="slide slide-section">
+    <div class="slide-inner">
+      <div class="section-num-large">PART 03</div>
+      <h2 class="section-title-large">통신 발달과<br>정보 혁명</h2>
+      <p class="section-subtitle-large">정보가 빛의 속도로 움직이자, 거래의 모든 것이 달라졌다</p>
+      <div class="section-keywords">
+        <span class="keyword-tag">전신</span>
+        <span class="keyword-tag">전화</span>
+        <span class="keyword-tag">방송</span>
+        <span class="keyword-tag">정보 비대칭 축소</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 11: 통신 개념 + 타임라인 ============ -->
+  <div class="slide slide-content">
+    <div class="slide-inner">
+      <div class="content-header">
+        <div class="content-meta">PART 03 · 핵심 개념</div>
+        <h2 class="content-title">"정보 비대칭"이라는 적</h2>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-label">핵심 개념</span>
+        <h3>아는 사람이 이긴다 — 정보 격차의 비용</h3>
+        <p>거래에서 한쪽은 알고 다른 쪽은 모르면, 모르는 쪽이 손해를 봅니다. 중고차 시장에서 판매자만 차의 진짜 상태를 아는 것처럼요. 통신 기술의 발달은 이 <strong>정보 비대칭을 줄여서</strong> 시장을 더 공정하고 효율적으로 만들었습니다.</p>
+      </div>
+
+      <h3 class="slide-h3">📡 통신 기술의 단계적 발전</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">1837년</div>
+          <div class="timeline-event">전신(Telegraph) — 사무엘 모스</div>
+          <div class="timeline-desc">장거리 정보 전송 혁명. 뉴욕의 주가가 런던에 실시간 전달되기 시작.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">1876년</div>
+          <div class="timeline-event">전화(Telephone) — 알렉산더 그레이엄 벨</div>
+          <div class="timeline-desc">실시간 음성 소통. "주문 → 생산 → 배송"의 속도가 비약적으로 빨라짐.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">1920년대</div>
+          <div class="timeline-event">라디오 방송</div>
+          <div class="timeline-desc">대중을 향한 일방향 정보 전달. 광고와 대중 소비문화의 시작.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 12: 통신 비유 + 경제효과 ============ -->
+  <div class="slide slide-content">
+    <div class="slide-inner">
+      <div class="content-header">
+        <div class="content-meta">PART 03 · 경제적 영향</div>
+        <h2 class="content-title">통신과 경제성장의 상관관계</h2>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-tag">💡 쉽게 이해하기</div>
+        <h4>전신 = 19세기의 카카오톡</h4>
+        <p>
+          지금 우리에게 메신저가 없다고 상상해보세요. 거래처에 가격 변동을 알리려면 직접 가야 하고,
+          지방 지점에 지시사항을 보내려면 편지를 부쳐야 합니다. 며칠이 걸리겠죠.
+          1837년 전신의 등장은 <strong>"멀리 있어도 즉시 소통할 수 있다"</strong>는,
+          오늘날 우리가 당연하게 여기는 그 능력을 인류에게 처음 선물한 사건이었습니다.
+        </p>
+      </div>
+
+      <h3 class="slide-h3">📊 통신 발달의 3대 경제 효과</h3>
+      <div class="flow">
+        <div class="flow-step">정보 비대칭 축소<small>가격발견 효율↑</small></div>
+        <div class="flow-arrow">+</div>
+        <div class="flow-step">거래비용 절감<small>대면 의존 감소</small></div>
+        <div class="flow-arrow">+</div>
+        <div class="flow-step">공급망 조정 속도↑<small>재고·리드타임↓</small></div>
+      </div>
+
+      <div class="key-point">
+        <div class="key-point-label">⭐ 꼭 기억하기</div>
+        <p>통신의 진짜 가치는 "빠른 연락"이 아니라 <strong>정보 격차의 해소</strong>입니다. 누구나 같은 정보를 가질 때 시장은 더 효율적으로 작동합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 13: PART 4 인트로 ============ -->
+  <div class="slide slide-section">
+    <div class="slide-inner">
+      <div class="section-num-large">PART 04</div>
+      <h2 class="section-title-large">디지털 시대의<br>확장</h2>
+      <p class="section-subtitle-large">핀테크 · 5G · 자율주행이 만드는 초연결 경제</p>
+      <div class="section-keywords">
+        <span class="keyword-tag">핀테크</span>
+        <span class="keyword-tag">5G</span>
+        <span class="keyword-tag">자율주행</span>
+        <span class="keyword-tag">초연결</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 14: 5G + 실무 ============ -->
+  <div class="slide slide-content">
+    <div class="slide-inner">
+      <div class="content-header">
+        <div class="content-meta">PART 04 · 디지털 인프라</div>
+        <h2 class="content-title">5G가 만드는 초연결 사회</h2>
+      </div>
+
+      <h3 class="slide-h3">🚀 5G의 4가지 특성</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">데이터 속도</div>
+          <div class="stat-value">20배↑</div>
+          <div class="stat-desc">4G 대비 초고속 전송</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">반응 속도</div>
+          <div class="stat-value">≤1ms</div>
+          <div class="stat-desc">초저지연 실시간 상호작용</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">동시 접속</div>
+          <div class="stat-value">100만/㎢</div>
+          <div class="stat-desc">사물인터넷 시대 인프라</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">2030 한국 가치</div>
+          <div class="stat-value">47조원</div>
+          <div class="stat-desc">금융 부문만 5.6조</div>
+        </div>
+      </div>
+
+      <div class="practice-box">
+        <h3>💼 우리 일과 어떻게 연결되나?</h3>
+        <p>
+          여러분이 어떤 부서에 가든, 결국 일은 <strong>"더 빠르고 더 정확한 연결"</strong>에 관한 것입니다.
+          영업이라면 고객과의 연결, 개발이라면 시스템 간의 연결, 마케팅이라면 메시지와 소비자의 연결.
+          디지털 인프라(클라우드·API·5G·AI)는 우리 회사의 <strong>모든 부서가 함께 올라탄 거대한 컨베이어 벨트</strong>입니다.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 15: PART 5 인트로 ============ -->
+  <div class="slide slide-section">
+    <div class="slide-inner">
+      <div class="section-num-large">PART 05</div>
+      <h2 class="section-title-large">국가별<br>산업화 경로</h2>
+      <p class="section-subtitle-large">같은 산업혁명, 다른 전략 — 4개국의 성공 방식</p>
+      <div class="section-keywords">
+        <span class="keyword-tag">영국</span>
+        <span class="keyword-tag">미국</span>
+        <span class="keyword-tag">독일</span>
+        <span class="keyword-tag">일본</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 16: 국가별 비교표 ============ -->
+  <div class="slide slide-content">
+    <div class="slide-inner">
+      <div class="content-header">
+        <div class="content-meta">PART 05 · 4개국 비교</div>
+        <h2 class="content-title">산업혁명, 4가지 다른 길</h2>
+      </div>
+
+      <div class="comparison-table">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 100px;">국가</th>
+              <th>시기</th>
+              <th>주도 산업</th>
+              <th>핵심 특징</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="country-tag tag-uk">영국</span></td>
+              <td>1760~1840</td>
+              <td>섬유·철도·제철</td>
+              <td>최초의 산업혁명 / 민간 주도 / 글로벌 해운 네트워크</td>
+            </tr>
+            <tr>
+              <td><span class="country-tag tag-us">미국</span></td>
+              <td>1870~1914</td>
+              <td>석유·전기·자동차</td>
+              <td>2차 산업혁명 / 대량생산 체제 / 포드주의</td>
+            </tr>
+            <tr>
+              <td><span class="country-tag tag-de">독일</span></td>
+              <td>1850~1914</td>
+              <td>화학·전기·기계</td>
+              <td>기술교육 중심 / 유니버설뱅크 / 국가 주도 표준화</td>
+            </tr>
+            <tr>
+              <td><span class="country-tag tag-jp">일본</span></td>
+              <td>1870~1930</td>
+              <td>섬유·조선·중화학</td>
+              <td>정부 주도 산업화 / 추격 성장 / 서구 기술 선별 수용</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="key-point">
+        <div class="key-point-label">⭐ 꼭 기억하기</div>
+        <p>4개국의 공통점은 <strong>"인프라 + 금융 + 산업"을 동시에 키웠다</strong>는 것입니다. 어느 하나만으로는 부족했습니다. 오늘날 기업 전략도 마찬가지 — 기술만 좋아서도, 자금만 있어도, 사람만 있어도 안 됩니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 17: PART 6 인트로 ============ -->
+  <div class="slide slide-section">
+    <div class="slide-inner">
+      <div class="section-num-large">PART 06</div>
+      <h2 class="section-title-large">네트워크 효과의<br>비밀</h2>
+      <p class="section-subtitle-large">왜 카카오톡, 인스타그램, 쿠팡은 한번 1등이 되면 잘 안 무너질까?</p>
+      <div class="section-keywords">
+        <span class="keyword-tag">메트칼프 법칙</span>
+        <span class="keyword-tag">규모의 경제</span>
+        <span class="keyword-tag">네트워크 효과</span>
+        <span class="keyword-tag">승수 효과</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 18: 메트칼프 + 비교 ============ -->
+  <div class="slide slide-content">
+    <div class="slide-inner">
+      <div class="content-header">
+        <div class="content-meta">PART 06 · 메트칼프의 법칙</div>
+        <h2 class="content-title">사용자 제곱의 마법</h2>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-label">METCALFE'S LAW</span>
+        <h3>네트워크 가치 = 사용자 수의 제곱 (V ∝ n²)</h3>
+        <p>전화기 1대는 쓸모없습니다. 2대면 1쌍이 통화 가능. 10대면 45쌍의 통화 가능. 100대면 4,950쌍. <strong>사용자가 늘면 네트워크 가치는 기하급수적으로 폭발</strong>합니다. 이게 플랫폼 비즈니스의 "승자독식" 원리입니다.</p>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-tag">💡 쉽게 이해하기</div>
+        <h4>왜 친구들이 다 같은 메신저를 쓸까?</h4>
+        <p>
+          여러분 혼자 새로운 메신저 앱을 깔아봤자 의미가 없죠. 친구가 다 카카오톡에 있으니까 카카오톡을 쓸 수밖에.
+          이게 <strong>"네트워크 효과"</strong>입니다. 먼저 사람을 모은 플랫폼이 압도적으로 유리해지는 이유.
+          그래서 IT 기업들은 초기에 적자를 감수하고서라도 <strong>"먼저 1억 명 모으기 게임"</strong>을 합니다.
+        </p>
+      </div>
+
+      <div class="key-point">
+        <div class="key-point-label">⭐ 꼭 기억하기</div>
+        <p>인프라 투자의 경제적 승수 효과: <strong>교통 1:3~1:5</strong>, <strong>통신 1:4~1:7</strong>, <strong>5G 1:6~1:10</strong>. 디지털 인프라일수록 ROI가 더 높습니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 19: PART 7 인트로 ============ -->
+  <div class="slide slide-section">
+    <div class="slide-inner">
+      <div class="section-num-large">PART 07</div>
+      <h2 class="section-title-large">핵심 통찰</h2>
+      <p class="section-subtitle-large">생산 → 연결 → 초연결, 패러다임은 이렇게 진화한다</p>
+      <div class="section-keywords">
+        <span class="keyword-tag">패러다임 전환</span>
+        <span class="keyword-tag">역사적 교훈</span>
+        <span class="keyword-tag">연결의 가치</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 20: 패러다임 전환 ============ -->
+  <div class="slide slide-content">
+    <div class="slide-inner">
+      <div class="content-header">
+        <div class="content-meta">PART 07 · 패러다임 전환</div>
+        <h2 class="content-title">경제 패러다임의 3단계</h2>
+      </div>
+
+      <div class="flow" style="padding: 40px 24px;">
+        <div class="flow-step">1단계: 생산 중심<small>(많이, 빠르게)</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">2단계: 연결 중심<small>(교통·통신·금융)</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">3단계: 초연결<small>(5G·IoT·AI)</small></div>
+      </div>
+
+      <h3 class="slide-h3">🎯 역사가 우리에게 가르쳐주는 4가지</h3>
+      <div class="insight-grid">
+        <div class="insight-card" data-num="01">
+          <h4>인프라가 산업을 견인한다</h4>
+          <p>철도 없는 제조업, 통신망 없는 서비스업은 성장에 한계가 있습니다. 인프라가 먼저고 산업이 따라옵니다.</p>
+        </div>
+        <div class="insight-card" data-num="02">
+          <h4>네트워크는 임계점 이후 폭발한다</h4>
+          <p>초기 투자는 더디고 답답합니다. 하지만 일정 규모를 넘으면 스스로 가속하기 시작합니다.</p>
+        </div>
+        <div class="insight-card" data-num="03">
+          <h4>표준화가 규모를 만든다</h4>
+          <p>철도 궤도 폭, 전화 프로토콜, 인터넷 표준 — 표준 없이는 어떤 인프라도 확장되지 못합니다.</p>
+        </div>
+        <div class="insight-card" data-num="04">
+          <h4>금융은 모든 성장의 엔진</h4>
+          <p>저축 → 투자 → 생산 → 소득의 선순환. 금융이 멈추면 모든 게 멈춥니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 21: 신입사원에게 ============ -->
+  <div class="slide slide-content">
+    <div class="slide-inner">
+      <div class="content-header">
+        <div class="content-meta">CLOSING MESSAGE</div>
+        <h2 class="content-title">신입사원에게 드리는 한 마디</h2>
+      </div>
+
+      <div class="practice-box" style="padding: 50px 50px;">
+        <h3 style="font-size: 26px;">🎓 여러분의 첫걸음</h3>
+        <p style="font-size: 17px;">
+          여러분이 입사한 이 회사도, 여러분이 만드는 모든 제품과 서비스도 — 결국 <strong>"누군가와 누군가를 연결"</strong>하는 일입니다.<br><br>
+          고객과 가치를, 데이터와 의사결정을, 자본과 기회를, 사람과 사람을.<br><br>
+          역사가 보여줬듯, 가장 좋은 연결을 만드는 사람과 회사가 결국 시장의 주인공이 됩니다.
+          여러분의 첫걸음이 그 연결의 한 점이 되기를 응원합니다.
+        </p>
+      </div>
+
+      <div class="key-point" style="margin-top: 30px;">
+        <div class="key-point-label">⭐ 최종 요약</div>
+        <p><strong>연결 인프라(교통·통신·금융)는 성장의 촉매</strong>입니다. 데이터 기반 투자 우선순위 · 표준화 · 금융혁신의 병행이 핵심 시사점이며, 우리 회사도 이 흐름 속에서 함께 성장합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 슬라이드 22: 마무리 ============ -->
+  <div class="slide slide-end">
+    <div class="end-content">
+      <div class="end-icon">🌟</div>
+      <p class="end-quote">"우리는 연결되어 있기에 강하다.<br>인프라는 보이지 않는 곳에서<br>모든 성장의 토대가 된다."</p>
+      <p class="end-thanks">— 신입사원 교육 자료 ·  2026 NEW EMPLOYEE ORIENTATION —</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ 네비게이션 ============ -->
+<div class="nav-controls">
+  <button class="nav-home" onclick="goToSlide(1)" title="처음으로">⌂</button>
+  <button class="nav-btn" id="prevBtn" onclick="prevSlide()">◀ 이전</button>
+  <div class="nav-counter"><span class="current" id="currentNum">1</span> / <span id="totalNum">22</span></div>
+  <button class="nav-btn" id="nextBtn" onclick="nextSlide()">다음 ▶</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  let currentSlide = 1;
+
+  document.getElementById('totalNum').textContent = totalSlides;
+
+  function showSlide(num) {
+    if (num < 1) num = 1;
+    if (num > totalSlides) num = totalSlides;
+    
+    slides.forEach(s => s.classList.remove('active'));
+    slides[num - 1].classList.add('active');
+    
+    // 스크롤을 위로
+    slides[num - 1].scrollTop = 0;
+    
+    currentSlide = num;
+    document.getElementById('currentNum').textContent = num;
+    
+    // 진행률
+    const progress = ((num - 1) / (totalSlides - 1)) * 100;
+    document.getElementById('progressBar').style.width = progress + '%';
+    
+    // 버튼 상태
+    document.getElementById('prevBtn').disabled = (num === 1);
+    document.getElementById('nextBtn').disabled = (num === totalSlides);
+  }
+
+  function nextSlide() {
+    if (currentSlide < totalSlides) showSlide(currentSlide + 1);
+  }
+
+  function prevSlide() {
+    if (currentSlide > 1) showSlide(currentSlide - 1);
+  }
+
+  function goToSlide(num) {
+    showSlide(num);
+  }
+
+  // 키보드 네비게이션
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      prevSlide();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      showSlide(1);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      showSlide(totalSlides);
+    }
+  });
+
+  // 초기 설정
+  showSlide(1);
+</script>
+
+</body>
+</html>
