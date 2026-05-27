@@ -153,17 +153,22 @@
   .prog-empty { text-align:center; padding:32px; color:#bbb; font-size:14px; }
 
   /* 답안 상세 테이블 */
-  .detail-answer-table { width:100%; border-collapse:collapse; font-size:13px; margin-top:16px; }
-  .detail-answer-table th { background:#4527A0; color:#fff; padding:9px 12px; text-align:center; font-weight:600; position:sticky; top:0; }
+  .detail-answer-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:16px; }
+  .detail-answer-table th { background:#4527A0; color:#fff; padding:9px 12px; text-align:center; font-weight:600; position:sticky; top:0; z-index:1; }
   .detail-answer-table th:nth-child(2) { text-align:left; }
+  .detail-answer-table th:last-child   { text-align:left; }
   .detail-answer-table td { padding:9px 12px; border-bottom:1px solid #f0f0f0; vertical-align:middle; text-align:center; }
   .detail-answer-table td:nth-child(2) { text-align:left; font-size:12px; color:#333; }
+  .detail-answer-table td:last-child   { text-align:left; font-size:11px; color:#555; line-height:1.5; }
   .detail-answer-table tr.wrong-row { background:#fff5f5; }
-  .detail-answer-table tr.wrong-row td:nth-child(2) { color:#B71C1C; }
+  .detail-answer-table tr.wrong-row td:nth-child(2) { color:#B71C1C; font-weight:600; }
+  .detail-answer-table tr.wrong-row td:last-child   { color:#B71C1C; }
   .ans-cell { font-size:15px; font-weight:800; display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:6px; }
   .ans-student-ok   { background:#E8F5E9; color:#2E7D32; border:2px solid #A5D6A7; }
   .ans-student-fail { background:#FFEBEE; color:#C62828; border:2px solid #EF9A9A; text-decoration:line-through; }
   .ans-answer       { background:#E3F2FD; color:#1565C0; border:2px solid #90CAF9; }
+  .result-ok   { display:inline-block; padding:3px 10px; border-radius:4px; font-size:12px; font-weight:700; background:#E8F5E9; color:#2E7D32; }
+  .result-fail { display:inline-block; padding:3px 10px; border-radius:4px; font-size:12px; font-weight:700; background:#FFEBEE; color:#C62828; }
 
   .page-footer { text-align: center; padding: 20px 0 32px; font-size: 11px; color: #bbb; }
 
@@ -291,8 +296,72 @@
 <script>
 const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwVv93ic_VlKwnQvm2wUYHtNX44AbYBJCH2XiSJRMiWjoY892NCKftniF5ufUgv2B7s/exec';
 const ADMIN_KEY='flowpay2026';
-const CORRECT=['O','O','X','O','X','O','X','O','X','X','O','O','X','O','X','O','X','O','X','O','O','X','O','X','O','X','O','X','O','X'];
-const QUESTIONS=['핀테크는 금융(Finance)과 기술(Technology)의 합성어다','간편결제 서비스는 핀테크 결제/송금 영역에 포함된다','크라우드펀딩은 자산관리 핀테크로 분류된다','핀테크 기업은 금융위원회의 규제를 받을 수 있다','금융위원회는 금융사 현장 감독·검사를 직접 수행한다','SCF는 공급망 전반의 자금흐름을 최적화하는 금융기법이다','BNPL과 SNPL의 최대 차이는 이용 주체(개인 vs 기업)이다','외상매입금 조기지급 프로그램은 구매자 주도 SCF 방식이다','팩토링의 법적 근거는 어음법상 배서 양도이다','전자어음의 통상 만기는 30일~120일이다','플로우페이는 B2B 거래에 특화된 SNPL 서비스이다','플로우페이의 핵심 고객은 중소 제조·도매 기업이다','플로우페이는 공급업체에 대금을 즉시 지급한다','플로우페이 이용 시 구매기업은 결제를 최대 90일 유예할 수 있다','플로우페이 수익은 구매대행 수수료와 금융 마진으로 구성된다','어음은 일정 금액을 지급하겠다는 유가증권이다','약속어음은 발행인이 제3자에게 지급을 위탁하는 형식이다','전자어음은 종이어음과 달리 분실·위변조 위험이 낮다','어음 할인이란 만기 전 어음을 액면가 그대로 현금화하는 것이다','어음할인 시 할인료가 높을수록 수취 금액이 줄어든다','매출채권은 기업이 상품/서비스 제공 후 받을 권리이다','팩토링은 매출채권의 소유권을 금융기관에 양도한다','외상매출채권담보대출(외담대)은 팩토링과 달리 채권 소유권이 이전된다','팩토링은 매출채권 회수 리스크를 금융기관이 부담할 수 있다','외담대는 담보 제공 방식으로 기존 채권을 활용한다','플로우페이의 수익 구조는 구매대행 수수료와 상품판매 마진이다','금융감독원은 금융위원회의 정책 방향에 따라 감독 업무를 수행한다','P2P 금융은 전통 금융기관 없이 개인 간 자금 중개를 지원한다','리스크 관리 측면에서 팩토링은 불완전한 채권양도가 가능하다','인슈어테크는 보험 분야에 IT 기술을 접목한 핀테크 영역이다'];
+/* ── index.html 문제 세트와 완전 동기화 ── */
+const CORRECT=['O','O','X','O','O','X','O','X','O','X','O','X','X','X','X','O','O','X','O','O','X','O','X','X','O','X','O','O','X','O'];
+const QUESTIONS=[
+  '핀테크(FinTech)는 Financial(금융)과 Technology(기술)의 합성어이다.',
+  '핀테크 산업에서 InsurTech는 보험(Insurance)에 기술을 접목한 서비스를 의미한다.',
+  'BNPL(Buy Now Pay Later)은 B2B 기업 간 거래를 위한 금융 서비스이다.',
+  'SNPL(Supply Now Pay Later)은 B2B 기업 간 구매대행 후불결제 서비스이다.',
+  '공급망금융(SCF)에서 구매기업의 신용을 기반으로 공급업체에 자금이 제공된다.',
+  '오픈뱅킹 정책은 핀테크 기업의 성장을 저해하는 규제이다.',
+  'P2P 금융은 중개기관 없이 개인 간 직접 대출·투자하는 방식이다.',
+  '핀테크 기업은 반드시 금융 면허(은행업 인가)를 취득해야만 서비스를 제공할 수 있다.',
+  '전자어음은 종이 어음과 달리 분실·위조 위험이 낮다.',
+  '전자어음의 통상 만기는 30일에서 120일이다.',
+  '전자어음의 발행·유통을 관리하는 전자어음관리기관은 금융결제원이다.',
+  '어음할인이란 만기가 지난 어음을 현금으로 교환하는 방식이다.',
+  '어음할인율이 높을수록 공급업체가 수령하는 금액이 많아진다.',
+  '전자어음은 분할 양도가 불가능하다.',
+  '팩토링의 법적 근거는 어음법이다.',
+  '상환청구권 無(Non-Recourse) 팩토링에서 채무 불이행 리스크는 금융기관이 부담한다.',
+  '팩토링에서 채권을 매각하면 회계상 해당 채권이 재무상태표에서 제거된다.',
+  '외담대(외상매출채권담보대출)는 채권 소유권을 금융기관에 이전하는 방식이다.',
+  '팩토링과 외담대의 가장 큰 차이는 채권 소유권의 이전 여부이다.',
+  '배서(背書)란 어음·수표의 뒷면에 서명하여 제3자에게 권리를 양도하는 행위이다.',
+  '상환청구권 有(Recourse) 팩토링에서 채무 불이행 시 금융기관은 채무자에게만 청구할 수 있다.',
+  '외담대 방식에서는 채권 소유권이 기업에 남아 있으므로 회계상 부채(차입금)가 계상된다.',
+  '플로우페이는 B2C 개인 소비자를 주요 타깃으로 하는 금융 서비스이다.',
+  '플로우페이 SNPL 구조에서 고객사는 공급사에 직접 즉시 결제한다.',
+  '플로우페이 SNPL 구조에서 공급사는 물품 납품 후 플로우페이로부터 즉시 대금을 수령한다.',
+  '플로우페이의 수익은 구매대행 수수료와 금융 마진으로 구성된다.',
+  '276홀딩스의 플로우페이는 B2B SNPL 카테고리의 공급망금융 서비스이다.',
+  '플로우페이의 리스크 관리 핵심은 고객사 심사 프로세스이다.',
+  '금융위원회는 핀테크 기업에 대한 현장 감독·검사를 담당하는 기관이다.',
+  '혁신금융서비스(규제 샌드박스)는 신규 핀테크 서비스에 일정 기간 규제 특례를 부여한다.'
+];
+const EXPLANATIONS=[
+  '핀테크 = Financial + Technology. IT 기술을 활용한 금융 서비스 혁신 산업 전반을 뜻합니다.',
+  'InsurTech = Insurance + Technology. AI·빅데이터를 활용한 보험 혁신 서비스입니다.',
+  'BNPL은 B2C(기업→소비자) 서비스입니다. B2B에 해당하는 것은 SNPL입니다.',
+  'SNPL = Supply Now Pay Later. 기업이 물품을 먼저 수령하고 나중에 납부하는 B2B 구조입니다.',
+  '신용이 높은 구매기업(바이어)의 신용을 활용해 공급업체가 조기 현금을 수령하는 구조입니다.',
+  '오픈뱅킹은 은행 API를 핀테크 기업에 개방하는 정책으로, 오히려 핀테크 산업 성장을 촉진합니다.',
+  'P2P(Peer-to-Peer) 금융은 플랫폼을 통해 개인이 다른 개인에게 직접 투자·대출하는 방식입니다.',
+  '핀테크 기업은 서비스 유형에 따라 필요한 인허가가 다릅니다. 결제·데이터 등 일부는 은행업 인가 없이도 가능합니다.',
+  '금융결제원을 통해 전자적으로 관리되어 종이 어음의 분실·위조 문제가 해소됩니다.',
+  '전자어음의 최대 만기는 90일입니다. 120일은 잘못된 정보이며, 정확히는 30일~90일 범위입니다.',
+  '금융결제원이 전자어음관리기관으로서 발행·유통·소각을 관리합니다.',
+  '어음할인은 만기 전 어음을 할인하여 현금화하는 방식입니다. 만기 후에는 일반 대금 청구를 합니다.',
+  '할인율이 높을수록 차감액이 커져 수령금액이 줄어듭니다. 수령금액 = 액면가 × (1 - 할인율 × 잔존일수/365)',
+  '전자어음은 분할 양도가 가능합니다. 이는 종이 어음 대비 유연한 특징 중 하나입니다.',
+  '팩토링은 민법의 채권양도 규정을 근거로 합니다. 어음법은 어음할인의 근거입니다.',
+  'Non-Recourse 팩토링은 채무 불이행 시 금융기관이 공급업체에게 상환 청구 불가 — 리스크를 금융기관이 부담합니다.',
+  '팩토링은 채권 매각이므로 재무상태표에서 채권이 제거되고 현금(수취액)이 증가합니다.',
+  '외담대는 채권을 담보로 제공할 뿐 소유권은 기업이 보유합니다. 소유권이 이전되는 것은 팩토링입니다.',
+  '팩토링(매각→소유권 이전) vs 외담대(담보 제공→소유권 유지)가 핵심 차이입니다.',
+  '어음 배서는 뒷면에 서명하여 권리를 제3자에게 넘기는 행위로, 어음할인 시 활용됩니다.',
+  'Recourse 팩토링은 채무 불이행 시 금융기관이 채무자뿐 아니라 매도인(공급업체)에게도 상환을 청구할 수 있습니다.',
+  '외담대는 대출 방식이므로 채권(자산)은 유지되고 차입금(부채)이 증가합니다. 팩토링과 회계 처리가 다릅니다.',
+  '플로우페이는 B2B 서비스로, 소규모~중형 사업자(기업)를 타깃으로 합니다.',
+  'SNPL 구조에서는 플로우페이가 공급사에 먼저 결제하고, 고객사는 일정 기간 후 플로우페이에 납부합니다.',
+  '플로우페이가 공급사에 즉시 결제하는 것이 SNPL의 핵심입니다. 공급사 입장에서 미수금 리스크가 없습니다.',
+  '플로우페이의 수익 구조는 구매대행 수수료와 상품판매 마진입니다. "금융 마진"은 정확한 표현이 아닙니다.',
+  '플로우페이는 B2B SNPL(Supply Now Pay Later) 방식의 공급망금융(SCF) 서비스입니다.',
+  '플로우페이는 고객사 미결제 리스크를 직접 부담하므로 엄격한 고객사 심사가 핵심입니다.',
+  '현장 감독·검사는 금융감독원의 역할입니다. 금융위원회는 정책 총괄 및 혁신금융서비스(샌드박스) 심사를 담당합니다.',
+  '규제 샌드박스는 기존 규제에 막힌 새로운 금융 서비스에 일정 기간 특례를 주어 시장 테스트를 가능하게 하는 제도입니다.'
+];
 let allRows=[],allHeaders=[],allProgress=[],allRequests=[];
 
 function doLogin(){const k=document.getElementById('admin-key-input').value.trim();if(k!==ADMIN_KEY){document.getElementById('login-error').style.display='block';document.getElementById('admin-key-input').classList.add('error');document.getElementById('admin-key-input').value='';return;}document.getElementById('login-screen').style.display='none';document.getElementById('dashboard').style.display='block';loadData();}
@@ -336,12 +405,16 @@ function showDetail(idx){
     const ans=r[i+2]||'—', ok=ans===CORRECT[i];
     const rowCls=ok?'':'wrong-row';
     const studentCls=ok?'ans-student-ok':'ans-student-fail';
+    const resultBadge=ok
+      ?'<span class="result-ok">맞음</span>'
+      :'<span class="result-fail">틀림</span>';
     return`<tr class="${rowCls}">
-      <td style="color:#888;font-weight:600;text-align:center">Q${i+1}</td>
-      <td style="font-size:12px;color:${ok?'#333':'#B71C1C'}">${QUESTIONS[i]}</td>
+      <td style="color:#888;font-weight:600;text-align:center;white-space:nowrap">Q${i+1}</td>
+      <td>${QUESTIONS[i]}</td>
       <td style="text-align:center"><span class="ans-cell ${studentCls}">${ans}</span></td>
       <td style="text-align:center"><span class="ans-cell ans-answer">${CORRECT[i]}</span></td>
-      <td style="text-align:center;font-size:18px">${ok?'✅':'❌'}</td>
+      <td style="text-align:center">${resultBadge}</td>
+      <td>${EXPLANATIONS[i]}</td>
     </tr>`;
   }).join('');
   document.getElementById('modal-body').innerHTML=`
@@ -357,11 +430,12 @@ function showDetail(idx){
     </div>
     <table class="detail-answer-table">
       <thead><tr>
-        <th style="width:48px">#</th>
+        <th style="width:44px">#</th>
         <th>문항</th>
-        <th style="width:72px">응시 답안</th>
-        <th style="width:72px">정 답</th>
-        <th style="width:52px">결과</th>
+        <th style="width:68px">응시 답안</th>
+        <th style="width:56px">정 답</th>
+        <th style="width:60px">결과</th>
+        <th>해설</th>
       </tr></thead>
       <tbody>${tRows}</tbody>
     </table>`;
