@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이해도 테스트 | 교통·통신·금융의 발달과 경제성장</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2847;
+    --navy-deep: #0f1a35;
+    --blue: #2563eb;
+    --blue-soft: #dbeafe;
+    --accent: #f59e0b;
+    --green: #10b981;
+    --green-soft: #d1fae5;
+    --red: #ef4444;
+    --red-soft: #fee2e2;
+    --cream: #faf7f2;
+    --paper: #f5f1ea;
+    --ink: #1c1917;
+    --ink-soft: #44403c;
+    --muted: #78716c;
+    --line: #e7e2d8;
+    --gold: #b8924a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Pretendard', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  /* ============ 헤더 ============ */
+  .header {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%);
+    color: var(--cream);
+    padding: 80px 60px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .header-content {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .header-tag {
+    font-size: 13px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .header h1 {
+    font-family: 'Gowun Batang', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .header p {
+    font-size: 18px;
+    color: rgba(250, 247, 242, 0.7);
+    margin-bottom: 30px;
+  }
+
+  .header-info {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .info-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(250, 247, 242, 0.5);
+  }
+
+  .info-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--cream);
+  }
+
+  /* ============ 컨테이너 ============ */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px;
+  }
+
+  /* ============ 안내 박스 ============ */
+  .guide {
+    background: white;
+    border-left: 5px solid var(--accent);
+    padding: 28px 32px;
+    margin-bottom: 50px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .guide h3 {
+    color: var(--navy);
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .guide ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .guide li {
+    padding: 4px 0;
+    color: var(--ink-soft);
+    font-size: 15px;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .guide li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ============ 진행 표시 ============ */
+  .progress-bar {
+    background: var(--line);
+    height: 6px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--accent));
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 10px;
+  }
+
+  /* ============ 문제 카드 ============ */
+  .question-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 40px;
+    margin-bottom: 32px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .question-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+
+  .q-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .q-num {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .q-num-badge {
+    background: var(--navy);
+    color: var(--cream);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Gowun Batang', serif;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .q-label {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .q-part {
+    font-size: 11px;
+    padding: 4px 10px;
+    background: var(--blue-soft);
+    color: var(--blue);
+    border-radius: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .q-text {
+    font-size: 18px;
+    color: var(--navy);
+    font-weight: 600;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  .q-text .highlight {
+    background: linear-gradient(180deg, transparent 60%, rgba(245, 158, 11, 0.25) 60%);
+    padding: 0 2px;
+  }
+
+  /* ============ 보기 ============ */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--paper);
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .option:hover {
+    background: white;
+    border-color: var(--blue);
+    transform: translateX(4px);
+  }
+
+  .option.selected {
+    background: white;
+    border-color: var(--blue);
+  }
+
+  .option.correct {
+    background: var(--green-soft);
+    border-color: var(--green);
+  }
+
+  .option.incorrect {
+    background: var(--red-soft);
+    border-color: var(--red);
+  }
+
+  .option-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  .option.selected .option-num {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: white;
+  }
+
+  .option.correct .option-num {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+
+  .option.incorrect .option-num {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+
+  .option-text {
+    flex: 1;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* ============ 해설 (숨김 → 채점 후 표시) ============ */
+  .explanation {
+    margin-top: 20px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #fef3e7, #fdf5e6);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+    color: var(--ink-soft);
+    display: none;
+    line-height: 1.7;
+  }
+
+  .explanation.show {
+    display: block;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .explanation-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .explanation strong {
+    color: var(--navy);
+  }
+
+  /* ============ 채점 버튼 ============ */
+  .submit-section {
+    text-align: center;
+    padding: 40px 0;
+    margin-top: 20px;
+  }
+
+  .btn-submit {
+    background: var(--navy);
+    color: var(--cream);
+    border: none;
+    padding: 18px 48px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Pretendard', sans-serif;
+    transition: all 0.2s ease;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-submit:hover {
+    background: var(--blue);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+  }
+
+  .btn-reset {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Pretendard', sans-serif;
+    margin-left: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: var(--paper);
+    border-color: var(--muted);
+  }
+
+  /* ============ 결과 패널 ============ */
+  .result-panel {
+    background: linear-gradient(135deg, var(--navy-deep), var(--navy));
+    color: var(--cream);
+    padding: 50px;
+    border-radius: 8px;
+    margin: 40px 0;
+    text-align: center;
+    display: none;
+  }
+
+  .result-panel.show {
+    display: block;
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-score {
+    font-family: 'Gowun Batang', serif;
+    font-size: 72px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .result-score .total {
+    color: rgba(250, 247, 242, 0.5);
+    font-size: 36px;
+  }
+
+  .result-label {
+    font-size: 14px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(250, 247, 242, 0.6);
+    margin-bottom: 30px;
+  }
+
+  .result-message {
+    font-size: 18px;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .result-sub {
+    font-size: 14px;
+    color: rgba(250, 247, 242, 0.6);
+  }
+
+  /* ============ 답안지 (인쇄용) ============ */
+  .answer-key {
+    background: white;
+    border: 1px solid var(--line);
+    padding: 40px;
+    margin-top: 60px;
+    border-radius: 8px;
+  }
+
+  .answer-key h3 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 24px;
+    color: var(--navy);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .answer-key-sub {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 30px;
+  }
+
+  .answer-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+
+  .answer-item {
+    background: var(--paper);
+    padding: 14px;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .answer-num {
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 4px;
+    letter-spacing: 0.1em;
+  }
+
+  .answer-correct {
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  /* ============ 반응형 ============ */
+  @media (max-width: 768px) {
+    .header, .container { padding: 40px 24px; }
+    .question-card { padding: 28px 24px; }
+    .answer-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-content">
+    <div class="header-tag">COMPREHENSION TEST · 신입사원 평가</div>
+    <h1>이해도 테스트</h1>
+    <p>교통·통신·금융의 발달과 경제성장 — 학습 내용을 점검해봅시다</p>
+    <div class="header-info">
+      <div class="info-item">
+        <div class="info-label">문항 수</div>
+        <div class="info-value">10문제</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">유형</div>
+        <div class="info-value">4지선다</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">권장 시간</div>
+        <div class="info-value">15분</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">합격 기준</div>
+        <div class="info-value">7문항 이상 (70%)</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="guide">
+    <h3>📝 테스트 안내</h3>
+    <ul>
+      <li>각 문제에서 가장 적절한 답 1개를 선택하세요</li>
+      <li>모든 문제를 푼 후 하단의 "채점하기" 버튼을 누르면 결과가 나옵니다</li>
+      <li>틀린 문제는 해설과 함께 표시됩니다</li>
+      <li>다시 풀고 싶다면 "다시 풀기" 버튼을 활용하세요</li>
+    </ul>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress"></div>
+  </div>
+
+  <!-- ============ 문제 1 ============ -->
+  <div class="question-card" data-q="1" data-answer="2">
+    <div class="q-header">
+      <div class="q-num">
+        <div class="q-num-badge">1</div>
+        <div class="q-label">Question 01</div>
+      </div>
+      <div class="q-part">PART 1 · 금융</div>
+    </div>
+    <div class="q-text">세계 최초의 중앙은행으로 알려진 <span class="highlight">잉글랜드 은행(Bank of England)</span>은 언제 설립되었으며, 그것이 가지는 역사적 의미는 무엇입니까?</div>
+    <div class="options">
+      <div class="option" data-num="1"><div class="option-num">1</div><div class="option-text">1612년 — 식민지 무역 자본 조달을 위해 설립</div></div>
+      <div class="option" data-num="2"><div class="option-num">2</div><div class="option-text">1694년 — 국가 차원의 화폐·신용 관리 시스템의 시작</div></div>
+      <div class="option" data-num="3"><div class="option-num">3</div><div class="option-text">1776년 — 미국 독립과 함께 글로벌 금융 패권 형성</div></div>
+      <div class="option" data-num="4"><div class="option-num">4</div><div class="option-text">1825년 — 철도 건설 자금 조달용 특수은행으로 출범</div></div>
+    </div>
+    <div class="explanation">
+      <div class="explanation-label">💡 해설</div>
+      잉글랜드 은행은 <strong>1694년 영국에서 설립된 세계 최초의 중앙은행</strong>입니다. 이는 단순한 은행의 등장이 아니라 국가 차원의 통화·신용 관리 시스템이 시작되었다는 의미를 가지며, 이후 산업혁명기 SOC(도로·운하·철도) 자금조달의 토대가 되었습니다.
+    </div>
+  </div>
+
+  <!-- ============ 문제 2 ============ -->
+  <div class="question-card" data-q="2" data-answer="4">
+    <div class="q-header">
+      <div class="q-num">
+        <div class="q-num-badge">2</div>
+        <div class="q-label">Question 02</div>
+      </div>
+      <div class="q-part">PART 1 · 금융</div>
+    </div>
+    <div class="q-text">자료에서 제시된 <span class="highlight">금융의 4가지 경제적 역할</span>에 포함되지 <strong>않는</strong> 것은?</div>
+    <div class="options">
+      <div class="option" data-num="1"><div class="option-num">1</div><div class="option-text">자본 집중 — 소액 저축을 대규모 투자로 전환</div></div>
+      <div class="option" data-num="2"><div class="option-num">2</div><div class="option-text">위험 분산 — 주식·채권을 통한 리스크의 사회적 배분</div></div>
+      <div class="option" data-num="3"><div class="option-num">3</div><div class="option-text">유동성 공급 — 단·장기 자금의 효율적 배분</div></div>
+      <div class="option" data-num="4"><div class="option-num">4</div><div class="option-text">물가 통제 — 인플레이션 억제와 환율 안정</div></div>
+    </div>
+    <div class="explanation">
+      <div class="explanation-label">💡 해설</div>
+      자료에서 제시한 금융의 4가지 역할은 <strong>① 자본 집중 ② 위험 분산 ③ 유동성 공급 ④ 가격 발견·지배구조 개선(시장 규율)</strong>입니다. "물가 통제"는 중앙은행의 통화정책 영역으로, 본 자료의 금융 시스템 역할 분류에는 해당하지 않습니다.
+    </div>
+  </div>
+
+  <!-- ============ 문제 3 ============ -->
+  <div class="question-card" data-q="3" data-answer="3">
+    <div class="q-header">
+      <div class="q-num">
+        <div class="q-num-badge">3</div>
+        <div class="q-label">Question 03</div>
+      </div>
+      <div class="q-part">PART 2 · 교통</div>
+    </div>
+    <div class="q-text">자료에 따르면 미국에서 <span class="highlight">철도 도입 후 운송비용은 마차/운하 대비 약 몇 % 감소</span>했습니까?</div>
+    <div class="options">
+      <div class="option" data-num="1"><div class="option-num">1</div><div class="option-text">약 20%</div></div>
+      <div class="option" data-num="2"><div class="option-num">2</div><div class="option-text">약 50%</div></div>
+      <div class="option" data-num="3"><div class="option-num">3</div><div class="option-text">약 80%</div></div>
+      <div class="option" data-num="4"><div class="option-num">4</div><div class="option-text">약 95%</div></div>
+    </div>
+    <div class="explanation">
+      <div class="explanation-label">💡 해설</div>
+      자료에 따르면 미국 철도 도입 후 운송비용은 <strong>약 80% 감소</strong>했으며, 기존 운송 방식 대비 수송 속도는 <strong>10배 이상 증가</strong>했습니다. 이는 "대량운송 → 단가하락 → 가격인하 → 수요확대"의 선순환을 만들었습니다.
+    </div>
+  </div>
+
+  <!-- ============ 문제 4 ============ -->
+  <div class="question-card" data-q="4" data-answer="2">
+    <div class="q-header">
+      <div class="q-num">
+        <div class="q-num-badge">4</div>
+        <div class="q-label">Question 04</div>
+      </div>
+      <div class="q-part">PART 2 · 교통</div>
+    </div>
+    <div class="q-text">철도의 발달이 가져온 사회적 파급효과 중, <span class="highlight">1840년대 영국에서 도입된 시스템</span>으로 옳은 것은?</div>
+    <div class="options">
+      <div class="option" data-num="1"><div class="option-num">1</div><div class="option-text">국가 차원의 보편적 우편 시스템</div></div>
+      <div class="option" data-num="2"><div class="option-num">2</div><div class="option-text">표준시(Standard Time) — 기차 시간표 통일에서 비롯</div></div>
+      <div class="option" data-num="3"><div class="option-num">3</div><div class="option-text">전국 단위 의무교육 제도</div></div>
+      <div class="option" data-num="4"><div class="option-num">4</div><div class="option-text">국가 통계청 설립과 인구 센서스</div></div>
+    </div>
+    <div class="explanation">
+      <div class="explanation-label">💡 해설</div>
+      <strong>1840년대 철도 시간표를 맞추기 위해 표준시(Standard Time)가 도입</strong>되었습니다. 이전에는 각 지역마다 해의 위치에 따라 시간이 달랐지만, 기차 운행을 위해 전국의 시간이 통일된 것입니다. 인프라가 사회 전체의 작동 방식을 바꾼 대표적 사례입니다.
+    </div>
+  </div>
+
+  <!-- ============ 문제 5 ============ -->
+  <div class="question-card" data-q="5" data-answer="1">
+    <div class="q-header">
+      <div class="q-num">
+        <div class="q-num-badge">5</div>
+        <div class="q-label">Question 05</div>
+      </div>
+      <div class="q-part">PART 3 · 통신</div>
+    </div>
+    <div class="q-text">다음 통신 기술의 발명 순서가 <span class="highlight">시간순(과거 → 현재)</span>으로 올바르게 나열된 것은?</div>
+    <div class="options">
+      <div class="option" data-num="1"><div class="option-num">1</div><div class="option-text">전신(1837) → 전화(1876) → 라디오 방송(1920년대)</div></div>
+      <div class="option" data-num="2"><div class="option-num">2</div><div class="option-text">전화(1837) → 전신(1876) → 라디오 방송(1920년대)</div></div>
+      <div class="option" data-num="3"><div class="option-num">3</div><div class="option-text">라디오(1837) → 전화(1876) → 전신(1920년대)</div></div>
+      <div class="option" data-num="4"><div class="option-num">4</div><div class="option-text">전신(1876) → 전화(1837) → 라디오 방송(1920년대)</div></div>
+    </div>
+    <div class="explanation">
+      <div class="explanation-label">💡 해설</div>
+      통신 기술 발달의 순서는 <strong>전신(1837, 사무엘 모스) → 전화(1876, 알렉산더 그레이엄 벨) → 라디오 방송(1920년대)</strong>입니다. 전신은 장거리 정보 전송, 전화는 실시간 음성 소통, 라디오는 대중을 향한 일방향 방송으로 단계적으로 진화했습니다.
+    </div>
+  </div>
+
+  <!-- ============ 문제 6 ============ -->
+  <div class="question-card" data-q="6" data-answer="3">
+    <div class="q-header">
+      <div class="q-num">
+        <div class="q-num-badge">6</div>
+        <div class="q-label">Question 06</div>
+      </div>
+      <div class="q-part">PART 3 · 통신</div>
+    </div>
+    <div class="q-text">통신 발달이 경제에 미친 영향을 설명한 다음 중, <span class="highlight">자료에서 가장 강조한 핵심 메커니즘</span>은?</div>
+    <div class="options">
+      <div class="option" data-num="1"><div class="option-num">1</div><div class="option-text">고용 증가를 통한 GDP 직접 상승</div></div>
+      <div class="option" data-num="2"><div class="option-num">2</div><div class="option-text">금리 인하로 인한 기업 자본조달 비용 감소</div></div>
+      <div class="option" data-num="3"><div class="option-num">3</div><div class="option-text">정보 비대칭 축소 → 거래비용 절감 → 공급망 조정 속도 증가</div></div>
+      <div class="option" data-num="4"><div class="option-num">4</div><div class="option-text">관세 인하로 인한 국제무역 활성화</div></div>
+    </div>
+    <div class="explanation">
+      <div class="explanation-label">💡 해설</div>
+      자료는 통신 발달의 경제적 효과로 <strong>① 정보 비대칭 축소(가격발견·계약 효율성↑) ② 거래비용 절감(이동·대면 의존도↓ → 생산성↑) ③ 공급망 조정 속도↑(재고·리드타임 감소)</strong>를 핵심으로 제시했습니다. 즉, 통신의 본질적 가치는 "정보 흐름의 개선"에 있습니다.
+    </div>
+  </div>
+
+  <!-- ============ 문제 7 ============ -->
+  <div class="question-card" data-q="7" data-answer="2">
+    <div class="q-header">
+      <div class="q-num">
+        <div class="q-num-badge">7</div>
+        <div class="q-label">Question 07</div>
+      </div>
+      <div class="q-part">PART 4 · 디지털</div>
+    </div>
+    <div class="q-text">자료에 따르면 <span class="highlight">5G 기술의 특성</span>으로 옳지 <strong>않은</strong> 것은?</div>
+    <div class="options">
+      <div class="option" data-num="1"><div class="option-num">1</div><div class="option-text">4G 대비 약 20배 빠른 데이터 전송 속도</div></div>
+      <div class="option" data-num="2"><div class="option-num">2</div><div class="option-text">약 100ms 수준의 평균 반응 지연 속도</div></div>
+      <div class="option" data-num="3"><div class="option-num">3</div><div class="option-text">1㎢ 당 약 100만 대의 동시 접속 디바이스 지원</div></div>
+      <div class="option" data-num="4"><div class="option-num">4</div><div class="option-text">2030년 한국 5G 기반 사회경제적 가치 약 47조원 추정</div></div>
+    </div>
+    <div class="explanation">
+      <div class="explanation-label">💡 해설</div>
+      5G의 반응 지연은 <strong>1ms(밀리초) 이하의 초저지연</strong>이 핵심 특성입니다. 100ms는 4G 수준이며, 5G는 이보다 100배 이상 빠른 반응 속도로 자율주행·원격수술 등 실시간 상호작용을 가능하게 합니다.
+    </div>
+  </div>
+
+  <!-- ============ 문제 8 ============ -->
+  <div class="question-card" data-q="8" data-answer="3">
+    <div class="q-header">
+      <div class="q-num">
+        <div class="q-num-badge">8</div>
+        <div class="q-label">Question 08</div>
+      </div>
+      <div class="q-part">PART 5 · 국가별 비교</div>
+    </div>
+    <div class="q-text">다음 중 <span class="highlight">독일의 산업화 특징</span>으로 가장 적절하게 설명한 것은?</div>
+    <div class="options">
+      <div class="option" data-num="1"><div class="option-num">1</div><div class="option-text">민간 주도 + 런던 중심 글로벌 해운 네트워크 구축</div></div>
+      <div class="option" data-num="2"><div class="option-num">2</div><div class="option-text">벤처 캐피털 중심 금융 + 대륙횡단 인프라 우선 투자</div></div>
+      <div class="option" data-num="3"><div class="option-num">3</div><div class="option-text">기술교육 중심 + 유니버설뱅크(은행-산업 연계) + 국가 주도 표준화</div></div>
+      <div class="option" data-num="4"><div class="option-num">4</div><div class="option-text">정부 계획·재벌 중심 + 서구 기술의 선별적 수용</div></div>
+    </div>
+    <div class="explanation">
+      <div class="explanation-label">💡 해설</div>
+      ① 영국 / ② 미국 / ③ <strong>독일</strong> / ④ 일본에 해당합니다. 독일은 <strong>1850~1914년 화학·전기·기계 산업을 중심으로, 기술교육과 유니버설뱅크(은행-산업 긴밀 협력), 국가 주도 표준화</strong>를 통해 산업화를 달성했습니다.
+    </div>
+  </div>
+
+  <!-- ============ 문제 9 ============ -->
+  <div class="question-card" data-q="9" data-answer="2">
+    <div class="q-header">
+      <div class="q-num">
+        <div class="q-num-badge">9</div>
+        <div class="q-label">Question 09</div>
+      </div>
+      <div class="q-part">PART 6 · 경제이론</div>
+    </div>
+    <div class="q-text"><span class="highlight">메트칼프의 법칙(Metcalfe's Law)</span>을 가장 정확하게 설명한 것은?</div>
+    <div class="options">
+      <div class="option" data-num="1"><div class="option-num">1</div><div class="option-text">네트워크 가치는 사용자 수에 정비례(선형)하여 증가한다 (V ∝ n)</div></div>
+      <div class="option" data-num="2"><div class="option-num">2</div><div class="option-text">네트워크 가치는 사용자 수의 제곱에 비례하여 증가한다 (V ∝ n²)</div></div>
+      <div class="option" data-num="3"><div class="option-num">3</div><div class="option-text">네트워크 가치는 사용자 수의 로그값에 비례한다 (V ∝ log n)</div></div>
+      <div class="option" data-num="4"><div class="option-num">4</div><div class="option-text">네트워크 가치는 일정 수준에서 포화되어 더 이상 증가하지 않는다</div></div>
+    </div>
+    <div class="explanation">
+      <div class="explanation-label">💡 해설</div>
+      메트칼프의 법칙은 <strong>네트워크의 가치(V)가 사용자 수(n)의 제곱에 비례한다(V ∝ n²)</strong>는 이론입니다. 이는 선점 효과, 자연독점 경향, 승자독식 현상을 설명하는 핵심 원리로 전화망·SNS·결제 네트워크·메신저 플랫폼에 적용됩니다.
+    </div>
+  </div>
+
+  <!-- ============ 문제 10 ============ -->
+  <div class="question-card" data-q="10" data-answer="4">
+    <div class="q-header">
+      <div class="q-num">
+        <div class="q-num-badge">10</div>
+        <div class="q-label">Question 10</div>
+      </div>
+      <div class="q-part">PART 7 · 핵심 통찰</div>
+    </div>
+    <div class="q-text">자료가 제시한 <span class="highlight">"역사적 교훈 4가지"</span>에 해당하지 <strong>않는</strong> 것은?</div>
+    <div class="options">
+      <div class="option" data-num="1"><div class="option-num">1</div><div class="option-text">인프라 선행이 산업 성장을 견인한다</div></div>
+      <div class="option" data-num="2"><div class="option-num">2</div><div class="option-text">네트워크 임계점 이후는 기하급수 성장이 이뤄진다</div></div>
+      <div class="option" data-num="3"><div class="option-num">3</div><div class="option-text">표준화가 규모를 만든다</div></div>
+      <div class="option" data-num="4"><div class="option-num">4</div><div class="option-text">정부 규제 완화가 혁신의 핵심이다</div></div>
+    </div>
+    <div class="explanation">
+      <div class="explanation-label">💡 해설</div>
+      자료가 제시한 역사적 교훈 4가지는 <strong>① 인프라 선행이 산업 성장을 견인 ② 네트워크 임계점 이후 기하급수 성장 ③ 표준화가 규모를 만든다 ④ 금융은 성장의 엔진(저축→투자→생산→소득의 선순환)</strong>입니다. "정부 규제 완화"는 별도의 정책 담론으로, 본 자료의 4대 교훈에는 포함되지 않습니다.
+    </div>
+  </div>
+
+  <!-- ============ 채점 버튼 ============ -->
+  <div class="submit-section">
+    <button class="btn-submit" onclick="gradeTest()">📊 채점하기</button>
+    <button class="btn-reset" onclick="resetTest()">🔄 다시 풀기</button>
+  </div>
+
+  <!-- ============ 결과 패널 ============ -->
+  <div class="result-panel" id="result">
+    <div class="result-label">YOUR SCORE</div>
+    <div class="result-score"><span id="score">0</span><span class="total"> / 10</span></div>
+    <div class="result-message" id="resultMessage">결과를 확인하세요</div>
+    <div class="result-sub" id="resultSub">아래 해설을 참고하여 학습을 보완하세요</div>
+  </div>
+
+  <!-- ============ 답안지 (강사용) ============ -->
+  <div class="answer-key">
+    <h3>📋 정답 요약 (강사용)</h3>
+    <div class="answer-key-sub">신입사원 교육 평가 답안</div>
+    <div class="answer-grid">
+      <div class="answer-item"><div class="answer-num">Q1</div><div class="answer-correct">②</div></div>
+      <div class="answer-item"><div class="answer-num">Q2</div><div class="answer-correct">④</div></div>
+      <div class="answer-item"><div class="answer-num">Q3</div><div class="answer-correct">③</div></div>
+      <div class="answer-item"><div class="answer-num">Q4</div><div class="answer-correct">②</div></div>
+      <div class="answer-item"><div class="answer-num">Q5</div><div class="answer-correct">①</div></div>
+      <div class="answer-item"><div class="answer-num">Q6</div><div class="answer-correct">③</div></div>
+      <div class="answer-item"><div class="answer-num">Q7</div><div class="answer-correct">②</div></div>
+      <div class="answer-item"><div class="answer-num">Q8</div><div class="answer-correct">③</div></div>
+      <div class="answer-item"><div class="answer-num">Q9</div><div class="answer-correct">②</div></div>
+      <div class="answer-item"><div class="answer-num">Q10</div><div class="answer-correct">④</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // 선택 처리
+  const userAnswers = {};
+  let isGraded = false;
+
+  document.querySelectorAll('.option').forEach(option => {
+    option.addEventListener('click', function() {
+      if (isGraded) return;
+      const card = this.closest('.question-card');
+      const qNum = card.dataset.q;
+      card.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      this.classList.add('selected');
+      userAnswers[qNum] = this.dataset.num;
+      updateProgress();
+    });
+  });
+
+  function updateProgress() {
+    const total = 10;
+    const answered = Object.keys(userAnswers).length;
+    const percent = (answered / total) * 100;
+    document.getElementById('progress').style.width = percent + '%';
+  }
+
+  function gradeTest() {
+    if (Object.keys(userAnswers).length < 10) {
+      alert('모든 문제에 답을 선택해주세요. (' + Object.keys(userAnswers).length + '/10)');
+      return;
+    }
+    isGraded = true;
+    let score = 0;
+    
+    document.querySelectorAll('.question-card').forEach(card => {
+      const qNum = card.dataset.q;
+      const correctAnswer = card.dataset.answer;
+      const userAnswer = userAnswers[qNum];
+      
+      card.querySelectorAll('.option').forEach(option => {
+        option.classList.remove('selected');
+        const optNum = option.dataset.num;
+        if (optNum === correctAnswer) {
+          option.classList.add('correct');
+        } else if (optNum === userAnswer && userAnswer !== correctAnswer) {
+          option.classList.add('incorrect');
+        }
+      });
+      
+      card.querySelector('.explanation').classList.add('show');
+      if (userAnswer === correctAnswer) score++;
+    });
+    
+    document.getElementById('score').textContent = score;
+    const resultPanel = document.getElementById('result');
+    resultPanel.classList.add('show');
+    
+    let message, sub;
+    if (score === 10) {
+      message = '🏆 완벽합니다! 모든 내용을 정확히 이해했습니다.';
+      sub = '여러분은 이제 비즈니스의 큰 그림을 명확히 그릴 수 있습니다.';
+    } else if (score >= 7) {
+      message = '✨ 합격! 핵심 내용을 잘 이해했습니다.';
+      sub = '틀린 문제의 해설을 한 번 더 확인해보세요.';
+    } else if (score >= 5) {
+      message = '📚 조금 더 학습이 필요합니다.';
+      sub = '교육 자료를 다시 한 번 복습한 후 재도전을 권장합니다.';
+    } else {
+      message = '⚠️ 재학습이 필요합니다.';
+      sub = '교육 자료를 처음부터 차근차근 다시 읽어보시기 바랍니다.';
+    }
+    
+    document.getElementById('resultMessage').textContent = message;
+    document.getElementById('resultSub').textContent = sub;
+    
+    resultPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function resetTest() {
+    isGraded = false;
+    for (let k in userAnswers) delete userAnswers[k];
+    document.querySelectorAll('.option').forEach(o => {
+      o.classList.remove('selected', 'correct', 'incorrect');
+    });
+    document.querySelectorAll('.explanation').forEach(e => e.classList.remove('show'));
+    document.getElementById('result').classList.remove('show');
+    document.getElementById('progress').style.width = '0%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
