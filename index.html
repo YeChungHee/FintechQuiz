@@ -533,7 +533,7 @@ function submitQuiz(){
 
   // 점수·등급 계산 (Sheets 저장용)
   var pct   = Math.round(correct / Q.length * 100);
-  var grade = pct>=90 ? 'A등급·탁월' : pct>=75 ? 'B등급·우수' : pct>=60 ? 'C등급·보통' : 'D등급·복습필요';
+  var grade = correct>=28 ? 'A등급·탁월' : correct>=25 ? 'B등급·우수' : correct>=21 ? 'C등급·보통' : 'D등급·복습필요';
 
   // 결과 페이지 구성
   buildResult(name, correct);
@@ -556,7 +556,7 @@ function buildResult(name, correct){
 
   // 점수 원형 게이지 (CSS conic-gradient)
   var circle = document.getElementById('scoreCircle');
-  var col = pct>=90?'#1e7e34': pct>=75?'#1565c0': pct>=60?'#f57f17':'#c62828';
+  var col = correct>=28?'#1e7e34': correct>=25?'#1565c0': correct>=21?'#f57f17':'#c62828';
   circle.style.background = 'conic-gradient('+col+' '+pct+'%, #e8e0f7 0)';
 
   document.getElementById('scoreNum').textContent = correct;
@@ -564,13 +564,13 @@ function buildResult(name, correct){
   document.getElementById('scorePct').textContent = pct + '%';
 
   var grade, gClass, comment;
-  if(pct>=90){
+  if(correct>=28){
     grade='A등급 · 탁월'; gClass='grade-A';
     comment='훌륭합니다! 핀테크 도메인 핵심 개념을 완벽히 이해했습니다. 내일 플로우페이 심화 학습이 기대됩니다.';
-  } else if(pct>=75){
+  } else if(correct>=25){
     grade='B등급 · 우수'; gClass='grade-B';
     comment='잘했습니다! 대부분의 개념을 이해했습니다. 틀린 문항을 중심으로 교육자료를 한 번 더 확인해 보세요.';
-  } else if(pct>=60){
+  } else if(correct>=21){
     grade='C등급 · 보통'; gClass='grade-C';
     comment='기초 개념은 잡혔습니다. B2B 금융 서비스 용어(팩토링·외담대·어음할인) 파트를 추가 복습하세요.';
   } else {
