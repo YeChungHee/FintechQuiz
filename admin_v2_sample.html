@@ -1,0 +1,2464 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관리자 대시보드 v2 — 276홀딩스</title>
+<style>
+  :root{
+    --primary:#673AB7;--primary-dark:#4527A0;--primary-light:#EDE7F6;
+    --success:#2E7D32;--danger:#C62828;--warn:#E65100;--info:#1565C0;
+    --text:#212121;--text-sec:#616161;--border:#E0E0E0;--bg:#F5F5F5;--white:#FFFFFF;
+    --grade-A:#1565C0;--grade-B:#2E7D32;--grade-C:#E65100;--grade-D:#C62828;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',-apple-system,sans-serif;
+    background:var(--bg);color:var(--text);font-size:13px;}
+
+  /* ── SVG ── */
+  .ic{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .ic svg{display:block;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ── TOP BAR ── */
+  .topbar{background:var(--primary-dark);color:#fff;height:56px;padding:0 24px;
+    display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+  .topbar-left{display:flex;align-items:center;gap:10px;}
+  .topbar-logo{font-size:17px;font-weight:700;display:flex;align-items:center;gap:7px;}
+  .ver-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+    padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;}
+  .topbar-right{display:flex;align-items:center;gap:8px;}
+  .tb-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;
+    padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;
+    display:flex;align-items:center;gap:4px;font-family:inherit;}
+  .tb-btn:hover{background:rgba(255,255,255,.2);}
+
+  /* ── NAV TABS (horizontal) ── */
+  .nav-tabs{background:var(--white);border-bottom:2px solid var(--border);
+    display:flex;padding:0 20px;gap:2px;overflow-x:auto;position:sticky;top:56px;z-index:100;}
+  .nav-tab{padding:12px 16px;font-size:13px;font-weight:500;color:var(--text-sec);
+    cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;
+    white-space:nowrap;transition:.2s;display:flex;align-items:center;gap:6px;user-select:none;}
+  .nav-tab:hover{color:var(--primary);}
+  .nav-tab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:700;}
+  .nav-tab .badge{background:var(--primary-light);color:var(--primary);
+    font-size:10px;padding:1px 6px;border-radius:8px;font-weight:700;}
+  .nav-tab.new-tab .badge{background:#FFF3E0;color:var(--warn);}
+
+  /* ── CONTENT ── */
+  .content{max-width:1200px;margin:0 auto;padding:24px 20px;}
+  .tab-pane{display:none;} .tab-pane.active{display:block;}
+
+  /* ── STAT CARDS ── */
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px;}
+  .stat-card{background:var(--white);border-radius:10px;padding:16px;border:1px solid var(--border);}
+  .stat-card .sc-label{font-size:11px;color:var(--text-sec);margin-bottom:6px;
+    display:flex;align-items:center;gap:5px;}
+  .stat-card .sc-val{font-size:24px;font-weight:700;color:var(--text);}
+  .stat-card .sc-sub{font-size:11px;color:var(--text-sec);margin-top:3px;}
+
+  /* ── SECTION HEADER ── */
+  .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .sec-title{font-size:15px;font-weight:700;color:var(--primary-dark);
+    display:flex;align-items:center;gap:7px;}
+  .sec-actions{display:flex;gap:8px;}
+
+  /* ── TABLE ── */
+  .tbl-wrap{background:var(--white);border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:20px;}
+  .tbl{width:100%;border-collapse:collapse;}
+  .tbl th{background:var(--primary-dark);color:#fff;padding:10px 12px;text-align:left;
+    font-size:12px;font-weight:600;}
+  .tbl td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle;}
+  .tbl tr:last-child td{border-bottom:none;}
+  .tbl tr:hover td{background:#FAFAFA;}
+
+  /* ── BADGES ── */
+  .badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;
+    border-radius:10px;font-size:11px;font-weight:600;}
+  .badge-green{background:#E8F5E9;color:var(--success);}
+  .badge-orange{background:#FFF3E0;color:var(--warn);}
+  .badge-blue{background:#E3F2FD;color:var(--info);}
+  .badge-red{background:#FFEBEE;color:var(--danger);}
+  .badge-purple{background:var(--primary-light);color:var(--primary);}
+  .badge-gray{background:#F5F5F5;color:#757575;}
+
+  /* ── BUTTONS ── */
+  .btn{padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;
+    cursor:pointer;border:none;font-family:inherit;display:inline-flex;align-items:center;gap:4px;transition:.15s;}
+  .btn-primary{background:var(--primary);color:#fff;}
+  .btn-primary:hover{background:var(--primary-dark);}
+  .btn-success{background:var(--success);color:#fff;}
+  .btn-outline{background:var(--white);color:var(--primary);border:1px solid var(--primary);}
+  .btn-outline:hover{background:var(--primary-light);}
+  .btn-sm{padding:4px 9px;font-size:11px;}
+  .btn-danger{background:var(--danger);color:#fff;}
+  .btn-gray{background:#F5F5F5;color:#757575;border:1px solid var(--border);}
+  button:disabled{opacity:.45;cursor:default;}
+
+  /* ── PROGRESS BAR ── */
+  .prog-track{height:6px;background:#EEEEEE;border-radius:3px;overflow:hidden;min-width:80px;}
+  .prog-fill{height:100%;border-radius:3px;transition:width .3s;}
+
+  /* ── EMPLOYEE CARD ── */
+  .emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:20px;}
+  .emp-card{background:var(--white);border-radius:10px;border:1px solid var(--border);
+    padding:16px;display:flex;gap:12px;align-items:flex-start;}
+  .emp-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0;}
+  .emp-info .emp-name{font-size:14px;font-weight:700;margin-bottom:2px;}
+  .emp-info .emp-dept{font-size:11px;color:var(--text-sec);margin-bottom:6px;}
+  .emp-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+  .emp-actions{display:flex;gap:6px;}
+
+  /* ── WEAKNESS CHART ── */
+  .weak-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;margin-bottom:20px;}
+  .weak-card{background:var(--white);border-radius:10px;border:1px solid var(--border);padding:16px;}
+  .weak-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .weak-name{font-size:14px;font-weight:700;}
+  .weak-score{font-size:20px;font-weight:700;}
+  .weak-tags{display:flex;flex-direction:column;gap:7px;}
+  .wtag-row{display:flex;align-items:center;gap:8px;}
+  .wtag-name{font-size:12px;color:var(--text-sec);width:100px;flex-shrink:0;}
+  .wtag-bar{flex:1;height:7px;background:#EEEEEE;border-radius:4px;overflow:hidden;}
+  .wtag-fill{height:100%;border-radius:4px;}
+  .wtag-pct{font-size:11px;font-weight:600;min-width:32px;text-align:right;}
+
+  /* ── MODULE PROGRESS ── */
+  .module-row{display:flex;align-items:center;gap:8px;padding:8px 0;
+    border-bottom:1px solid var(--border);}
+  .module-row:last-child{border-bottom:none;}
+  .module-week{font-size:10px;font-weight:700;color:var(--text-sec);width:32px;flex-shrink:0;}
+  .module-name{flex:1;font-size:12px;}
+  .module-dots{display:flex;gap:4px;}
+  .mdot{width:14px;height:14px;border-radius:50%;border:1px solid var(--border);}
+  .mdot.done{background:var(--success);border-color:var(--success);}
+  .mdot.partial{background:#FFA726;border-color:#FFA726;}
+
+  /* ── SEARCH / FILTER ── */
+  .filter-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+  .search-input{padding:7px 12px;border:1px solid var(--border);border-radius:7px;
+    font-size:12px;font-family:inherit;outline:none;min-width:180px;}
+  .search-input:focus{border-color:var(--primary);}
+  select.filter-sel{padding:7px 10px;border:1px solid var(--border);border-radius:7px;
+    font-size:12px;font-family:inherit;outline:none;background:var(--white);cursor:pointer;}
+
+  /* ── MODAL (simple) ── */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);
+    z-index:500;align-items:center;justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--white);border-radius:12px;width:480px;max-width:95vw;
+    padding:28px;box-shadow:0 8px 32px rgba(0,0,0,.2);}
+  .modal-title{font-size:17px;font-weight:700;margin-bottom:20px;}
+  .modal-field{margin-bottom:14px;}
+  .modal-label{font-size:12px;font-weight:600;margin-bottom:5px;color:#424242;}
+  .modal-input{width:100%;padding:9px 12px;border:1.5px solid var(--border);
+    border-radius:7px;font-size:13px;font-family:inherit;outline:none;}
+  .modal-input:focus{border-color:var(--primary);}
+  .modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
+
+  /* ── EMPTY STATE ── */
+  .empty-state{padding:40px 20px;text-align:center;color:var(--text-sec);}
+  .empty-state svg{margin:0 auto 10px;display:block;color:#BDBDBD;}
+  .empty-state p{font-size:13px;}
+
+  /* ── LOADING ── */
+  .loading{padding:30px;text-align:center;color:#BDBDBD;font-size:13px;}
+
+  /* ── 4주 학습 계획서 직접 작성 ── */
+  .plan-config{display:grid;grid-template-columns:1fr 480px;gap:20px;align-items:start;}
+  .plan-editor{background:var(--white);border-radius:10px;border:1px solid var(--border);padding:20px;}
+  .plan-form{background:var(--white);border-radius:10px;border:1px solid var(--border);padding:16px;}
+  .plan-form-title{font-size:14px;font-weight:700;color:var(--primary-dark);
+    margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+  .pf-group{margin-bottom:12px;}
+  .pf-label{font-size:12px;font-weight:600;color:#424242;margin-bottom:5px;}
+  .pf-input,.pf-select{width:100%;padding:8px 11px;border:1px solid var(--border);
+    border-radius:7px;font-size:12px;font-family:inherit;outline:none;background:var(--white);}
+  .pf-input:focus,.pf-select:focus{border-color:var(--primary);}
+  .pf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+  /* 사원 정보 헤더 */
+  .emp-info-bar{background:var(--primary-light);border-radius:8px;padding:12px 16px;
+    margin-bottom:16px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;}
+  .eib-field{display:flex;flex-direction:column;gap:2px;}
+  .eib-label{font-size:10px;font-weight:600;color:var(--primary);letter-spacing:.5px;text-transform:uppercase;}
+  .eib-input{font-size:13px;font-weight:600;background:transparent;border:none;
+    outline:none;color:var(--primary-dark);font-family:inherit;min-width:80px;}
+  .eib-input::placeholder{font-weight:400;color:#BDBDBD;}
+
+  /* 주차 아코디언 */
+  .week-accordion{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .week-acc-header{padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;
+    user-select:none;transition:background .15s;}
+  .week-acc-header:hover{background:#FAFAFA;}
+  .week-acc-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+  .week-acc-title{flex:1;font-size:13px;font-weight:600;color:var(--text);}
+  .week-acc-date{font-size:11px;color:var(--text-sec);}
+  .week-acc-chevron{color:var(--text-sec);transition:transform .25s;}
+  .week-acc-chevron.open{transform:rotate(180deg);}
+  .week-acc-body{padding:14px 16px;border-top:1px solid var(--border);display:none;}
+  .week-acc-body.open{display:block;}
+
+  /* 일정 편집 테이블 */
+  .edit-tbl{width:100%;border-collapse:collapse;margin-bottom:8px;}
+  .edit-tbl th{background:#F5F5F5;padding:7px 8px;font-size:11px;font-weight:600;
+    color:var(--text-sec);text-align:left;border-bottom:1px solid var(--border);}
+  .edit-tbl td{padding:5px 4px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  .edit-tbl tr:last-child td{border-bottom:none;}
+  .edit-tbl input[type=text]{width:100%;border:1px solid transparent;border-radius:5px;
+    padding:5px 7px;font-size:12px;font-family:inherit;outline:none;background:transparent;}
+  .edit-tbl input[type=text]:focus{border-color:var(--primary);background:#fff;}
+  .edit-tbl input[type=text]:hover{background:#F9F9F9;}
+  .row-del-btn{width:22px;height:22px;border:none;background:none;cursor:pointer;
+    color:#BDBDBD;border-radius:4px;display:flex;align-items:center;justify-content:center;}
+  .row-del-btn:hover{color:var(--danger);background:#FFEBEE;}
+  .add-row-btn{font-size:11px;color:var(--primary);background:var(--primary-light);
+    border:1px dashed var(--primary);border-radius:6px;padding:4px 10px;cursor:pointer;
+    font-family:inherit;transition:.15s;}
+  .add-row-btn:hover{background:#D1C4E9;}
+
+  /* 체크리스트 편집 */
+  .checklist-editor{margin-top:12px;}
+  .cl-editor-label{font-size:11px;font-weight:600;color:var(--text-sec);margin-bottom:6px;}
+  .cl-item-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+  .cl-item-input{flex:1;border:1px solid var(--border);border-radius:6px;padding:5px 9px;
+    font-size:12px;font-family:inherit;outline:none;}
+  .cl-item-input:focus{border-color:var(--primary);}
+
+  /* 미리보기 패널 */
+  .preview-panel{background:var(--white);border-radius:10px;border:1px solid var(--border);
+    padding:20px;position:sticky;top:76px;max-height:calc(100vh - 100px);overflow-y:auto;}
+  .preview-panel-header{display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+  .preview-empty{text-align:center;padding:40px 0;color:#BDBDBD;}
+  .preview-empty svg{display:block;margin:0 auto 8px;}
+
+  .plan-preview{background:var(--white);border-radius:10px;border:1px solid var(--border);
+    padding:24px;min-height:500px;}
+  .plan-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:400px;color:#BDBDBD;text-align:center;}
+  .plan-empty svg{margin-bottom:12px;color:#E0E0E0;}
+
+  /* 계획서 출력물 */
+  .plan-doc{display:none;}
+  .plan-doc.visible{display:block;}
+  .plan-header{border-bottom:3px solid var(--primary);padding-bottom:14px;margin-bottom:20px;}
+  .plan-header-top{display:flex;align-items:flex-start;justify-content:space-between;}
+  .plan-header-badge{background:var(--primary-dark);color:#fff;font-size:11px;font-weight:700;
+    padding:3px 10px;border-radius:5px;letter-spacing:.5px;}
+  .plan-doc-title{font-size:22px;font-weight:700;color:var(--primary-dark);margin:8px 0 4px;}
+  .plan-doc-sub{font-size:13px;color:var(--text-sec);}
+  .plan-meta-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;}
+  .plan-meta-item{font-size:12px;}
+  .plan-meta-item strong{color:var(--primary-dark);}
+
+  .week-card{border-radius:10px;border:1px solid var(--border);margin-bottom:14px;overflow:hidden;}
+  .week-header{padding:12px 16px;display:flex;align-items:center;gap:10px;font-weight:700;}
+  .week-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+  .week-title{font-size:14px;}
+  .week-date{font-size:11px;font-weight:400;opacity:.8;margin-left:auto;}
+  .week-body{padding:14px 16px;}
+  .week-goal{font-size:12px;color:var(--text-sec);margin-bottom:10px;padding:8px 12px;
+    background:#FAFAFA;border-radius:6px;border-left:3px solid;}
+  .day-table{width:100%;border-collapse:collapse;}
+  .day-table th{background:#F5F5F5;padding:7px 10px;font-size:11px;font-weight:600;
+    color:var(--text-sec);text-align:left;border-bottom:1px solid var(--border);}
+  .day-table td{padding:7px 10px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:top;}
+  .day-table tr:last-child td{border-bottom:none;}
+  .day-table tr:hover td{background:#FAFAFA;}
+  .topic-tag{display:inline-block;background:var(--primary-light);color:var(--primary);
+    font-size:10px;font-weight:600;padding:1px 6px;border-radius:8px;margin-right:3px;}
+  .check-list{list-style:none;margin-top:8px;}
+  .check-list li{font-size:11px;color:var(--text-sec);padding:3px 0;
+    display:flex;align-items:center;gap:5px;}
+  .check-box{width:13px;height:13px;border:1px solid var(--border);border-radius:2px;flex-shrink:0;}
+
+  .plan-actions{display:flex;gap:8px;margin-top:16px;justify-content:flex-end;}
+
+  @media(max-width:700px){.plan-config{grid-template-columns:1fr;}}
+  @media print{
+    .topbar,.nav-tabs,.plan-config>.plan-form,.plan-actions,.login-modal{display:none!important;}
+    .plan-doc{display:block!important;}
+    .plan-preview{border:none;padding:0;}
+    body{background:white;}
+  }
+
+  /* ── 방식 토글 ── */
+  .method-toggle{display:flex;gap:0;background:#F5F5F5;border-radius:8px;
+    padding:3px;margin-bottom:16px;}
+  .mt-btn{flex:1;padding:7px 0;border:none;border-radius:6px;font-size:12px;font-weight:600;
+    cursor:pointer;background:transparent;color:#BDBDBD;font-family:inherit;
+    display:flex;align-items:center;justify-content:center;gap:5px;transition:.2s;}
+  .mt-btn:hover{color:var(--text);}
+  .mt-btn.active{background:var(--white);color:var(--primary);
+    box-shadow:0 1px 4px rgba(0,0,0,.1);}
+
+  /* ── 링크 방식 안내 ── */
+  .link-method-info{background:#E3F2FD;border-radius:7px;padding:9px 12px;
+    font-size:12px;color:var(--info);margin-bottom:12px;
+    display:flex;align-items:flex-start;gap:7px;line-height:1.5;}
+  .link-method-info svg{flex-shrink:0;margin-top:1px;}
+
+  /* ── SVG globe 심볼 추가 ── */
+
+  /* ── 업로드 존 ── */
+  .upload-zone{border:2px dashed var(--border);border-radius:10px;padding:28px 20px;
+    text-align:center;cursor:pointer;transition:all .2s;}
+  .upload-zone:hover,.upload-zone.drag-over{border-color:var(--primary);background:var(--primary-light);}
+
+  /* ── 단계 표시 ── */
+  .tb-step{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
+  .ts-num{width:24px;height:24px;border-radius:50%;background:#E0E0E0;color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+  .ts-label{font-size:10px;color:#BDBDBD;font-weight:500;}
+  .tb-step.active .ts-num{background:var(--primary);}
+  .tb-step.active .ts-label{color:var(--primary);}
+  .tb-step.done .ts-num{background:var(--success);}
+  .tb-step.done .ts-label{color:var(--success);}
+  .ts-arrow{font-size:14px;color:#BDBDBD;padding:0 2px;margin-top:-8px;}
+
+  /* ── 플로우 스텝 ── */
+  .flow-step-item{display:flex;align-items:center;gap:10px;padding:10px 12px;
+    border-radius:8px;border:1px solid;}
+  .fsi-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+  .fsi-title{font-size:12px;font-weight:700;margin-bottom:2px;}
+  .fsi-desc{font-size:11px;color:var(--text-sec);}
+  .flow-arrow-down{text-align:center;font-size:16px;color:#BDBDBD;line-height:1;}
+
+  /* ── 로딩 스피너 ── */
+  .loading-spinner{width:36px;height:36px;border:3px solid var(--primary-light);
+    border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;
+    margin:0 auto;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ── 파싱된 문항 ── */
+  .parsed-q-item{border:1px solid var(--border);border-radius:8px;padding:10px 12px;
+    margin-bottom:8px;background:var(--white);}
+  .pqi-q{font-size:12px;font-weight:600;margin-bottom:6px;}
+  .pqi-meta{display:flex;gap:8px;align-items:center;}
+  .pqi-ans-sel{padding:3px 8px;border:1px solid var(--border);border-radius:5px;
+    font-size:11px;font-family:inherit;outline:none;}
+  .pqi-tag-sel{padding:3px 8px;border:1px solid var(--border);border-radius:5px;
+    font-size:11px;font-family:inherit;outline:none;}
+  .pqi-del{margin-left:auto;background:none;border:none;cursor:pointer;
+    color:#BDBDBD;font-size:16px;line-height:1;}
+  .pqi-del:hover{color:var(--danger);}
+
+  @media(max-width:700px){
+    .plan-config,.manual-grid{grid-template-columns:1fr!important;}
+  }
+  @media(max-width:600px){.stat-row{grid-template-columns:repeat(2,1fr);}.emp-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- SVG SYMBOLS -->
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-user-plus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+    <symbol id="i-slack" viewBox="0 0 24 24"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+    <symbol id="i-file-text" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></symbol>
+    <symbol id="i-printer" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <symbol id="i-link-ext" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></symbol>
+  </defs>
+</svg>
+
+<!-- ── TOP BAR ── -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">
+      <span class="ic"><svg width="18" height="18" style="stroke:#CE93D8"><use href="#i-home"/></svg></span>
+      276홀딩스 관리자
+      <span class="ver-badge">v2.0</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="tb-btn" onclick="loadAllData()">
+      <span class="ic"><svg width="13" height="13" style="stroke:currentColor"><use href="#i-refresh"/></svg></span>새로고침
+    </button>
+    <button class="tb-btn" onclick="exportCSV()">
+      <span class="ic"><svg width="13" height="13" style="stroke:currentColor"><use href="#i-download"/></svg></span>내보내기
+    </button>
+    <button class="tb-btn" id="logout-btn">
+      <span class="ic"><svg width="13" height="13" style="stroke:currentColor"><use href="#i-lock"/></svg></span>로그아웃
+    </button>
+  </div>
+</div>
+
+<!-- ── NAV TABS ── -->
+<div class="nav-tabs">
+  <!-- 기존 탭 -->
+  <div class="nav-tab active" onclick="switchTab('quiz')" id="tab-quiz">
+    <span class="ic"><svg width="14" height="14"><use href="#i-chart"/></svg></span>
+    퀴즈 응시 현황
+  </div>
+  <div class="nav-tab" onclick="switchTab('progress')" id="tab-progress">
+    <span class="ic"><svg width="14" height="14"><use href="#i-book"/></svg></span>
+    학습 진도
+  </div>
+  <!-- 신규 탭 -->
+  <div class="nav-tab new-tab" onclick="switchTab('employees')" id="tab-employees">
+    <span class="ic"><svg width="14" height="14"><use href="#i-users"/></svg></span>
+    신입사원 관리
+    <span class="badge">NEW</span>
+  </div>
+  <div class="nav-tab new-tab" onclick="switchTab('accounts')" id="tab-accounts">
+    <span class="ic"><svg width="14" height="14"><use href="#i-user-plus"/></svg></span>
+    계정 요청
+    <span class="badge" id="req-count-badge">3</span>
+  </div>
+  <div class="nav-tab new-tab" onclick="switchTab('weakness')" id="tab-weakness">
+    <span class="ic"><svg width="14" height="14"><use href="#i-alert"/></svg></span>
+    취약점 분석
+    <span class="badge">NEW</span>
+  </div>
+  <div class="nav-tab new-tab" onclick="switchTab('remediation')" id="tab-remediation">
+    <span class="ic"><svg width="14" height="14"><use href="#i-edit"/></svg></span>
+    보강 교육
+    <span class="badge">NEW</span>
+  </div>
+  <div class="nav-tab new-tab" onclick="switchTab('plangen')" id="tab-plangen">
+    <span class="ic"><svg width="14" height="14"><use href="#i-file-text"/></svg></span>
+    4주 학습 계획서
+    <span class="badge">NEW</span>
+  </div>
+  <div class="nav-tab new-tab" onclick="switchTab('textbook')" id="tab-textbook">
+    <span class="ic"><svg width="14" height="14"><use href="#i-book"/></svg></span>
+    교과서 관리
+    <span class="badge">NEW</span>
+  </div>
+  <div class="nav-tab new-tab" onclick="switchTab('quizmgr')" id="tab-quizmgr">
+    <span class="ic"><svg width="14" height="14"><use href="#i-edit"/></svg></span>
+    퀴즈 관리
+    <span class="badge">NEW</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ───────────── 퀴즈 응시 현황 ───────────── -->
+  <div class="tab-pane active" id="pane-quiz">
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="sc-label"><span class="ic"><svg width="13" height="13"><use href="#i-users"/></svg></span>전체 응시</div>
+        <div class="sc-val" id="stat-total">—</div>
+        <div class="sc-sub">누적 응시자 수</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label"><span class="ic"><svg width="13" height="13"><use href="#i-chart"/></svg></span>평균 점수</div>
+        <div class="sc-val" id="stat-avg">—</div>
+        <div class="sc-sub">30점 만점</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label">A등급 (28+)</div>
+        <div class="sc-val" id="stat-a" style="color:var(--grade-A)">—</div>
+        <div class="sc-sub">명</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label">B등급 (25~27)</div>
+        <div class="sc-val" id="stat-b" style="color:var(--grade-B)">—</div>
+        <div class="sc-sub">명</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label">D등급 (0~20)</div>
+        <div class="sc-val" id="stat-d" style="color:var(--grade-D)">—</div>
+        <div class="sc-sub">보강 필요</div>
+      </div>
+    </div>
+
+    <div class="sec-hdr">
+      <div class="sec-title"><span class="ic"><svg width="16" height="16"><use href="#i-users"/></svg></span>응시 결과 목록</div>
+      <div class="sec-actions">
+        <input class="search-input" id="quiz-search" placeholder="이름 검색..." oninput="filterQuizTable()">
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th>#</th><th>이름</th><th>응시일시</th><th>점수</th><th>정답률</th><th>등급</th><th>상세</th>
+        </tr></thead>
+        <tbody id="quiz-tbody"><tr><td colspan="7"><div class="loading">데이터 로딩 중...</div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ───────────── 학습 진도 ───────────── -->
+  <div class="tab-pane" id="pane-progress">
+    <div class="sec-hdr">
+      <div class="sec-title"><span class="ic"><svg width="16" height="16"><use href="#i-book"/></svg></span>학습 모듈 진도 현황</div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th>이름</th><th>챕터 1</th><th>챕터 2</th><th>챕터 3</th><th>챕터 4</th><th>챕터 5</th><th>완료율</th><th>최근 학습</th>
+        </tr></thead>
+        <tbody id="progress-tbody"><tr><td colspan="8"><div class="loading">데이터 로딩 중...</div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ───────────── 신입사원 관리 (NEW) ───────────── -->
+  <div class="tab-pane" id="pane-employees">
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="sc-label">전체 사원</div>
+        <div class="sc-val" id="emp-total">—</div>
+        <div class="sc-sub">등록 사원 수</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label" style="color:var(--success)">활성</div>
+        <div class="sc-val" id="emp-active" style="color:var(--success)">—</div>
+        <div class="sc-sub">정상 계정</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label" style="color:var(--warn)">온보딩 중</div>
+        <div class="sc-val" id="emp-onboard" style="color:var(--warn)">—</div>
+        <div class="sc-sub">4주 진행 중</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label" style="color:var(--info)">Slack 발송</div>
+        <div class="sc-val" id="emp-slack" style="color:var(--info)">—</div>
+        <div class="sc-sub">계정 전달 완료</div>
+      </div>
+    </div>
+
+    <div class="sec-hdr">
+      <div class="sec-title"><span class="ic"><svg width="16" height="16"><use href="#i-users"/></svg></span>사원 목록</div>
+      <div class="sec-actions">
+        <input class="search-input" placeholder="이름·부서 검색...">
+        <select class="filter-sel">
+          <option>전체 상태</option>
+          <option>온보딩 중</option>
+          <option>활성</option>
+          <option>비활성</option>
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="openCreateModal()">
+          <span class="ic"><svg width="12" height="12" style="stroke:#fff"><use href="#i-user-plus"/></svg></span>
+          신규 등록
+        </button>
+      </div>
+    </div>
+
+    <div class="emp-grid" id="emp-grid">
+      <!-- 샘플 데이터 -->
+      <div class="emp-card">
+        <div class="emp-avatar" style="background:#4527A0;">안</div>
+        <div class="emp-info" style="flex:1;">
+          <div class="emp-name">안애경</div>
+          <div class="emp-dept">영업지원팀 · 입사 2026-05-26</div>
+          <div class="emp-meta">
+            <span class="badge badge-orange">온보딩 중</span>
+            <span class="badge badge-blue">멘토: 박진용</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-sec);margin-bottom:8px;">
+            4주차 진행률
+            <div class="prog-track" style="margin-top:4px;">
+              <div class="prog-fill" style="width:25%;background:var(--primary);"></div>
+            </div>
+          </div>
+          <div class="emp-actions">
+            <button class="btn btn-outline btn-sm">상세</button>
+            <button class="btn btn-sm" style="background:#E8F5E9;color:var(--success);border:none;" onclick="sendSlack('안애경')">
+              <span class="ic"><svg width="11" height="11" style="stroke:currentColor"><use href="#i-slack"/></svg></span>
+              Slack
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="emp-card">
+        <div class="emp-avatar" style="background:#1565C0;">이</div>
+        <div class="emp-info" style="flex:1;">
+          <div class="emp-name">이도연</div>
+          <div class="emp-dept">심사팀 · 입사 2026-05-26</div>
+          <div class="emp-meta">
+            <span class="badge badge-orange">온보딩 중</span>
+            <span class="badge badge-blue">멘토: 송인탁</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-sec);margin-bottom:8px;">
+            4주차 진행률
+            <div class="prog-track" style="margin-top:4px;">
+              <div class="prog-fill" style="width:25%;background:var(--info);"></div>
+            </div>
+          </div>
+          <div class="emp-actions">
+            <button class="btn btn-outline btn-sm">상세</button>
+            <button class="btn btn-sm" style="background:#E8F5E9;color:var(--success);border:none;" onclick="sendSlack('이도연')">
+              <span class="ic"><svg width="11" height="11" style="stroke:currentColor"><use href="#i-slack"/></svg></span>
+              Slack
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-hdr" style="margin-top:8px;">
+      <div class="sec-title"><span class="ic"><svg width="16" height="16"><use href="#i-users"/></svg></span>전체 사원 테이블</div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th>사원ID</th><th>이름</th><th>로그인ID</th><th>이메일</th><th>부서</th><th>입사일</th><th>멘토</th><th>상태</th><th>Slack</th><th>관리</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--text-sec)">EMP-001</td>
+            <td><strong>안애경</strong></td>
+            <td style="font-family:monospace;font-size:11px;">aek</td>
+            <td style="font-size:11px;">aek@276holdings.com</td>
+            <td>영업지원</td>
+            <td>2026-05-26</td>
+            <td>박진용</td>
+            <td><span class="badge badge-orange">온보딩 중</span></td>
+            <td><span class="badge badge-green">발송 완료</span></td>
+            <td><button class="btn btn-outline btn-sm">편집</button></td>
+          </tr>
+          <tr>
+            <td style="color:var(--text-sec)">EMP-002</td>
+            <td><strong>이도연</strong></td>
+            <td style="font-family:monospace;font-size:11px;">dyi</td>
+            <td style="font-size:11px;">dyi@276holdings.com</td>
+            <td>심사</td>
+            <td>2026-05-26</td>
+            <td>송인탁</td>
+            <td><span class="badge badge-orange">온보딩 중</span></td>
+            <td><span class="badge badge-green">발송 완료</span></td>
+            <td><button class="btn btn-outline btn-sm">편집</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ───────────── 계정 요청 (NEW) ───────────── -->
+  <div class="tab-pane" id="pane-accounts">
+    <div class="sec-hdr">
+      <div class="sec-title"><span class="ic"><svg width="16" height="16"><use href="#i-user-plus"/></svg></span>계정 요청 목록</div>
+      <div class="sec-actions">
+        <select class="filter-sel">
+          <option>전체</option>
+          <option>확인 대기</option>
+          <option>승인 완료</option>
+          <option>거절</option>
+        </select>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th>#</th><th>요청일시</th><th>이름</th><th>휴대폰</th><th>이메일 아이디</th><th>상태</th><th>임시PW</th><th>Slack</th><th>처리</th>
+        </tr></thead>
+        <tbody id="accounts-tbody">
+          <tr>
+            <td style="color:var(--text-sec)">1</td>
+            <td style="font-size:11px;">2026-05-29 09:12</td>
+            <td><strong>김민준</strong></td>
+            <td>010-1234-5678</td>
+            <td style="font-family:monospace;font-size:11px;">mj.kim</td>
+            <td><span class="badge badge-orange">확인 대기</span></td>
+            <td style="color:var(--text-sec)">—</td>
+            <td style="color:var(--text-sec)">—</td>
+            <td style="display:flex;gap:5px;">
+              <button class="btn btn-success btn-sm" onclick="approveAccount(this,'김민준','mj.kim')">
+                <span class="ic"><svg width="11" height="11" style="stroke:#fff"><use href="#i-check"/></svg></span>승인
+              </button>
+              <button class="btn btn-gray btn-sm">거절</button>
+            </td>
+          </tr>
+          <tr>
+            <td style="color:var(--text-sec)">2</td>
+            <td style="font-size:11px;">2026-05-29 10:34</td>
+            <td><strong>박서연</strong></td>
+            <td>010-9876-5432</td>
+            <td style="font-family:monospace;font-size:11px;">sy.park</td>
+            <td><span class="badge badge-orange">확인 대기</span></td>
+            <td style="color:var(--text-sec)">—</td>
+            <td style="color:var(--text-sec)">—</td>
+            <td style="display:flex;gap:5px;">
+              <button class="btn btn-success btn-sm" onclick="approveAccount(this,'박서연','sy.park')">
+                <span class="ic"><svg width="11" height="11" style="stroke:#fff"><use href="#i-check"/></svg></span>승인
+              </button>
+              <button class="btn btn-gray btn-sm">거절</button>
+            </td>
+          </tr>
+          <tr>
+            <td style="color:var(--text-sec)">3</td>
+            <td style="font-size:11px;">2026-05-29 13:20</td>
+            <td><strong>최준혁</strong></td>
+            <td>010-5555-7777</td>
+            <td style="font-family:monospace;font-size:11px;">jh.choi</td>
+            <td><span class="badge badge-green">승인 완료</span></td>
+            <td style="font-family:monospace;font-size:11px;color:var(--info)">Tmp#2026</td>
+            <td><span class="badge badge-green">발송 완료</span></td>
+            <td><button class="btn btn-gray btn-sm" disabled>처리 완료</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ───────────── 취약점 분석 (NEW) ───────────── -->
+  <div class="tab-pane" id="pane-weakness">
+    <div class="sec-hdr">
+      <div class="sec-title"><span class="ic"><svg width="16" height="16"><use href="#i-alert"/></svg></span>사원별 취약점 분석</div>
+      <div class="sec-actions">
+        <button class="btn btn-outline btn-sm" onclick="runAnalysis()">
+          <span class="ic"><svg width="12" height="12"><use href="#i-refresh"/></svg></span>분석 갱신
+        </button>
+      </div>
+    </div>
+    <div class="weak-grid" id="weak-grid">
+      <!-- 안애경 -->
+      <div class="weak-card">
+        <div class="weak-header">
+          <div>
+            <div class="weak-name">안애경</div>
+            <div style="font-size:11px;color:var(--text-sec)">영업지원 · 최근 응시 2026-05-28</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="weak-score" style="color:var(--grade-B)">28/30</div>
+            <span class="badge badge-blue">B등급·우수</span>
+          </div>
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--text-sec);margin-bottom:8px;">태그별 정답률</div>
+        <div class="weak-tags">
+          <div class="wtag-row">
+            <div class="wtag-name">전자어음</div>
+            <div class="wtag-bar"><div class="wtag-fill" style="width:60%;background:#E65100;"></div></div>
+            <div class="wtag-pct" style="color:#E65100;">60%</div>
+          </div>
+          <div class="wtag-row">
+            <div class="wtag-name">팩토링</div>
+            <div class="wtag-bar"><div class="wtag-fill" style="width:67%;background:#FFA726;"></div></div>
+            <div class="wtag-pct" style="color:#FFA726;">67%</div>
+          </div>
+          <div class="wtag-row">
+            <div class="wtag-name">FlowPay_SNPL</div>
+            <div class="wtag-bar"><div class="wtag-fill" style="width:100%;background:#2E7D32;"></div></div>
+            <div class="wtag-pct" style="color:#2E7D32;">100%</div>
+          </div>
+          <div class="wtag-row">
+            <div class="wtag-name">핀테크기초</div>
+            <div class="wtag-bar"><div class="wtag-fill" style="width:90%;background:#1565C0;"></div></div>
+            <div class="wtag-pct" style="color:#1565C0;">90%</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:6px;">
+          <span class="badge badge-red">전자어음 취약</span>
+          <span class="badge badge-orange">팩토링 주의</span>
+        </div>
+        <button class="btn btn-primary btn-sm" style="margin-top:10px;width:100%;" onclick="createRemediation('안애경','전자어음,팩토링')">
+          <span class="ic"><svg width="12" height="12" style="stroke:#fff"><use href="#i-edit"/></svg></span>
+          보강 교육 생성
+        </button>
+      </div>
+      <!-- 이도연 -->
+      <div class="weak-card">
+        <div class="weak-header">
+          <div>
+            <div class="weak-name">이도연</div>
+            <div style="font-size:11px;color:var(--text-sec)">심사팀 · 최근 응시 2026-05-28</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="weak-score" style="color:var(--grade-B)">28/30</div>
+            <span class="badge badge-blue">B등급·우수</span>
+          </div>
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--text-sec);margin-bottom:8px;">태그별 정답률</div>
+        <div class="weak-tags">
+          <div class="wtag-row">
+            <div class="wtag-name">심사프로세스</div>
+            <div class="wtag-bar"><div class="wtag-fill" style="width:67%;background:#E65100;"></div></div>
+            <div class="wtag-pct" style="color:#E65100;">67%</div>
+          </div>
+          <div class="wtag-row">
+            <div class="wtag-name">팩토링</div>
+            <div class="wtag-bar"><div class="wtag-fill" style="width:75%;background:#FFA726;"></div></div>
+            <div class="wtag-pct" style="color:#FFA726;">75%</div>
+          </div>
+          <div class="wtag-row">
+            <div class="wtag-name">FlowPay_SNPL</div>
+            <div class="wtag-bar"><div class="wtag-fill" style="width:100%;background:#2E7D32;"></div></div>
+            <div class="wtag-pct" style="color:#2E7D32;">100%</div>
+          </div>
+          <div class="wtag-row">
+            <div class="wtag-name">핀테크기초</div>
+            <div class="wtag-bar"><div class="wtag-fill" style="width:85%;background:#1565C0;"></div></div>
+            <div class="wtag-pct" style="color:#1565C0;">85%</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:6px;">
+          <span class="badge badge-red">심사프로세스 취약</span>
+          <span class="badge badge-orange">팩토링 주의</span>
+        </div>
+        <button class="btn btn-primary btn-sm" style="margin-top:10px;width:100%;" onclick="createRemediation('이도연','심사프로세스,팩토링')">
+          <span class="ic"><svg width="12" height="12" style="stroke:#fff"><use href="#i-edit"/></svg></span>
+          보강 교육 생성
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────── 보강 교육 (NEW) ───────────── -->
+  <div class="tab-pane" id="pane-remediation">
+    <div class="sec-hdr">
+      <div class="sec-title"><span class="ic"><svg width="16" height="16"><use href="#i-edit"/></svg></span>보강 교육 과제 관리</div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th>#</th><th>대상 사원</th><th>원인 태그</th><th>보강 제목</th><th>생성일</th><th>완료 기준</th><th>상태</th><th>Slack 발송</th>
+        </tr></thead>
+        <tbody id="remediation-tbody">
+          <tr>
+            <td style="color:var(--text-sec)">1</td>
+            <td><strong>안애경</strong></td>
+            <td><span class="badge badge-red">전자어음</span> <span class="badge badge-orange">팩토링</span></td>
+            <td>전자어음 할인 구조 재학습</td>
+            <td style="font-size:11px;">2026-05-29</td>
+            <td>보강 퀴즈 80% 이상</td>
+            <td><span class="badge badge-orange">진행 중</span></td>
+            <td><button class="btn btn-sm" style="background:#E8F5E9;color:var(--success);border:none;">
+              <span class="ic"><svg width="11" height="11" style="stroke:currentColor"><use href="#i-slack"/></svg></span> 발송
+            </button></td>
+          </tr>
+          <tr>
+            <td style="color:var(--text-sec)">2</td>
+            <td><strong>이도연</strong></td>
+            <td><span class="badge badge-red">심사프로세스</span></td>
+            <td>FlowPay 심사 프로세스 재학습</td>
+            <td style="font-size:11px;">2026-05-29</td>
+            <td>보강 퀴즈 80% 이상</td>
+            <td><span class="badge badge-orange">진행 중</span></td>
+            <td><button class="btn btn-sm" style="background:#E8F5E9;color:var(--success);border:none;">
+              <span class="ic"><svg width="11" height="11" style="stroke:currentColor"><use href="#i-slack"/></svg></span> 발송
+            </button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ───────────── 4주 학습 계획서 직접 작성 (NEW) ───────────── -->
+  <div class="tab-pane" id="pane-plangen">
+
+    <!-- 상단 액션바 -->
+    <div class="sec-hdr" style="margin-bottom:14px;">
+      <div class="sec-title">
+        <span class="ic"><svg width="16" height="16"><use href="#i-file-text"/></svg></span>
+        4주 학습 계획서 작성
+      </div>
+      <div class="sec-actions">
+        <button class="btn btn-gray btn-sm" onclick="clearPlanEditor()">
+          <span class="ic"><svg width="12" height="12"><use href="#i-x"/></svg></span>초기화
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="refreshPreview()">
+          <span class="ic"><svg width="12" height="12"><use href="#i-refresh"/></svg></span>미리보기 갱신
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="sendPlanSlack()">
+          <span class="ic"><svg width="12" height="12"><use href="#i-slack"/></svg></span>Slack 발송
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="window.print()">
+          <span class="ic"><svg width="12" height="12" style="stroke:#fff"><use href="#i-printer"/></svg></span>인쇄/PDF
+        </button>
+      </div>
+    </div>
+
+    <div class="plan-config">
+
+      <!-- ── 좌: 직접 편집 영역 ── -->
+      <div>
+        <!-- 사원 기본 정보 -->
+        <div class="plan-editor" style="margin-bottom:12px;">
+          <div class="plan-form-title">
+            <span class="ic" style="color:var(--primary)"><svg width="15" height="15"><use href="#i-users"/></svg></span>
+            사원 기본 정보
+          </div>
+          <div class="pf-row">
+            <div class="pf-group">
+              <div class="pf-label">이름 <span style="color:var(--danger)">*</span></div>
+              <input class="pf-input" id="ei-name" type="text" placeholder="홍길동" oninput="onInfoChange()">
+            </div>
+            <div class="pf-group">
+              <div class="pf-label">부서</div>
+              <select class="pf-select" id="ei-dept" onchange="onInfoChange()">
+                <option>영업지원</option><option>심사</option><option>기획</option>
+                <option>운영</option><option>AX·R&D</option><option>개발</option>
+              </select>
+            </div>
+          </div>
+          <div class="pf-row">
+            <div class="pf-group">
+              <div class="pf-label">멘토</div>
+              <input class="pf-input" id="ei-mentor" type="text" placeholder="박진용" oninput="onInfoChange()">
+            </div>
+            <div class="pf-group">
+              <div class="pf-label">입사일</div>
+              <input class="pf-input" id="ei-date" type="date" onchange="updateWeekDates();onInfoChange()">
+            </div>
+          </div>
+          <div class="pf-group">
+            <div class="pf-label">온보딩 핵심 목표</div>
+            <textarea class="pf-input" id="ei-goal" rows="2"
+              placeholder="예: CRM 기반 리드 DB 독립 관리 + 콜드메일 자력 발송"
+              style="resize:none;" oninput="onInfoChange()"></textarea>
+          </div>
+        </div>
+
+        <!-- 주차별 편집 아코디언 -->
+        <div id="week-accordions"></div>
+      </div>
+
+      <!-- ── 우: 미리보기 패널 ── -->
+      <div class="preview-panel" id="preview-panel">
+        <div class="preview-panel-header">
+          <span style="font-size:13px;font-weight:700;color:var(--primary-dark);">미리보기</span>
+          <span style="font-size:11px;color:var(--text-sec);">갱신 버튼으로 업데이트</span>
+        </div>
+        <div class="preview-empty" id="preview-empty">
+          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#i-file-text"/></svg>
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px;">미리보기</div>
+          <div style="font-size:12px;">내용 입력 후<br>미리보기 갱신을 클릭하세요</div>
+        </div>
+        <!-- 실제 미리보기 출력 (print 대상) -->
+        <div class="plan-doc" id="plan-doc">
+          <div class="plan-header">
+            <div class="plan-header-top">
+              <span class="plan-header-badge">4주 온보딩 학습 계획서</span>
+              <span style="font-size:11px;color:var(--text-sec)" id="pd-created"></span>
+            </div>
+            <div class="plan-doc-title" id="pd-title">—</div>
+            <div class="plan-doc-sub" id="pd-sub">—</div>
+            <div class="plan-meta-row">
+              <div class="plan-meta-item"><strong>부서</strong> <span id="pd-dept">—</span></div>
+              <div class="plan-meta-item"><strong>멘토</strong> <span id="pd-mentor">—</span></div>
+              <div class="plan-meta-item"><strong>입사일</strong> <span id="pd-date">—</span></div>
+              <div class="plan-meta-item"><strong>완료 목표일</strong> <span id="pd-end">—</span></div>
+            </div>
+          </div>
+          <div style="background:var(--primary-light);border-radius:8px;padding:10px 14px;
+            margin-bottom:14px;font-size:12px;color:var(--primary-dark);" id="pd-goal-box"></div>
+          <div id="pd-weeks"></div>
+          <div style="margin-top:14px;border-radius:8px;border:1px solid var(--border);padding:12px 14px;">
+            <div style="font-size:12px;font-weight:700;color:var(--primary-dark);margin-bottom:8px;">
+              평가 등급 기준 (O/X 퀴즈 30문항)
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">
+              <div style="text-align:center;padding:8px;background:#E3F2FD;border-radius:6px;">
+                <div style="font-size:14px;font-weight:700;color:var(--info)">A등급</div>
+                <div style="font-size:11px;color:var(--info)">28~30점 · 탁월</div>
+              </div>
+              <div style="text-align:center;padding:8px;background:#E8F5E9;border-radius:6px;">
+                <div style="font-size:14px;font-weight:700;color:var(--success)">B등급</div>
+                <div style="font-size:11px;color:var(--success)">25~27점 · 우수</div>
+              </div>
+              <div style="text-align:center;padding:8px;background:#FFF3E0;border-radius:6px;">
+                <div style="font-size:14px;font-weight:700;color:var(--warn)">C등급</div>
+                <div style="font-size:11px;color:var(--warn)">21~24점 · 보통</div>
+              </div>
+              <div style="text-align:center;padding:8px;background:#FFEBEE;border-radius:6px;">
+                <div style="font-size:14px;font-weight:700;color:var(--danger)">D등급</div>
+                <div style="font-size:11px;color:var(--danger)">0~20점 · 복습필요</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /plan-config -->
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       교과서 관리 탭
+  ═══════════════════════════════════════════ -->
+  <div class="tab-pane" id="pane-textbook">
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="sc-label"><span class="ic"><svg width="13" height="13"><use href="#i-book"/></svg></span>등록 교재</div>
+        <div class="sc-val">3</div><div class="sc-sub">챕터 수</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label" style="color:var(--success)">배포 완료</div>
+        <div class="sc-val" style="color:var(--success)">3</div><div class="sc-sub">신입사원 노출 중</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label" style="color:var(--warn)">대기 중</div>
+        <div class="sc-val" style="color:var(--warn)">1</div><div class="sc-sub">변환 완료 미배포</div>
+      </div>
+    </div>
+
+    <!-- 업로드 + 플로우 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+
+      <!-- 좌: 교재 추가 (PDF | 웹링크 토글) -->
+      <div class="card">
+        <div class="card-title">
+          <span class="ic" style="color:var(--primary)"><svg width="15" height="15"><use href="#i-book"/></svg></span>
+          교재 추가
+        </div>
+
+        <!-- 입력 방식 토글 -->
+        <div class="method-toggle" id="tb-method-toggle">
+          <button class="mt-btn active" id="tb-mt-pdf" onclick="switchTbMethod('pdf')">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-download"/></svg>
+            PDF 업로드
+          </button>
+          <button class="mt-btn" id="tb-mt-link" onclick="switchTbMethod('link')">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-globe"/></svg>
+            웹페이지 링크
+          </button>
+        </div>
+
+        <!-- ── PDF 방식 ── -->
+        <div id="tb-mode-pdf">
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:14px;" id="tb-steps">
+            <div class="tb-step active" id="tbs-1"><div class="ts-num">1</div><div class="ts-label">PDF 선택</div></div>
+            <div class="ts-arrow">→</div>
+            <div class="tb-step" id="tbs-2"><div class="ts-num">2</div><div class="ts-label">추출</div></div>
+            <div class="ts-arrow">→</div>
+            <div class="tb-step" id="tbs-3"><div class="ts-num">3</div><div class="ts-label">편집</div></div>
+            <div class="ts-arrow">→</div>
+            <div class="tb-step" id="tbs-4"><div class="ts-num">4</div><div class="ts-label">배포</div></div>
+          </div>
+          <div id="tb-step1">
+            <div class="upload-zone" id="tb-drop" onclick="document.getElementById('tb-file').click()"
+              ondragover="event.preventDefault();this.classList.add('drag-over')"
+              ondragleave="this.classList.remove('drag-over')" ondrop="handleTbDrop(event)">
+              <span class="ic" style="color:#BDBDBD;display:block;margin:0 auto 8px">
+                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#i-download"/></svg>
+              </span>
+              <div style="font-size:13px;font-weight:600;margin-bottom:3px;">PDF 파일을 드래그하거나 클릭</div>
+              <div style="font-size:11px;color:#BDBDBD;">최대 20MB · PDF 파일만 허용</div>
+            </div>
+            <input type="file" id="tb-file" accept=".pdf" style="display:none" onchange="handleTbFile(this)">
+          </div>
+          <div id="tb-step2" style="display:none;text-align:center;padding:16px;">
+            <div class="loading-spinner"></div>
+            <div style="font-size:13px;font-weight:600;color:var(--primary);margin-top:10px">PDF 내용 추출 중...</div>
+            <div style="font-size:11px;color:var(--text-sec);margin-top:4px" id="tb-parse-progress">페이지 분석 중</div>
+          </div>
+          <div id="tb-step3" style="display:none;">
+            <div class="pf-group">
+              <div class="pf-label">교재 제목 <span style="color:var(--danger)">*</span></div>
+              <input class="pf-input" id="tb-title" type="text" placeholder="예: 핀테크 도메인 기초">
+            </div>
+            <div class="pf-row">
+              <div class="pf-group">
+                <div class="pf-label">챕터</div>
+                <select class="pf-select" id="tb-chap">
+                  <option>챕터 1</option><option>챕터 2</option><option>챕터 3</option>
+                  <option>챕터 4</option><option>챕터 5</option><option>챕터 6 (신규)</option>
+                </select>
+              </div>
+              <div class="pf-group">
+                <div class="pf-label">배정 주차</div>
+                <select class="pf-select" id="tb-week">
+                  <option>1주차</option><option>2주차</option><option>3주차</option><option>4주차</option>
+                </select>
+              </div>
+            </div>
+            <div class="pf-group">
+              <div class="pf-label">추출 내용 편집</div>
+              <textarea class="pf-input" id="tb-content" rows="5"
+                placeholder="PDF에서 추출된 텍스트" style="resize:vertical;font-size:11px;"></textarea>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-gray btn-sm" onclick="resetTbUpload()">취소</button>
+              <button class="btn btn-primary" style="flex:1" onclick="deployTextbook('pdf')">
+                <span class="ic"><svg width="13" height="13" style="stroke:#fff"><use href="#i-zap"/></svg></span>
+                신입사원 페이지에 배포
+              </button>
+            </div>
+          </div>
+          <div id="tb-step4" style="display:none;text-align:center;padding:16px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#E8F5E9;display:flex;
+              align-items:center;justify-content:center;margin:0 auto 10px;color:var(--success)">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg>
+            </div>
+            <div style="font-size:15px;font-weight:700;color:var(--success);margin-bottom:5px">배포 완료</div>
+            <div style="font-size:12px;color:var(--text-sec)" id="tb-deploy-msg"></div>
+            <button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="resetTbUpload()">새 교재 추가</button>
+          </div>
+        </div>
+
+        <!-- ── 웹페이지 링크 방식 ── -->
+        <div id="tb-mode-link" style="display:none;">
+          <div class="link-method-info">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-globe"/></svg>
+            <span>웹 주소를 교재로 등록합니다. 신입사원이 교재 제목을 클릭하면 해당 페이지가 열립니다.</span>
+          </div>
+          <div class="pf-group">
+            <div class="pf-label">웹페이지 URL <span style="color:var(--danger)">*</span></div>
+            <div style="display:flex;gap:6px;">
+              <input class="pf-input" id="tbl-url" type="url"
+                placeholder="https://example.com/fintech-guide" style="flex:1;">
+              <button class="btn btn-outline btn-sm" onclick="previewTbLink()" style="white-space:nowrap;">
+                미리보기
+              </button>
+            </div>
+          </div>
+          <div class="pf-group">
+            <div class="pf-label">교재 제목 (학습자에게 표시) <span style="color:var(--danger)">*</span></div>
+            <input class="pf-input" id="tbl-title" type="text" placeholder="예: 276홀딩스 공식 가이드">
+          </div>
+          <div class="pf-row">
+            <div class="pf-group">
+              <div class="pf-label">챕터</div>
+              <select class="pf-select" id="tbl-chap">
+                <option>챕터 1</option><option>챕터 2</option><option>챕터 3</option>
+                <option>챕터 4</option><option>챕터 5</option><option>챕터 6 (신규)</option>
+              </select>
+            </div>
+            <div class="pf-group">
+              <div class="pf-label">배정 주차</div>
+              <select class="pf-select" id="tbl-week">
+                <option>1주차</option><option>2주차</option><option>3주차</option><option>4주차</option>
+              </select>
+            </div>
+          </div>
+          <div class="pf-group">
+            <div class="pf-label">열기 방식</div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+              <label style="font-size:12px;display:flex;align-items:center;gap:5px;cursor:pointer;">
+                <input type="radio" name="tb-open" value="tab" checked> 새 탭에서 열기
+              </label>
+              <label style="font-size:12px;display:flex;align-items:center;gap:5px;cursor:pointer;">
+                <input type="radio" name="tb-open" value="iframe"> 페이지 내 iframe 열기
+              </label>
+            </div>
+          </div>
+
+          <!-- 링크 미리보기 박스 -->
+          <div id="tbl-preview-box" style="display:none;border:1px solid var(--border);
+            border-radius:8px;padding:12px;margin-bottom:12px;background:#FAFAFA;">
+            <div style="font-size:11px;color:var(--text-sec);margin-bottom:6px;">미리보기 (신입사원 화면)</div>
+            <div style="display:flex;align-items:center;gap:8px;padding:10px;background:white;
+              border-radius:6px;border:1px solid var(--border);">
+              <span class="ic" style="color:var(--info)">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-globe"/></svg>
+              </span>
+              <div>
+                <div style="font-size:13px;font-weight:600;color:var(--primary);text-decoration:underline;cursor:pointer;"
+                  id="tbl-preview-title">교재 제목</div>
+                <div style="font-size:11px;color:var(--text-sec)" id="tbl-preview-url"></div>
+              </div>
+              <span class="badge badge-blue" style="margin-left:auto;">외부 링크</span>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-gray btn-sm" onclick="document.getElementById('tbl-url').value='';document.getElementById('tbl-preview-box').style.display='none';">초기화</button>
+            <button class="btn btn-primary" style="flex:1" onclick="deployTextbookLink()">
+              <span class="ic"><svg width="13" height="13" style="stroke:#fff"><use href="#i-zap"/></svg></span>
+              신입사원 페이지에 등록
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 우: 변환 플로우 설명 -->
+      <div class="card">
+        <div class="card-title"><span class="ic" style="color:var(--primary)"><svg width="15" height="15"><use href="#i-zap"/></svg></span>교재 변환 플로우</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="flow-step-item" style="background:#EDE7F6;border-color:#B39DDB;">
+            <div class="fsi-num" style="background:#4527A0">1</div>
+            <div><div class="fsi-title">PDF 업로드</div>
+              <div class="fsi-desc">어드민이 교재 PDF 파일 선택 (최대 20MB)</div></div>
+          </div>
+          <div class="flow-arrow-down">↓</div>
+          <div class="flow-step-item" style="background:#E3F2FD;border-color:#90CAF9;">
+            <div class="fsi-num" style="background:#1565C0">2</div>
+            <div><div class="fsi-title">텍스트 추출 (pdf.js)</div>
+              <div class="fsi-desc">브라우저에서 pdf.js로 전 페이지 텍스트 추출</div></div>
+          </div>
+          <div class="flow-arrow-down">↓</div>
+          <div class="flow-step-item" style="background:#E8F5E9;border-color:#A5D6A7;">
+            <div class="fsi-num" style="background:#2E7D32">3</div>
+            <div><div class="fsi-title">내용 편집 & 구조화</div>
+              <div class="fsi-desc">제목·챕터·주차 설정 + 텍스트 편집 후 HTML 변환</div></div>
+          </div>
+          <div class="flow-arrow-down">↓</div>
+          <div class="flow-step-item" style="background:#FFF3E0;border-color:#FFCC80;">
+            <div class="fsi-num" style="background:#E65100">4</div>
+            <div><div class="fsi-title">Apps Script → GitHub</div>
+              <div class="fsi-desc">FinTech_Book.html 챕터 추가 + textbooks 시트 기록</div></div>
+          </div>
+          <div class="flow-arrow-down">↓</div>
+          <div class="flow-step-item" style="background:#F3E5F5;border-color:#CE93D8;">
+            <div class="fsi-num" style="background:#673AB7">5</div>
+            <div><div class="fsi-title">신입사원 페이지 자동 반영</div>
+              <div class="fsi-desc">대시보드에 새 챕터 모듈로 즉시 노출</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 등록된 교재 목록 -->
+    <div class="sec-hdr">
+      <div class="sec-title"><span class="ic"><svg width="16" height="16"><use href="#i-book"/></svg></span>등록된 교재 목록</div>
+      <div class="sec-actions">
+        <button class="btn btn-outline btn-sm" onclick="switchTab('textbook')">
+          <span class="ic"><svg width="12" height="12"><use href="#i-refresh"/></svg></span>새로고침
+        </button>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th>#</th><th>교재 제목</th><th>챕터</th><th>배정 주차</th><th>업로드일</th><th>상태</th><th>관리</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>핀테크 도메인 기초</strong></td><td>챕터 1~2</td><td>1주차</td><td>2026-05-20</td><td><span class="badge badge-green">배포 완료</span></td><td><button class="btn btn-outline btn-sm">미리보기</button></td></tr>
+          <tr><td>2</td><td><strong>FlowPay SNPL 구조</strong></td><td>챕터 3</td><td>2주차</td><td>2026-05-20</td><td><span class="badge badge-green">배포 완료</span></td><td><button class="btn btn-outline btn-sm">미리보기</button></td></tr>
+          <tr><td>3</td><td><strong>전자어음·팩토링</strong></td><td>챕터 4~5</td><td>2주차</td><td>2026-05-20</td><td><span class="badge badge-green">배포 완료</span></td><td><button class="btn btn-outline btn-sm">미리보기</button></td></tr>
+          <tr><td>4</td><td><strong>심사 프로세스 가이드</strong></td><td>챕터 6</td><td>3주차</td><td>2026-05-29</td><td><span class="badge badge-orange">배포 대기</span></td><td>
+            <div style="display:flex;gap:5px">
+              <button class="btn btn-outline btn-sm">미리보기</button>
+              <button class="btn btn-success btn-sm">배포</button>
+            </div>
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       퀴즈(문제) 관리 탭
+  ═══════════════════════════════════════════ -->
+  <div class="tab-pane" id="pane-quizmgr">
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="sc-label"><span class="ic"><svg width="13" height="13"><use href="#i-edit"/></svg></span>전체 문항</div>
+        <div class="sc-val">30</div><div class="sc-sub">활성 문항</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label">카테고리 수</div>
+        <div class="sc-val">5</div><div class="sc-sub">분야</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label" style="color:var(--warn)">검토 대기</div>
+        <div class="sc-val" style="color:var(--warn)">4</div><div class="sc-sub">신규 추가 문항</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label" style="color:var(--danger)">비활성</div>
+        <div class="sc-val" style="color:var(--danger)">2</div><div class="sc-sub">비활성 문항</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+
+      <!-- 좌: 문제 추가 (PDF | 웹링크 토글) -->
+      <div class="card">
+        <div class="card-title">
+          <span class="ic" style="color:var(--primary)"><svg width="15" height="15"><use href="#i-edit"/></svg></span>
+          문항 추가
+        </div>
+
+        <!-- 입력 방식 토글 -->
+        <div class="method-toggle">
+          <button class="mt-btn active" id="qb-mt-pdf" onclick="switchQbMethod('pdf')">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-download"/></svg>
+            PDF 업로드
+          </button>
+          <button class="mt-btn" id="qb-mt-link" onclick="switchQbMethod('link')">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-globe"/></svg>
+            웹페이지 링크
+          </button>
+        </div>
+
+        <!-- ── PDF 방식 ── -->
+        <div id="qb-mode-pdf">
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:12px;">
+            <div class="tb-step active" id="qbs-1"><div class="ts-num">1</div><div class="ts-label">PDF</div></div>
+            <div class="ts-arrow">→</div>
+            <div class="tb-step" id="qbs-2"><div class="ts-num">2</div><div class="ts-label">파싱</div></div>
+            <div class="ts-arrow">→</div>
+            <div class="tb-step" id="qbs-3"><div class="ts-num">3</div><div class="ts-label">편집</div></div>
+            <div class="ts-arrow">→</div>
+            <div class="tb-step" id="qbs-4"><div class="ts-num">4</div><div class="ts-label">배포</div></div>
+          </div>
+          <div id="qb-step1">
+            <div class="upload-zone" onclick="document.getElementById('qb-file').click()"
+              ondragover="event.preventDefault();this.classList.add('drag-over')"
+              ondragleave="this.classList.remove('drag-over')" ondrop="handleQbDrop(event)">
+              <span class="ic" style="color:#BDBDBD;display:block;margin:0 auto 8px">
+                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#i-download"/></svg>
+              </span>
+              <div style="font-size:13px;font-weight:600;margin-bottom:3px;">문제지 PDF 드래그 또는 클릭</div>
+              <div style="font-size:11px;color:#BDBDBD;">Q&A 형식 자동 파싱</div>
+            </div>
+            <input type="file" id="qb-file" accept=".pdf" style="display:none" onchange="handleQbFile(this)">
+            <div style="margin-top:8px;padding:8px 10px;background:#F5F5F5;border-radius:6px;font-size:11px;color:var(--text-sec);">
+              <strong>권장 PDF 형식:</strong> Q1. 질문... / 정답: O / 해설: ...
+            </div>
+          </div>
+          <div id="qb-step2" style="display:none;text-align:center;padding:16px;">
+            <div class="loading-spinner"></div>
+            <div style="font-size:13px;font-weight:600;color:var(--primary);margin-top:10px">문항 자동 파싱 중...</div>
+            <div style="font-size:11px;color:var(--text-sec);margin-top:4px" id="qb-parse-msg">Q&A 패턴 인식 중</div>
+          </div>
+          <div id="qb-step3" style="display:none;">
+            <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-sec)">
+              파싱 결과 편집 <span id="qb-parsed-count" style="color:var(--primary)"></span>
+            </div>
+            <div id="qb-parsed-list" style="max-height:220px;overflow-y:auto;"></div>
+            <div style="display:flex;gap:6px;margin-top:8px;">
+              <button class="btn btn-gray btn-sm" onclick="resetQbUpload()">취소</button>
+              <button class="btn btn-primary" style="flex:1" onclick="deployQuiz()">
+                <span class="ic"><svg width="12" height="12" style="stroke:#fff"><use href="#i-zap"/></svg></span>퀴즈 배포
+              </button>
+            </div>
+          </div>
+          <div id="qb-step4" style="display:none;text-align:center;padding:16px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#E8F5E9;display:flex;
+              align-items:center;justify-content:center;margin:0 auto 10px;color:var(--success)">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg>
+            </div>
+            <div style="font-size:14px;font-weight:700;color:var(--success);margin-bottom:5px">배포 완료</div>
+            <div style="font-size:12px;color:var(--text-sec)" id="qb-deploy-msg"></div>
+            <button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="resetQbUpload()">새 문항 추가</button>
+          </div>
+        </div>
+
+        <!-- ── 웹페이지 링크 방식 ── -->
+        <div id="qb-mode-link" style="display:none;">
+          <div class="link-method-info">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-globe"/></svg>
+            <span>웹페이지의 내용을 가져와 Q&A 문항을 자동 추출합니다.</span>
+          </div>
+          <div class="pf-group">
+            <div class="pf-label">웹페이지 URL <span style="color:var(--danger)">*</span></div>
+            <div style="display:flex;gap:6px;">
+              <input class="pf-input" id="qbl-url" type="url"
+                placeholder="https://example.com/quiz-source" style="flex:1;">
+              <button class="btn btn-primary btn-sm" onclick="fetchQbLink()" style="white-space:nowrap;">
+                내용 가져오기
+              </button>
+            </div>
+            <div style="font-size:11px;color:var(--text-sec);margin-top:4px;">
+              Q&A 형식이 포함된 페이지를 입력하면 문항을 자동 추출합니다.
+            </div>
+          </div>
+
+          <!-- 링크 파싱 중 -->
+          <div id="qbl-loading" style="display:none;text-align:center;padding:16px;">
+            <div class="loading-spinner"></div>
+            <div style="font-size:12px;color:var(--primary);margin-top:8px;">웹페이지 내용 분석 중...</div>
+          </div>
+
+          <!-- 추출 결과 -->
+          <div id="qbl-result" style="display:none;">
+            <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-sec);">
+              추출된 문항 <span id="qbl-count" style="color:var(--primary)"></span>
+            </div>
+            <div id="qbl-list" style="max-height:200px;overflow-y:auto;margin-bottom:8px;"></div>
+            <div style="font-size:11px;color:var(--text-sec);background:#F5F5F5;
+              border-radius:6px;padding:7px 9px;margin-bottom:8px;">
+              <strong>출처 URL:</strong> <span id="qbl-source-url" style="color:var(--info)"></span>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-gray btn-sm" onclick="resetQbLink()">초기화</button>
+              <button class="btn btn-primary" style="flex:1" onclick="deployQbLink()">
+                <span class="ic"><svg width="12" height="12" style="stroke:#fff"><use href="#i-zap"/></svg></span>
+                퀴즈 배포
+              </button>
+            </div>
+          </div>
+
+          <!-- 배포 완료 -->
+          <div id="qbl-done" style="display:none;text-align:center;padding:16px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#E8F5E9;display:flex;
+              align-items:center;justify-content:center;margin:0 auto 10px;color:var(--success)">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg>
+            </div>
+            <div style="font-size:14px;font-weight:700;color:var(--success);margin-bottom:5px">배포 완료</div>
+            <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="resetQbLink()">새 링크 추가</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 우: 직접 문항 추가 -->
+      <div class="card">
+        <div class="card-title"><span class="ic" style="color:var(--primary)"><svg width="15" height="15"><use href="#i-edit"/></svg></span>문항 직접 추가</div>
+        <div class="pf-group">
+          <div class="pf-label">질문 <span style="color:var(--danger)">*</span></div>
+          <textarea class="pf-input" id="nq-question" rows="2"
+            placeholder="예: 플로우페이 SNPL 구조에서 고객사는 공급사에 직접 즉시 결제한다."
+            style="resize:none;"></textarea>
+        </div>
+        <div class="pf-row">
+          <div class="pf-group">
+            <div class="pf-label">정답 <span style="color:var(--danger)">*</span></div>
+            <select class="pf-select" id="nq-answer">
+              <option value="O">O (맞음)</option>
+              <option value="X">X (틀림)</option>
+            </select>
+          </div>
+          <div class="pf-group">
+            <div class="pf-label">카테고리</div>
+            <select class="pf-select" id="nq-cat">
+              <option>핀테크기초</option><option>FlowPay_SNPL</option>
+              <option>전자어음</option><option>팩토링</option>
+              <option>심사프로세스</option><option>CRM</option><option>콜드메일</option>
+            </select>
+          </div>
+        </div>
+        <div class="pf-group">
+          <div class="pf-label">해설</div>
+          <textarea class="pf-input" id="nq-explain" rows="2"
+            placeholder="오답 시 표시될 해설 내용을 입력하세요"
+            style="resize:none;"></textarea>
+        </div>
+        <div class="pf-group">
+          <div class="pf-label">난이도</div>
+          <select class="pf-select" id="nq-diff">
+            <option>기본</option><option>중급</option><option>심화</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="addSingleQuestion()">
+          <span class="ic"><svg width="13" height="13" style="stroke:#fff"><use href="#i-check"/></svg></span>
+          문항 추가 + 퀴즈 배포
+        </button>
+      </div>
+    </div>
+
+    <!-- 현재 문항 목록 -->
+    <div class="sec-hdr">
+      <div class="sec-title"><span class="ic"><svg width="16" height="16"><use href="#i-edit"/></svg></span>현재 문항 목록 (활성)</div>
+      <div class="sec-actions">
+        <select class="filter-sel" id="q-filter-cat" onchange="filterQuizBank()">
+          <option value="">전체 카테고리</option>
+          <option>핀테크기초</option><option>FlowPay_SNPL</option>
+          <option>전자어음</option><option>팩토링</option><option>심사프로세스</option>
+        </select>
+        <select class="filter-sel" id="q-filter-ans">
+          <option value="">전체 정답</option>
+          <option value="O">O (맞음)</option>
+          <option value="X">X (틀림)</option>
+        </select>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th>#</th><th>질문</th><th>정답</th><th>카테고리</th><th>난이도</th><th>상태</th><th>편집</th>
+        </tr></thead>
+        <tbody id="quiz-bank-tbody">
+          <tr><td>1</td><td>플로우페이는 B2C 개인 소비자를 주요 타깃으로 하는 금융 서비스이다.</td><td><span class="badge badge-red">X</span></td><td><span class="badge badge-purple">FlowPay_SNPL</span></td><td>기본</td><td><span class="badge badge-green">활성</span></td><td><button class="btn btn-outline btn-sm">수정</button></td></tr>
+          <tr><td>2</td><td>SNPL 구조에서 플로우페이가 공급사에 먼저 결제하고, 고객사는 유예 기간 후 상환한다.</td><td><span class="badge badge-blue">O</span></td><td><span class="badge badge-purple">FlowPay_SNPL</span></td><td>기본</td><td><span class="badge badge-green">활성</span></td><td><button class="btn btn-outline btn-sm">수정</button></td></tr>
+          <tr><td>3</td><td>전자어음은 종이 어음을 디지털화한 것으로, 금융결제원에서 관리한다.</td><td><span class="badge badge-blue">O</span></td><td><span class="badge badge-orange">전자어음</span></td><td>기본</td><td><span class="badge badge-green">활성</span></td><td><button class="btn btn-outline btn-sm">수정</button></td></tr>
+          <tr style="background:#FFF8E1"><td>31</td><td style="color:var(--warn);font-weight:600">[신규] 팩토링은 매출채권을 금융사에 양도하여 조기 현금화하는 방법이다.</td><td><span class="badge badge-blue">O</span></td><td><span class="badge badge-orange">팩토링</span></td><td>중급</td><td><span class="badge badge-orange">검토 대기</span></td><td>
+            <div style="display:flex;gap:4px">
+              <button class="btn btn-outline btn-sm">수정</button>
+              <button class="btn btn-success btn-sm" onclick="this.closest('tr').cells[5].innerHTML='<span class=\'badge badge-green\'>활성</span>'">승인</button>
+            </div>
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 배포 버튼 -->
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;">
+      <button class="btn btn-gray">
+        <span class="ic"><svg width="13" height="13"><use href="#i-download"/></svg></span>
+        CSV 내보내기
+      </button>
+      <button class="btn btn-primary" onclick="deployAllQuiz()">
+        <span class="ic"><svg width="13" height="13" style="stroke:#fff"><use href="#i-zap"/></svg></span>
+        전체 퀴즈 배포 (index.html 반영)
+      </button>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- ── 계정 생성 MODAL ── -->
+<div class="modal-overlay" id="create-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title">신규 사원 등록</div>
+    <div class="modal-field">
+      <div class="modal-label">이름 <span style="color:var(--danger)">*</span></div>
+      <input class="modal-input" id="m-name" type="text" placeholder="실명">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">이메일 아이디 <span style="color:var(--danger)">*</span></div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <input class="modal-input" id="m-email" type="text" placeholder="영문+숫자" style="flex:1;">
+        <span style="font-size:12px;color:var(--text-sec);">@276holdings.com</span>
+      </div>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">부서</div>
+      <select class="modal-input" id="m-dept">
+        <option>영업지원</option><option>심사</option><option>기획</option>
+        <option>운영</option><option>AX·R&D</option><option>개발</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">멘토</div>
+      <select class="modal-input" id="m-mentor">
+        <option>박진용 (전략이사)</option><option>송인탁 (운영이사)</option>
+        <option>임지훈 (AX이사)</option><option>예충희 (영업이사)</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">입사일</div>
+      <input class="modal-input" id="m-date" type="date">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-gray" onclick="closeModal()">취소</button>
+      <button class="btn btn-primary" onclick="createEmployee()">
+        <span class="ic"><svg width="13" height="13" style="stroke:#fff"><use href="#i-user-plus"/></svg></span>
+        계정 생성 + Slack 발송
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 로그인 MODAL ── -->
+<div class="modal-overlay" id="login-modal" style="display:flex;">
+  <div class="modal">
+    <div class="modal-title" style="text-align:center;">
+      <span class="ic" style="color:var(--primary);margin-bottom:6px;display:block;">
+        <svg width="28" height="28"><use href="#i-lock"/></svg>
+      </span>
+      관리자 로그인
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">관리자 키</div>
+      <input class="modal-input" id="admin-key-input" type="password" placeholder="ADMIN KEY 입력"
+        onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div id="login-err" style="display:none;color:var(--danger);font-size:12px;margin-top:6px;"></div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" style="width:100%;" onclick="doLogin()">로그인</button>
+    </div>
+    <div style="text-align:center;margin-top:12px;font-size:11px;color:#BDBDBD;">
+      기본 키: <code style="background:#F5F5F5;padding:2px 6px;border-radius:4px;">flowpay2026</code>
+    </div>
+  </div>
+</div>
+
+<script>
+const APPS = 'https://script.google.com/macros/s/AKfycbwVv93ic_VlKwnQvm2wUYHtNX44AbYBJCH2XiSJRMiWjoY892NCKftniF5ufUgv2B7s/exec';
+const ADMIN_KEY = 'flowpay2026';
+let allQuizRows = [];
+
+/* ── LOGIN ── */
+function doLogin() {
+  const k = document.getElementById('admin-key-input').value;
+  if(k === ADMIN_KEY) {
+    document.getElementById('login-modal').style.display = 'none';
+    loadAllData();
+  } else {
+    const err = document.getElementById('login-err');
+    err.style.display = 'block';
+    err.textContent = '관리자 키가 올바르지 않습니다.';
+  }
+}
+document.getElementById('logout-btn').onclick = () => {
+  document.getElementById('admin-key-input').value = '';
+  document.getElementById('login-modal').style.display = 'flex';
+};
+
+/* ── TAB SWITCH ── */
+function switchTab(name) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.getElementById('pane-'+name).classList.add('active');
+  if(name === 'plangen' && !planEditorInitialized) {
+    initPlanEditor();
+    planEditorInitialized = true;
+  }
+}
+
+/* ── LOAD DATA ── */
+function loadAllData() {
+  loadQuizData();
+  loadProgressData();
+  updateEmpStats();
+}
+
+function calcScore(r) {
+  const CORRECT=['O','O','X','O','O','X','O','X','O','X','O','X','X','X','X','O','O','X','O','O','X','O','X','X','O','X','O','O','X','O'];
+  let c=0;
+  for(let i=0;i<30;i++) if((r[i+2]||'')===CORRECT[i]) c++;
+  return c;
+}
+function calcGrade(c) {
+  return c>=28?'A등급·탁월':c>=25?'B등급·우수':c>=21?'C등급·보통':'D등급·복습필요';
+}
+function gradeColor(g) {
+  if(g.startsWith('A')) return 'var(--grade-A)';
+  if(g.startsWith('B')) return 'var(--grade-B)';
+  if(g.startsWith('C')) return 'var(--grade-C)';
+  return 'var(--grade-D)';
+}
+function gradeBadgeClass(g) {
+  if(g.startsWith('A')) return 'badge-blue';
+  if(g.startsWith('B')) return 'badge-green';
+  if(g.startsWith('C')) return 'badge-orange';
+  return 'badge-red';
+}
+
+function loadQuizData() {
+  const url = APPS + '?action=getAll&key=' + ADMIN_KEY;
+  fetch(url)
+    .then(r => r.json())
+    .then(d => {
+      if(!d.rows||!d.rows.length) { showEmpty('quiz-tbody',7); return; }
+      allQuizRows = d.rows;
+      renderQuizTable(allQuizRows);
+      updateQuizStats(allQuizRows);
+    })
+    .catch(() => {
+      showEmpty('quiz-tbody',7,'API 연결 실패 — 샘플 데이터 표시');
+      const sample = [
+        ['2026-05-28 09:00','안애경','O','O','X','O','O','X','O','X','O','X','O','X','X','X','X','O','O','X','O','O','X','O','X','X','O','X','O','O','X','O',28],
+        ['2026-05-28 09:05','이도연','O','O','X','O','O','X','O','X','O','X','O','X','X','X','X','O','O','X','O','O','X','O','X','X','O','X','O','O','X','O',28],
+      ];
+      allQuizRows = sample;
+      renderQuizTable(sample);
+      updateQuizStats(sample);
+    });
+}
+
+function renderQuizTable(rows) {
+  const tb = document.getElementById('quiz-tbody');
+  if(!rows.length) { showEmpty('quiz-tbody',7); return; }
+  tb.innerHTML = rows.map((r,i) => {
+    const sc = calcScore(r), gd = calcGrade(sc), pct = Math.round(sc/30*100);
+    return `<tr>
+      <td style="color:var(--text-sec)">${i+1}</td>
+      <td><strong>${r[1]||'—'}</strong></td>
+      <td style="font-size:11px;color:var(--text-sec)">${r[0]||'—'}</td>
+      <td><strong>${sc}</strong> <span style="color:var(--text-sec)">/30</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${gradeColor(gd)};"></div></div>
+          <span style="font-size:11px;font-weight:600;color:${gradeColor(gd)}">${pct}%</span>
+        </div>
+      </td>
+      <td><span class="badge ${gradeBadgeClass(gd)}">${gd}</span></td>
+      <td><button class="btn btn-outline btn-sm">상세</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function updateQuizStats(rows) {
+  document.getElementById('stat-total').textContent = rows.length + '명';
+  const scores = rows.map(r => calcScore(r));
+  const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : 0;
+  document.getElementById('stat-avg').textContent = avg;
+  document.getElementById('stat-a').textContent = scores.filter(s=>s>=28).length;
+  document.getElementById('stat-b').textContent = scores.filter(s=>s>=25&&s<28).length;
+  document.getElementById('stat-d').textContent = scores.filter(s=>s<=20).length;
+}
+
+function filterQuizTable() {
+  const q = document.getElementById('quiz-search').value.toLowerCase();
+  renderQuizTable(q ? allQuizRows.filter(r=>(r[1]||'').toLowerCase().includes(q)) : allQuizRows);
+}
+
+function loadProgressData() {
+  const url = APPS + '?action=getProgress&key=' + ADMIN_KEY;
+  fetch(url)
+    .then(r=>r.json())
+    .then(d=>{
+      if(!d.rows) return;
+      const byName={};
+      d.rows.forEach(r=>{ const n=r[1]||'?'; if(!byName[n]) byName[n]=[]; byName[n].push(parseInt(r[2])||0); });
+      renderProgressTable(byName);
+    })
+    .catch(()=>{
+      const sample = {'안애경':[1],'이도연':[1,2]};
+      renderProgressTable(sample);
+    });
+}
+
+function renderProgressTable(byName) {
+  const tb = document.getElementById('progress-tbody');
+  if(!Object.keys(byName).length){ showEmpty('progress-tbody',8); return; }
+  tb.innerHTML = Object.entries(byName).map(([name,chs])=>{
+    const dots=[1,2,3,4,5].map(i=>`<div class="mdot ${chs.includes(i)?'done':''}" title="챕터${i}"></div>`).join('');
+    const pct = Math.round(chs.length/5*100);
+    return `<tr>
+      <td><strong>${name}</strong></td>
+      ${[1,2,3,4,5].map(i=>`<td style="text-align:center">${chs.includes(i)?'<span class="badge badge-green" style="font-size:10px;">완료</span>':'<span style="color:#BDBDBD;font-size:12px;">—</span>'}</td>`).join('')}
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:var(--primary);"></div></div>
+          <span style="font-size:11px;font-weight:700;color:var(--primary)">${pct}%</span>
+        </div>
+      </td>
+      <td style="font-size:11px;color:var(--text-sec)">—</td>
+    </tr>`;
+  }).join('');
+}
+
+function updateEmpStats() {
+  document.getElementById('emp-total').textContent = '2명';
+  document.getElementById('emp-active').textContent = '0명';
+  document.getElementById('emp-onboard').textContent = '2명';
+  document.getElementById('emp-slack').textContent = '2명';
+}
+
+/* ── ACCOUNT APPROVAL ── */
+function approveAccount(btn, name, emailId) {
+  if(!confirm(`"${name}" 계정을 승인하고 Slack을 발송할까요?\n이메일: ${emailId}@276holdings.com`)) return;
+  btn.disabled = true;
+  btn.textContent = '처리 중...';
+  const tmpPw = 'Tmp#' + Math.floor(1000+Math.random()*9000);
+  const url = APPS + `?action=approve&name=${encodeURIComponent(name)}&email_id=${emailId}&tmp_pw=${tmpPw}&key=${ADMIN_KEY}`;
+  fetch(url).catch(()=>{}).finally(()=>{
+    const row = btn.closest('tr');
+    row.cells[5].innerHTML = '<span class="badge badge-green">승인 완료</span>';
+    row.cells[6].innerHTML = `<span style="font-family:monospace;font-size:11px;color:var(--info)">${tmpPw}</span>`;
+    row.cells[7].innerHTML = '<span class="badge badge-green">발송 완료</span>';
+    row.cells[8].innerHTML = '<button class="btn btn-gray btn-sm" disabled>처리 완료</button>';
+    const cnt = document.getElementById('req-count-badge');
+    const n = parseInt(cnt.textContent||'0')-1;
+    cnt.textContent = n > 0 ? n : '0';
+    alert(`✅ ${name} 계정 승인 완료\n임시PW: ${tmpPw}\nSlack으로 발송됐습니다.`);
+  });
+}
+
+/* ── SLACK SEND ── */
+function sendSlack(name) {
+  alert(`📨 ${name}님에게 Slack DM을 발송합니다.\n(연동 시 자동 발송)`);
+}
+
+/* ── REMEDIATION ── */
+function createRemediation(name, tags) {
+  switchTab('remediation');
+  alert(`📝 ${name}님의 보강 교육이 생성됐습니다.\n대상 태그: ${tags}`);
+}
+
+function runAnalysis() { alert('취약점 분석이 갱신됐습니다.'); }
+
+/* ── MODAL ── */
+function openCreateModal() { document.getElementById('create-modal').classList.add('open'); }
+function closeModal() { document.getElementById('create-modal').classList.remove('open'); }
+function createEmployee() {
+  const name  = document.getElementById('m-name').value.trim();
+  const email = document.getElementById('m-email').value.trim();
+  if(!name||!email){ alert('이름과 이메일 아이디는 필수입니다.'); return; }
+  const tmpPw = 'Tmp#' + Math.floor(1000+Math.random()*9000);
+  closeModal();
+  alert(`✅ ${name} 계정 생성 완료!\n이메일: ${email}@276holdings.com\n임시PW: ${tmpPw}\nSlack DM으로 발송됐습니다.`);
+}
+
+/* ── EXPORT ── */
+function exportCSV() { alert('현재 탭의 데이터를 CSV로 내보냅니다.'); }
+
+/* ══════════════════════════════
+   교과서 관리 로직
+══════════════════════════════ */
+function setTbStep(n) {
+  for(let i=1;i<=4;i++){
+    const el = document.getElementById('tb-step'+i);
+    const sb = document.getElementById('tbs-'+i);
+    if(el) el.style.display = (i===n)?'block':'none';
+    if(sb) {
+      sb.classList.toggle('active', i===n);
+      sb.classList.toggle('done', i<n);
+    }
+  }
+}
+
+function handleTbDrop(e) {
+  e.preventDefault();
+  document.getElementById('tb-drop').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if(file && file.type==='application/pdf') processTbPdf(file);
+  else alert('PDF 파일만 업로드 가능합니다.');
+}
+function handleTbFile(input) {
+  if(input.files[0]) processTbPdf(input.files[0]);
+}
+function processTbPdf(file) {
+  setTbStep(2);
+  const progress = document.getElementById('tb-parse-progress');
+  const steps = ['PDF 읽는 중...','페이지 분석 중...','텍스트 추출 중...','내용 구조화 중...'];
+  let si = 0;
+  const iv = setInterval(() => {
+    progress.textContent = steps[si++ % steps.length];
+  }, 600);
+  // 실제 구현: pdf.js 로 텍스트 추출
+  // 샘플에서는 2초 후 가상 추출 결과로 이동
+  setTimeout(() => {
+    clearInterval(iv);
+    document.getElementById('tb-title').value = file.name.replace('.pdf','');
+    document.getElementById('tb-content').value =
+`[챕터 제목]\n${file.name.replace('.pdf','')}\n\n[학습 목표]\n이 챕터를 완료하면 핵심 개념을 이해하고 실무에 적용할 수 있습니다.\n\n[주요 내용]\n1. 개념 정의 및 배경\n2. 구조 및 작동 원리\n3. 실무 적용 사례\n4. 핵심 정리\n\n(PDF에서 추출된 실제 내용으로 자동 대체됩니다)`;
+    setTbStep(3);
+  }, 2500);
+}
+function deployTextbook() {
+  const title = document.getElementById('tb-title').value.trim();
+  if(!title) { alert('교재 제목을 입력해 주세요.'); return; }
+  setTbStep(4);
+  const chap = document.getElementById('tb-chap').value;
+  const week = document.getElementById('tb-week').value;
+  document.getElementById('tb-deploy-msg').textContent =
+    `"${title}" (${chap}, ${week}) 이 FinTech_Book.html에 추가되고 신입사원 대시보드에 노출됩니다.`;
+}
+function resetTbUpload() { setTbStep(1); document.getElementById('tb-file').value=''; }
+
+/* ══════════════════════════════
+   퀴즈 관리 로직
+══════════════════════════════ */
+function setQbStep(n) {
+  for(let i=1;i<=4;i++){
+    const el = document.getElementById('qb-step'+i);
+    const sb = document.getElementById('qbs-'+i);
+    if(el) el.style.display = (i===n)?'block':'none';
+    if(sb) { sb.classList.toggle('active',i===n); sb.classList.toggle('done',i<n); }
+  }
+}
+function handleQbDrop(e) {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if(file && file.type==='application/pdf') processQbPdf(file);
+  else alert('PDF 파일만 업로드 가능합니다.');
+}
+function handleQbFile(input) { if(input.files[0]) processQbPdf(input.files[0]); }
+
+const SAMPLE_PARSED_QS = [
+  {q:'매출채권 팩토링은 기업이 보유한 매출채권을 금융사에 매각하여 현금을 조기에 확보하는 방법이다.',a:'O',cat:'팩토링'},
+  {q:'외담대(외상매출채권 담보대출)와 팩토링은 동일한 금융 상품이다.',a:'X',cat:'팩토링'},
+  {q:'FlowScore는 사업자번호 입력만으로 기업 신용등급을 산출할 수 있다.',a:'O',cat:'FlowPay_SNPL'},
+  {q:'심사 프로세스에서 위체크(WeCheck)는 위험 거래처 여부를 조회하는 도구이다.',a:'O',cat:'심사프로세스'},
+];
+
+function processQbPdf(file) {
+  setQbStep(2);
+  const msg = document.getElementById('qb-parse-msg');
+  const steps = ['텍스트 추출 중...','Q&A 패턴 인식 중...','정답 매핑 중...','태그 분류 중...'];
+  let si=0; const iv = setInterval(() => { msg.textContent = steps[si++%steps.length]; }, 500);
+  setTimeout(() => {
+    clearInterval(iv);
+    renderParsedQuestions(SAMPLE_PARSED_QS);
+    document.getElementById('qb-parsed-count').textContent = `(${SAMPLE_PARSED_QS.length}개 인식됨)`;
+    setQbStep(3);
+  }, 2200);
+}
+
+function renderParsedQuestions(qs) {
+  const list = document.getElementById('qb-parsed-list');
+  const CATS = ['핀테크기초','FlowPay_SNPL','전자어음','팩토링','심사프로세스','CRM','콜드메일'];
+  list.innerHTML = qs.map((q,i) => `
+    <div class="parsed-q-item" id="pqi-${i}">
+      <div class="pqi-q">${i+1}. ${q.q}</div>
+      <div class="pqi-meta">
+        <span style="font-size:11px;color:var(--text-sec)">정답:</span>
+        <select class="pqi-ans-sel" id="pqi-ans-${i}">
+          <option value="O" ${q.a==='O'?'selected':''}>O</option>
+          <option value="X" ${q.a==='X'?'selected':''}>X</option>
+        </select>
+        <select class="pqi-tag-sel" id="pqi-tag-${i}">
+          ${CATS.map(c=>`<option value="${c}" ${c===q.cat?'selected':''}>${c}</option>`).join('')}
+        </select>
+        <button class="pqi-del" onclick="document.getElementById('pqi-${i}').remove()">×</button>
+      </div>
+    </div>`).join('');
+}
+
+function addParsedQuestions() { alert('파싱된 문항이 퀴즈 뱅크에 추가됩니다.'); }
+
+function deployQuiz() {
+  const count = document.querySelectorAll('.parsed-q-item').length;
+  setQbStep(4);
+  document.getElementById('qb-deploy-msg').textContent =
+    `${count}개 문항이 퀴즈 뱅크에 추가되고 index.html이 자동 업데이트됩니다.`;
+}
+function resetQbUpload() { setQbStep(1); document.getElementById('qb-file').value=''; }
+
+function addSingleQuestion() {
+  const q = document.getElementById('nq-question').value.trim();
+  const a = document.getElementById('nq-answer').value;
+  const cat = document.getElementById('nq-cat').value;
+  const ex = document.getElementById('nq-explain').value.trim();
+  if(!q) { alert('질문을 입력해 주세요.'); return; }
+  if(!confirm(`문항을 추가하고 퀴즈를 배포하시겠습니까?\n\n질문: ${q}\n정답: ${a} | 카테고리: ${cat}`)) return;
+  alert(`✅ 새 문항이 추가되고 index.html에 배포됩니다.\n문항: ${q.slice(0,30)}...`);
+  ['nq-question','nq-explain'].forEach(id => document.getElementById(id).value='');
+}
+
+function deployAllQuiz() {
+  const active = document.querySelectorAll('#quiz-bank-tbody .badge-green').length;
+  if(!confirm(`현재 활성 문항 ${active}개를 index.html에 배포하시겠습니까?`)) return;
+  alert(`✅ 퀴즈 배포 완료!\n총 ${active}개 문항이 index.html CORRECT 배열 및 QUESTIONS 배열에 반영됩니다.`);
+}
+
+function filterQuizBank() { /* 필터 로직 — 실제 구현 시 확장 */ }
+
+/* ── 교과서 방식 토글 ── */
+function switchTbMethod(mode) {
+  ['pdf','link'].forEach(m => {
+    document.getElementById('tb-mt-'+m).classList.toggle('active', m===mode);
+    document.getElementById('tb-mode-'+m).style.display = m===mode ? 'block' : 'none';
+  });
+}
+
+/* ── 교과서 웹링크 배포 ── */
+function previewTbLink() {
+  const url = document.getElementById('tbl-url').value.trim();
+  const title = document.getElementById('tbl-title').value.trim() || '(제목 미입력)';
+  if(!url){ alert('URL을 입력해 주세요.'); return; }
+  const box = document.getElementById('tbl-preview-box');
+  document.getElementById('tbl-preview-title').textContent = title;
+  document.getElementById('tbl-preview-url').textContent = url;
+  box.style.display = 'block';
+}
+document.getElementById('tbl-title') && document.getElementById('tbl-title')
+  .addEventListener('input', () => {
+    const t = document.getElementById('tbl-preview-title');
+    if(t) t.textContent = document.getElementById('tbl-title').value || '(제목 미입력)';
+  });
+
+function deployTextbookLink() {
+  const url   = document.getElementById('tbl-url').value.trim();
+  const title = document.getElementById('tbl-title').value.trim();
+  const chap  = document.getElementById('tbl-chap').value;
+  const week  = document.getElementById('tbl-week').value;
+  const openMode = document.querySelector('input[name="tb-open"]:checked')?.value || 'tab';
+  if(!url||!title){ alert('URL과 교재 제목을 모두 입력해 주세요.'); return; }
+  // 목록에 링크 행 추가 (시뮬레이션)
+  const tbody = document.querySelector('#pane-textbook .tbl tbody');
+  const n = tbody.querySelectorAll('tr').length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${n}</td>
+    <td>
+      <a href="${url}" target="${openMode==='tab'?'_blank':'_self'}"
+        style="color:var(--primary);text-decoration:none;display:flex;align-items:center;gap:5px;font-weight:600;">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-globe"/></svg>
+        ${title}
+        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-link-ext"/></svg>
+      </a>
+    </td>
+    <td>${chap}</td><td>${week}</td>
+    <td>${new Date().toISOString().slice(0,10)}</td>
+    <td><span class="badge badge-green">배포 완료</span> <span class="badge badge-blue">링크</span></td>
+    <td><a href="${url}" target="_blank" class="btn btn-outline btn-sm">열기</a></td>`;
+  tbody.appendChild(tr);
+  alert(`✅ "${title}" 링크 교재가 신입사원 대시보드에 등록되었습니다.\n열기 방식: ${openMode==='tab'?'새 탭':'같은 창'}`);
+  document.getElementById('tbl-url').value='';
+  document.getElementById('tbl-title').value='';
+  document.getElementById('tbl-preview-box').style.display='none';
+}
+
+/* ── 퀴즈 방식 토글 ── */
+function switchQbMethod(mode) {
+  ['pdf','link'].forEach(m => {
+    document.getElementById('qb-mt-'+m).classList.toggle('active', m===mode);
+    document.getElementById('qb-mode-'+m).style.display = m===mode ? 'block' : 'none';
+  });
+}
+
+/* ── 퀴즈 웹링크 파싱 ── */
+const SAMPLE_LINK_QS = [
+  {q:'매출채권 팩토링은 기업이 보유한 채권을 금융사에 매각하여 유동성을 확보하는 방법이다.',a:'O',cat:'팩토링'},
+  {q:'FlowScore는 사업자번호 기반으로 20등급 기업 신용평가를 제공한다.',a:'O',cat:'FlowPay_SNPL'},
+  {q:'전자어음과 외담대(외상매출채권 담보대출)는 동일한 금융 상품이다.',a:'X',cat:'전자어음'},
+];
+
+function fetchQbLink() {
+  const url = document.getElementById('qbl-url').value.trim();
+  if(!url){ alert('URL을 입력해 주세요.'); return; }
+  document.getElementById('qbl-loading').style.display='block';
+  document.getElementById('qbl-result').style.display='none';
+  // 실제 구현: Apps Script → URL fetch → Q&A 파싱
+  setTimeout(() => {
+    document.getElementById('qbl-loading').style.display='none';
+    document.getElementById('qbl-source-url').textContent = url;
+    document.getElementById('qbl-count').textContent = `(${SAMPLE_LINK_QS.length}개 추출됨)`;
+    // 파싱 결과 렌더
+    const CATS = ['핀테크기초','FlowPay_SNPL','전자어음','팩토링','심사프로세스','CRM','콜드메일'];
+    document.getElementById('qbl-list').innerHTML = SAMPLE_LINK_QS.map((q,i) => `
+      <div class="parsed-q-item" id="qbli-${i}">
+        <div class="pqi-q">${i+1}. ${q.q}</div>
+        <div class="pqi-meta">
+          <span style="font-size:11px;color:var(--text-sec)">정답:</span>
+          <select class="pqi-ans-sel" id="qbli-ans-${i}">
+            <option value="O" ${q.a==='O'?'selected':''}>O</option>
+            <option value="X" ${q.a==='X'?'selected':''}>X</option>
+          </select>
+          <select class="pqi-tag-sel" id="qbli-tag-${i}">
+            ${CATS.map(c=>`<option value="${c}" ${c===q.cat?'selected':''}>${c}</option>`).join('')}
+          </select>
+          <button class="pqi-del" onclick="document.getElementById('qbli-${i}').remove()">×</button>
+        </div>
+      </div>`).join('');
+    document.getElementById('qbl-result').style.display='block';
+  }, 1800);
+}
+
+function deployQbLink() {
+  const cnt = document.querySelectorAll('[id^="qbli-"]').length;
+  document.getElementById('qbl-result').style.display='none';
+  document.getElementById('qbl-done').style.display='block';
+}
+
+function resetQbLink() {
+  document.getElementById('qbl-url').value='';
+  document.getElementById('qbl-loading').style.display='none';
+  document.getElementById('qbl-result').style.display='none';
+  document.getElementById('qbl-done').style.display='none';
+}
+
+/* ══════════════════════════════
+   4주 학습 계획서 직접 작성 로직
+══════════════════════════════ */
+const WEEK_META = [
+  {label:'1주차', color:'#4527A0', bg:'#EDE7F6'},
+  {label:'2주차', color:'#1565C0', bg:'#E3F2FD'},
+  {label:'3주차', color:'#2E7D32', bg:'#E8F5E9'},
+  {label:'4주차', color:'#E65100', bg:'#FFF3E0'},
+];
+
+// 아코디언 초기 렌더
+function initPlanEditor() {
+  const el = document.getElementById('week-accordions');
+  el.innerHTML = WEEK_META.map((w,i) => `
+    <div class="week-accordion" id="wacc-${i}">
+      <div class="week-acc-header" onclick="toggleAcc(${i})">
+        <div class="week-acc-num" style="background:${w.color}">${i+1}</div>
+        <div style="flex:1">
+          <input type="text" id="wt-theme-${i}"
+            style="width:100%;border:none;outline:none;font-size:13px;font-weight:600;
+              color:${w.color};background:transparent;font-family:inherit;"
+            placeholder="${w.label} 주제 입력 (예: 오리엔테이션 & 도메인 학습)"
+            onclick="event.stopPropagation()" oninput="onInfoChange()">
+        </div>
+        <div class="week-acc-date" id="wdate-${i}">—</div>
+        <svg class="week-acc-chevron" id="wchev-${i}" width="14" height="14" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <use href="#i-trend"/>
+        </svg>
+      </div>
+      <div class="week-acc-body ${i===0?'open':''}" id="wbody-${i}">
+
+        <!-- 주차 목표 -->
+        <div class="pf-group">
+          <div class="pf-label">주차 목표</div>
+          <input class="pf-input" id="wt-goal-${i}" type="text"
+            placeholder="이번 주 핵심 달성 목표를 입력하세요" oninput="onInfoChange()">
+        </div>
+
+        <!-- 일별 일정 테이블 -->
+        <div class="pf-label" style="margin-bottom:5px;">일별 학습 일정</div>
+        <table class="edit-tbl" id="etbl-${i}">
+          <thead><tr>
+            <th style="width:60px">일정</th>
+            <th>학습 주제</th>
+            <th>세부 내용 / 실습</th>
+            <th style="width:28px"></th>
+          </tr></thead>
+          <tbody id="etbl-body-${i}"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addTaskRow(${i})">+ 일정 추가</button>
+
+        <!-- 체크리스트 -->
+        <div class="checklist-editor">
+          <div class="cl-editor-label">완료 체크리스트</div>
+          <div id="cl-list-${i}"></div>
+          <button class="add-row-btn" style="margin-top:4px;" onclick="addCheckItem(${i})">+ 항목 추가</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // 각 주차에 기본 행 1개 추가
+  WEEK_META.forEach((_,i) => {
+    addTaskRow(i); addTaskRow(i); addTaskRow(i);
+    addCheckItem(i); addCheckItem(i);
+  });
+}
+
+function toggleAcc(i) {
+  const body = document.getElementById('wbody-'+i);
+  const chev = document.getElementById('wchev-'+i);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chev.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+let taskRowId = 0;
+function addTaskRow(wi) {
+  const id = taskRowId++;
+  const tbody = document.getElementById('etbl-body-'+wi);
+  const tr = document.createElement('tr');
+  tr.id = 'trow-'+id;
+  tr.innerHTML = `
+    <td><input type="text" placeholder="월/화/수..." oninput="onInfoChange()"></td>
+    <td><input type="text" placeholder="학습 주제" oninput="onInfoChange()"></td>
+    <td><input type="text" placeholder="세부 내용 및 실습 방법" oninput="onInfoChange()"></td>
+    <td><button class="row-del-btn" onclick="document.getElementById('trow-${id}').remove();onInfoChange()">
+      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round"><use href="#i-x"/></svg>
+    </button></td>`;
+  tbody.appendChild(tr);
+}
+
+let clItemId = 0;
+function addCheckItem(wi) {
+  const id = clItemId++;
+  const list = document.getElementById('cl-list-'+wi);
+  const div = document.createElement('div');
+  div.id = 'cli-'+id;
+  div.className = 'cl-item-row';
+  div.innerHTML = `
+    <div class="check-box"></div>
+    <input class="cl-item-input" type="text" placeholder="완료 항목 입력" oninput="onInfoChange()">
+    <button class="row-del-btn" onclick="document.getElementById('cli-${id}').remove();onInfoChange()">
+      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round"><use href="#i-x"/></svg>
+    </button>`;
+  list.appendChild(div);
+}
+
+function updateWeekDates() {
+  const dateVal = document.getElementById('ei-date').value;
+  if(!dateVal) { WEEK_META.forEach((_,i) => { document.getElementById('wdate-'+i).textContent='—'; }); return; }
+  const start = new Date(dateVal);
+  const fmt = d => `${d.getMonth()+1}/${d.getDate()}`;
+  WEEK_META.forEach((_,i) => {
+    const s = new Date(start); s.setDate(s.getDate() + i*7);
+    const e = new Date(s); e.setDate(s.getDate() + 4);
+    document.getElementById('wdate-'+i).textContent = `${fmt(s)} ~ ${fmt(e)}`;
+  });
+}
+
+function onInfoChange() { /* live preview 비활성 — 갱신 버튼 사용 */ }
+
+function refreshPreview() {
+  const name   = document.getElementById('ei-name').value.trim() || '—';
+  const dept   = document.getElementById('ei-dept').value;
+  const mentor = document.getElementById('ei-mentor').value.trim() || '—';
+  const dateV  = document.getElementById('ei-date').value;
+  const goal   = document.getElementById('ei-goal').value.trim();
+
+  if(name === '—') { alert('사원 이름을 입력해 주세요.'); return; }
+
+  const fmt = d => `${d.getMonth()+1}/${d.getDate()}`;
+  const startDate = dateV ? new Date(dateV) : new Date();
+  const endDate = new Date(startDate); endDate.setDate(endDate.getDate()+27);
+
+  document.getElementById('pd-title').textContent = `${name} 사원 4주 온보딩 학습 계획서`;
+  document.getElementById('pd-sub').textContent = `276홀딩스 ${dept}팀`;
+  document.getElementById('pd-dept').textContent = dept;
+  document.getElementById('pd-mentor').textContent = mentor;
+  document.getElementById('pd-date').textContent = dateV || '미입력';
+  document.getElementById('pd-end').textContent = fmt(endDate);
+  document.getElementById('pd-created').textContent = '생성일: ' + new Date().toLocaleDateString('ko-KR');
+  document.getElementById('pd-goal-box').innerHTML =
+    `<strong>🎯 온보딩 핵심 목표</strong><br>${goal || '(목표 미입력)'}`;
+
+  // 주차 카드 생성
+  let html = '';
+  WEEK_META.forEach((w,i) => {
+    const theme = document.getElementById('wt-theme-'+i).value || `${w.label} 주제`;
+    const wgoal = document.getElementById('wt-goal-'+i).value || '—';
+    const dateEl = document.getElementById('wdate-'+i).textContent;
+
+    // 일정 행 수집
+    const rows = Array.from(document.querySelectorAll('#etbl-body-'+i+' tr')).map(tr => {
+      const inputs = tr.querySelectorAll('input[type=text]');
+      return {day: inputs[0]?.value||'', topic: inputs[1]?.value||'', detail: inputs[2]?.value||''};
+    }).filter(r => r.topic);
+
+    // 체크리스트 수집
+    const checks = Array.from(document.querySelectorAll('#cl-list-'+i+' input[type=text]'))
+      .map(inp => inp.value).filter(v => v);
+
+    const rowsHtml = rows.map(r => `
+      <tr>
+        <td style="font-size:11px;font-weight:600;color:var(--text-sec);white-space:nowrap">${r.day}</td>
+        <td><span class="topic-tag" style="background:${w.bg};color:${w.color}">${w.label}</span>${r.topic}</td>
+        <td style="color:var(--text-sec);font-size:11px">${r.detail}</td>
+      </tr>`).join('') || `<tr><td colspan="3" style="color:#BDBDBD;font-size:12px;padding:8px">일정 없음</td></tr>`;
+
+    const checksHtml = checks.map(c => `<li><div class="check-box"></div>${c}</li>`).join('');
+
+    html += `
+      <div class="week-card">
+        <div class="week-header" style="background:${w.bg}">
+          <div class="week-num" style="background:${w.color}">${i+1}</div>
+          <div>
+            <div class="week-title" style="color:${w.color}">${w.label} — ${theme}</div>
+            <div style="font-size:11px;color:${w.color};opacity:.8">${dateEl}</div>
+          </div>
+        </div>
+        <div class="week-body">
+          <div class="week-goal" style="border-left-color:${w.color};color:${w.color}">목표: ${wgoal}</div>
+          <table class="day-table">
+            <thead><tr><th style="width:50px">일정</th><th>학습 주제</th><th>세부 내용</th></tr></thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+          ${checks.length ? `<div style="margin-top:8px">
+            <div style="font-size:11px;font-weight:600;color:var(--text-sec);margin-bottom:4px">✅ 주차 완료 체크리스트</div>
+            <ul class="check-list">${checksHtml}</ul></div>` : ''}
+        </div>
+      </div>`;
+  });
+  document.getElementById('pd-weeks').innerHTML = html;
+
+  document.getElementById('preview-empty').style.display = 'none';
+  document.getElementById('plan-doc').classList.add('visible');
+}
+
+function clearPlanEditor() {
+  if(!confirm('작성한 내용을 모두 초기화하시겠습니까?')) return;
+  ['ei-name','ei-mentor','ei-goal'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('ei-date').value='';
+  WEEK_META.forEach((_,i) => {
+    document.getElementById('wt-theme-'+i).value='';
+    document.getElementById('wt-goal-'+i).value='';
+    document.getElementById('etbl-body-'+i).innerHTML='';
+    document.getElementById('cl-list-'+i).innerHTML='';
+    addTaskRow(i); addTaskRow(i); addTaskRow(i);
+    addCheckItem(i); addCheckItem(i);
+    document.getElementById('wdate-'+i).textContent='—';
+  });
+  document.getElementById('preview-empty').style.display='block';
+  document.getElementById('plan-doc').classList.remove('visible');
+}
+
+// 탭 전환 시 에디터 초기화 여부
+let planEditorInitialized = false;
+
+const DEPT_PLANS = {
+  '영업지원': {
+    w1:{ theme:'오리엔테이션 & 핀테크 도메인', color:'#4527A0',
+      goal:'회사 시스템 적응 + 핀테크 기초 이해 완료',
+      days:[
+        {d:'1일차',topic:'입사 행정 + 핀테크 도메인 교육',detail:'근로계약서·서약서·지문등록 / FinTech_Book.html 1~2장 정독'},
+        {d:'2일차',topic:'문명의 발달과 경제성장',detail:'교통·통신·금융 발달사 학습 / 역강의 준비 (D+2)'},
+        {d:'3일차',topic:'플로우페이 SNPL 구조',detail:'SNPL 체크리스트 자가 점검 / 마진율 계산 실습'},
+        {d:'4일차',topic:'플로우페이 5단계 프로세스',detail:'프로세스 롤플레이 실습 / 고객 질문 시나리오 응답 연습'},
+        {d:'5일차',topic:'CRM 세일즈맵 기초',detail:'리드 등록·스테이지 이동·태그 분류 실습'},
+      ],
+      checks:['시스템 계정 전체 발급 완료','핀테크 O/X 퀴즈 1회 응시 (기준 C등급)','SNPL 구조 역강의 발표 완료','CRM 기본 사용 가능'],
+    },
+    w2:{ theme:'영업 실무 & 전자어음 교육', color:'#1565C0',
+      goal:'전자어음·팩토링 개념 이해 + CRM 독립 조작',
+      days:[
+        {d:'월',topic:'전자어음 할인 영업교육',detail:'예충희 영업이사 진행 / 팩토링·외담대 차이 구분'},
+        {d:'화',topic:'전자어음 역강의 발표',detail:'토크 트랙 롤플레이 — 오프닝·확인질문·마무리'},
+        {d:'수',topic:'경영지원 업무 인수인계',detail:'인프라 관리·주주 자료 구조 파악'},
+        {d:'목',topic:'AI 툴 환경 세팅',detail:'Claude·ChatGPT 업무 적용 / 자동화 파이프라인 초안'},
+        {d:'금',topic:'업무 롤 정의서 리뷰',detail:'자기 업무 범위 정의 + 멘토 피드백'},
+      ],
+      checks:['전자어음 할인 역강의 발표 완료','팩토링·외담대 차이 구분 가능','경영지원 루틴 업무 목록 파악','AI 툴 1종 업무 적용'],
+    },
+    w3:{ theme:'리드 발굴 & CRM 자립', color:'#2E7D32',
+      goal:'리드 DB 구조 자력 설계 + 콜드메일 템플릿 완성',
+      days:[
+        {d:'월',topic:'잠재 고객 DB 분류 기준 수립',detail:'업종·규모·결제 니즈별 세그먼트 정의 / 기존 DB 정제'},
+        {d:'화',topic:'리드 발굴 채널 파악',detail:'인바운드·아웃바운드 채널 구조 파악 및 우선순위 설정'},
+        {d:'수',topic:'콜드메일 초안 작성',detail:'타깃 업종 3종 콜드메일 템플릿 작성 / 팀 리뷰'},
+        {d:'목',topic:'자금 집행 데이터 관리',detail:'플랫폼 운영 데이터 정리 포맷 파악'},
+        {d:'금',topic:'주간 성과 공유',detail:'리드 DB 초안 + 콜드메일 템플릿 매니저 공유'},
+      ],
+      checks:['잠재 고객 DB 분류 기준 완성','콜드메일 템플릿 1종 승인','자금 집행 데이터 포맷 파악','O/X 퀴즈 B등급 이상 달성'],
+    },
+    w4:{ theme:'독립 업무 수행 & 온보딩 완료', color:'#E65100',
+      goal:'CRM 자력 관리 루틴 + 콜드메일 첫 발송 완료',
+      days:[
+        {d:'월',topic:'CRM 자력 관리 루틴 정착',detail:'신규 리드 CRM 등록·분류 자력 수행'},
+        {d:'화',topic:'콜드메일 첫 발송',detail:'승인 템플릿 기반 10~20건 첫 배치 발송 / 오픈율 기록'},
+        {d:'수',topic:'주주 대응 자료 정리',detail:'투자사 대응 자료 리서치 첫 수행'},
+        {d:'목',topic:'경영지원 루틴 독립 수행',detail:'인수인계 마무리 및 자력 수행 전환'},
+        {d:'금',topic:'온보딩 완료 면담',detail:'1개월 성과 점검 / 어려움·개선사항 청취 / 다음 분기 목표 확정'},
+      ],
+      checks:['CRM 자력 관리 루틴 정착','콜드메일 첫 발송 10건 이상','온보딩 완료 면담 진행','8주차 성과 발표 준비 시작'],
+    },
+  },
+  '심사': {
+    w1:{ theme:'오리엔테이션 & 핀테크 도메인', color:'#4527A0',
+      goal:'회사 시스템 적응 + 핀테크·심사 기초 이해',
+      days:[
+        {d:'1일차',topic:'입사 행정 + 핀테크 도메인 교육',detail:'근로계약서·서약서 / FinTech_Book.html 정독'},
+        {d:'2일차',topic:'플로우페이 SNPL 구조',detail:'공급망 금융 구조 이해 / SNPL 체크리스트'},
+        {d:'3일차',topic:'심사 프로세스 기초',detail:'송인탁 이사 진행 / 심사 기준·평가 프로세스·서류 검토'},
+        {d:'4일차',topic:'위체크 시스템 실습',detail:'위험 거래처 조회 실습 / 결과 해석 방법'},
+        {d:'5일차',topic:'리스크 관리 기준',detail:'업종별 리스크 분류 / 한도 설정 기준 파악'},
+      ],
+      checks:['심사 기준 문서 숙지','위체크 시스템 1회 독립 조회','SNPL 구조 역강의 발표','O/X 퀴즈 1회 응시'],
+    },
+    w2:{ theme:'심사 실무 & 서류 검토', color:'#1565C0',
+      goal:'고객 신청 서류 자력 검토 가능 수준 달성',
+      days:[
+        {d:'월',topic:'고객 신청 흐름 전체 학습',detail:'신청 접수 → 서류 검토 → 한도 산정 → 승인'},
+        {d:'화',topic:'재무 데이터 분석 실습',detail:'재무제표 기초 / 매출채권 회수 사이클 분석'},
+        {d:'수',topic:'심사 시뮬레이션 1',detail:'샘플 케이스 심사 실습 (기본)'},
+        {d:'목',topic:'심사 시뮬레이션 2',detail:'샘플 케이스 심사 실습 (심화)'},
+        {d:'금',topic:'결과 피드백 세션',detail:'멘토와 심사 결과 리뷰 / 개선 포인트 정리'},
+      ],
+      checks:['고객 신청 서류 자력 검토 1건','재무제표 핵심 지표 파악','심사 시뮬레이션 2회 완료','전자어음 할인 개념 이해'],
+    },
+    w3:{ theme:'리스크 분석 & 데이터 활용', color:'#2E7D32',
+      goal:'FlowScore 연동 이해 + 독립 심사 능력 확보',
+      days:[
+        {d:'월',topic:'FlowScore 신용평가 시스템',detail:'AI 신용평가 20등급 구조 이해 / API 연동 흐름'},
+        {d:'화',topic:'부실 징후 탐지 방법',detail:'조기 경보 지표 파악 / 케이스 스터디'},
+        {d:'수',topic:'채권 관리 기초',detail:'채권 회수 프로세스 / 연체 대응 절차'},
+        {d:'목',topic:'정산 데이터 관리',detail:'자금 집행 데이터 포맷 파악 / 정산 시스템 조작'},
+        {d:'금',topic:'독립 심사 1건 수행',detail:'실제 케이스 자력 심사 + 멘토 최종 확인'},
+      ],
+      checks:['FlowScore 결과 해석 가능','독립 심사 1건 완료','채권 관리 프로세스 이해','O/X 퀴즈 B등급 이상'],
+    },
+    w4:{ theme:'온보딩 완료 & 실무 투입', color:'#E65100',
+      goal:'심사 루틴 자립 + 온보딩 완료 발표',
+      days:[
+        {d:'월',topic:'주간 심사 루틴 자력 수행',detail:'신규 신청 케이스 독립 처리'},
+        {d:'화',topic:'구조적 리스크 보고서 작성',detail:'주간 리스크 현황 요약 보고서 첫 작성'},
+        {d:'수',topic:'채권 데이터 분석',detail:'이상 징후 탐지 실습 / 대응 방안 제안'},
+        {d:'목',topic:'프로세스 개선 제안',detail:'현행 심사 프로세스 개선안 1건 작성'},
+        {d:'금',topic:'온보딩 완료 면담',detail:'1개월 성과 점검 / 다음 분기 목표 확정'},
+      ],
+      checks:['심사 루틴 독립 수행','리스크 보고서 1건 작성','온보딩 완료 면담 진행','목표 달성률 80% 이상'],
+    },
+  },
+};
+
+// 기타 부서는 영업지원 기반으로 생성
+['기획','운영','AX·R&D'].forEach(d => { DEPT_PLANS[d] = DEPT_PLANS['영업지원']; });
+
+const WEEK_COLORS = ['#4527A0','#1565C0','#2E7D32','#E65100'];
+const WEEK_BG    = ['#EDE7F6','#E3F2FD','#E8F5E9','#FFF3E0'];
+
+function generatePlan() { /* 미사용 — refreshPreview() 로 대체 */
+  refreshPreview();
+}
+
+function _legacyGeneratePlan_unused() {
+  const empSel  = document.getElementById('pg-emp').value;
+  const deptVal = document.getElementById('pg-dept').value;
+  const mentor  = document.getElementById('pg-mentor').value || '—';
+  const dateVal = document.getElementById('pg-date').value;
+  const goalVal = document.getElementById('pg-goal').value || '핵심 업무 자력 수행 역량 확보';
+  const showGrade = document.getElementById('pg-grade').value === '1';
+
+  let empName = '';
+  if(empSel === 'custom') {
+    empName = document.getElementById('pg-name').value.trim() || '신입사원';
+  } else if(empSel) {
+    empName = empSel.split('|')[0];
+  } else {
+    alert('사원을 선택해 주세요.'); return;
+  }
+
+  const plan = DEPT_PLANS[deptVal] || DEPT_PLANS['영업지원'];
+
+  // 날짜 계산
+  const startDate = dateVal ? new Date(dateVal) : new Date();
+  const fmt = d => `${d.getMonth()+1}/${d.getDate()}`;
+  function getWeekRange(start, weekOffset) {
+    const s = new Date(start); s.setDate(s.getDate() + weekOffset*7);
+    const e = new Date(s); e.setDate(s.getDate() + 4);
+    return `${fmt(s)} ~ ${fmt(e)}`;
+  }
+  const endDate = new Date(startDate); endDate.setDate(endDate.getDate() + 27);
+
+  // 헤더 채우기
+  document.getElementById('pd-title').textContent = `${empName} 사원 4주 온보딩 학습 계획서`;
+  document.getElementById('pd-sub').textContent = `276홀딩스 ${deptVal}팀`;
+  document.getElementById('pd-dept').textContent = deptVal;
+  document.getElementById('pd-mentor').textContent = mentor;
+  document.getElementById('pd-date').textContent = dateVal || '미입력';
+  document.getElementById('pd-end').textContent = fmt(endDate);
+  document.getElementById('pd-created').textContent = '생성일: ' + new Date().toLocaleDateString('ko-KR');
+  document.getElementById('pd-goal-box').innerHTML =
+    `<strong style="color:var(--primary-dark);">🎯 온보딩 핵심 목표</strong><br><span style="font-size:13px;">${goalVal}</span>`;
+
+  // 주차별 카드 생성
+  const weeksData = [plan.w1, plan.w2, plan.w3, plan.w4];
+  const weekLabels = ['1주차','2주차','3주차','4주차'];
+  let html = '';
+  weeksData.forEach((w, i) => {
+    const range = getWeekRange(startDate, i);
+    const rows = w.days.map(d => `
+      <tr>
+        <td style="font-size:11px;font-weight:600;color:var(--text-sec);white-space:nowrap;">${d.d}</td>
+        <td>
+          <span class="topic-tag" style="background:${WEEK_BG[i]};color:${WEEK_COLORS[i]}">${weekLabels[i]}</span>
+          ${d.topic}
+        </td>
+        <td style="color:var(--text-sec);font-size:11px;">${d.detail}</td>
+      </tr>`).join('');
+    const checks = w.checks.map(c =>
+      `<li><div class="check-box"></div>${c}</li>`).join('');
+    html += `
+      <div class="week-card">
+        <div class="week-header" style="background:${WEEK_BG[i]}">
+          <div class="week-num" style="background:${WEEK_COLORS[i]}">${i+1}</div>
+          <div>
+            <div class="week-title" style="color:${WEEK_COLORS[i]}">${weekLabels[i]} — ${w.theme}</div>
+            <div style="font-size:11px;color:${WEEK_COLORS[i]};opacity:.8;margin-top:1px;">${range}</div>
+          </div>
+        </div>
+        <div class="week-body">
+          <div class="week-goal" style="border-left-color:${WEEK_COLORS[i]};color:${WEEK_COLORS[i]};">
+            목표: ${w.goal}
+          </div>
+          <table class="day-table">
+            <thead><tr><th style="width:50px">일정</th><th>학습 주제</th><th>세부 내용</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+          <div style="margin-top:10px;">
+            <div style="font-size:11px;font-weight:600;color:var(--text-sec);margin-bottom:4px;">✅ 주차 완료 체크리스트</div>
+            <ul class="check-list">${checks}</ul>
+          </div>
+        </div>
+      </div>`;
+  });
+  document.getElementById('pd-weeks').innerHTML = html;
+  document.getElementById('pd-grade-section').style.display = showGrade ? 'block' : 'none';
+
+  // 보이기
+  document.getElementById('plan-empty').style.display = 'none';
+  document.getElementById('plan-doc').classList.add('visible');
+}
+
+function resetPlan() { clearPlanEditor(); }
+
+function sendPlanSlack() {
+  const name = (document.getElementById('ei-name').value.trim()) || '—';
+  if(name==='—'){ alert('사원 이름을 입력 후 미리보기를 먼저 갱신해 주세요.'); return; }
+  const doc = document.getElementById('plan-doc');
+  if(!doc.classList.contains('visible')){ alert('Slack 발송 전 [미리보기 갱신] 버튼을 클릭해 주세요.'); return; }
+  alert(`📨 ${name} 사원에게 4주 학습 계획서를 Slack DM으로 발송합니다.\n(Apps Script 연동 시 자동 전달)`);
+}
+
+/* ── UTIL ── */
+function showEmpty(tbId, cols, msg='데이터 없음') {
+  document.getElementById(tbId).innerHTML =
+    `<tr><td colspan="${cols}"><div class="empty-state"><p>${msg}</p></div></td></tr>`;
+}
+</script>
+</body>
+</html>
