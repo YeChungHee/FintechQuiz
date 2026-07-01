@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>276홀딩스 — Welcome NewMember System</title>
+<style>
+  :root {
+    --primary:#673AB7; --primary-dark:#4527A0; --primary-light:#EDE7F6;
+    --accent:#FF6F00; --success:#2E7D32; --danger:#C62828; --info:#1565C0;
+    --text:#212121; --text-sec:#616161; --border:#E0E0E0;
+    --bg:#F5F5F5; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Malgun Gothic','Malgun Gothic Semilight','맑은 고딕',
+    'Apple SD Gothic Neo',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--bg);color:var(--text);font-size:14px;
+    display:flex;flex-direction:column;min-height:100vh;
+  }
+
+  /* ── SVG ICONS ── */
+  .ic{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .ic svg{display:block;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ── TOP BAR ── */
+  .topbar{height:52px;background:var(--primary-dark);display:flex;align-items:center;
+    justify-content:space-between;padding:0 28px;flex-shrink:0;}
+  .topbar-logo{display:flex;align-items:center;gap:8px;color:#fff;text-decoration:none;}
+  .topbar-logo-text{font-size:16px;font-weight:700;}
+  .topbar-logo-sub{font-size:11px;color:rgba(255,255,255,.55);
+    border-left:1px solid rgba(255,255,255,.25);padding-left:10px;margin-left:2px;}
+  .topbar-right{display:flex;align-items:center;gap:10px;}
+  .topbar-link{color:rgba(255,255,255,.65);font-size:12px;text-decoration:none;
+    padding:4px 10px;border-radius:5px;transition:.2s;display:flex;align-items:center;gap:4px;}
+  .topbar-link:hover{color:#fff;background:rgba(255,255,255,.12);}
+
+  /* ── MAIN LAYOUT ── */
+  .main{flex:1;display:grid;grid-template-columns:1fr 1fr;}
+
+  /* ── LEFT HERO ── */
+  .hero{background:linear-gradient(155deg,#4527A0 0%,#673AB7 55%,#9C27B0 100%);
+    color:#fff;padding:48px 40px;display:flex;flex-direction:column;justify-content:space-between;}
+  .hero-top{}
+  .hero-badge{display:inline-flex;align-items:center;gap:6px;
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);
+    padding:5px 14px;border-radius:20px;font-size:11px;margin-bottom:22px;}
+  .hero-title{font-size:28px;font-weight:700;line-height:1.35;margin-bottom:12px;}
+  .hero-desc{font-size:13px;line-height:1.75;opacity:.8;margin-bottom:28px;}
+  .hero-slogan{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+    padding:9px 18px;border-radius:24px;}
+
+  .hero-services{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px;}
+  .svc-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+    padding:5px 12px;border-radius:16px;font-size:11px;display:flex;align-items:center;gap:5px;}
+  .svc-dot{width:7px;height:7px;border-radius:50%;}
+
+  .hero-bottom{}
+  .hero-steps{display:flex;flex-direction:column;gap:10px;margin-top:32px;}
+  .step-item{display:flex;align-items:center;gap:12px;padding:10px 14px;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;}
+  .step-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;flex-shrink:0;}
+  .step-text{font-size:12px;line-height:1.4;}
+  .step-text strong{display:block;font-size:12px;font-weight:600;margin-bottom:1px;}
+  .step-text span{opacity:.7;font-size:11px;}
+
+  /* ── RIGHT FORM PANEL ── */
+  .form-panel{background:var(--white);display:flex;flex-direction:column;
+    justify-content:center;padding:48px 44px;}
+  .panel-greeting{font-size:11px;color:#BDBDBD;margin-bottom:4px;letter-spacing:.5px;}
+  .panel-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:28px;}
+
+  /* TABS */
+  .tab-row{display:flex;border-bottom:2px solid var(--border);margin-bottom:26px;}
+  .tab{flex:1;padding:11px 0;text-align:center;font-size:13px;font-weight:600;
+    color:#BDBDBD;cursor:pointer;border-bottom:3px solid transparent;
+    margin-bottom:-2px;transition:.2s;user-select:none;}
+  .tab:hover{color:var(--primary);}
+  .tab.active{color:var(--primary);border-bottom-color:var(--primary);}
+
+  /* VIEWS */
+  .view{display:none;} .view.active{display:block;}
+
+  /* FORM ELEMENTS */
+  .form-group{margin-bottom:16px;}
+  .form-label{font-size:12px;font-weight:600;color:#424242;margin-bottom:6px;
+    display:flex;align-items:center;gap:4px;}
+  .req{color:var(--danger);font-size:11px;}
+  .input-wrap{display:flex;align-items:center;gap:6px;}
+  .form-input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;
+    font-size:13px;color:var(--text);font-family:inherit;outline:none;
+    transition:border-color .2s,box-shadow .2s;background:#FAFAFA;}
+  .form-input:focus{border-color:var(--primary);background:var(--white);
+    box-shadow:0 0 0 3px rgba(103,58,183,.08);}
+  .form-input.error{border-color:var(--danger);background:#FFF5F5;}
+  .form-input.ok{border-color:var(--success);}
+  .input-suffix{font-size:12px;color:var(--text-sec);white-space:nowrap;flex-shrink:0;}
+  .form-hint{font-size:11px;color:#9E9E9E;margin-top:4px;display:flex;align-items:center;gap:4px;}
+  .form-hint.error{color:var(--danger);}
+  .form-hint svg{flex-shrink:0;}
+
+  /* BUTTON */
+  .btn{width:100%;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:700;
+    cursor:pointer;font-family:inherit;transition:.15s;display:flex;align-items:center;
+    justify-content:center;gap:7px;}
+  .btn-primary{background:linear-gradient(135deg,#673AB7,#4527A0);color:#fff;}
+  .btn-primary:hover{opacity:.9;}
+  .btn-primary:active{transform:scale(.99);}
+  .btn-primary:disabled{background:#BDBDBD;cursor:default;opacity:1;}
+  .btn-outline{background:var(--white);color:var(--primary);border:1.5px solid var(--primary);}
+  .btn-outline:hover{background:var(--primary-light);}
+  .btn-success{background:#2E7D32;color:#fff;cursor:default;}
+
+  /* DIVIDER */
+  .or-divider{text-align:center;font-size:12px;color:#BDBDBD;margin:14px 0;
+    position:relative;}
+  .or-divider::before,.or-divider::after{content:'';position:absolute;
+    top:50%;width:44%;height:1px;background:var(--border);}
+  .or-divider::before{left:0;} .or-divider::after{right:0;}
+
+  /* INFO BOXES */
+  .info-box{border-radius:8px;padding:11px 13px;font-size:12px;line-height:1.65;
+    display:flex;gap:8px;align-items:flex-start;margin-top:16px;}
+  .info-box.purple{background:var(--primary-light);color:var(--primary-dark);}
+  .info-box.blue{background:#E3F2FD;color:#1565C0;}
+  .info-box svg{flex-shrink:0;margin-top:1px;}
+
+  .status-flow{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap;}
+  .s-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;
+    display:inline-flex;align-items:center;gap:3px;}
+  .s-badge.wait{background:#FFF3E0;color:#E65100;}
+  .s-badge.done{background:#E8F5E9;color:#2E7D32;}
+  .s-arrow{font-size:12px;color:#BDBDBD;}
+
+  /* STATUS SCREEN */
+  .status-screen{text-align:center;padding:20px 0;}
+  .status-icon{width:56px;height:56px;border-radius:50%;background:#E8F5E9;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:#2E7D32;}
+  .status-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;}
+  .status-desc{font-size:13px;color:var(--text-sec);line-height:1.7;margin-bottom:20px;}
+  .status-detail{background:#F9F9F9;border-radius:8px;padding:14px;text-align:left;
+    border:1px solid var(--border);font-size:13px;}
+  .sd-row{display:flex;justify-content:space-between;padding:5px 0;
+    border-bottom:1px solid var(--border);font-size:12px;}
+  .sd-row:last-child{border-bottom:none;}
+  .sd-key{color:var(--text-sec);}
+  .sd-val{font-weight:600;color:var(--text);}
+
+  /* ── FOOTER ── */
+  .footer{background:var(--white);border-top:1px solid var(--border);
+    padding:12px 28px;display:flex;align-items:center;justify-content:space-between;
+    font-size:11px;color:#BDBDBD;flex-shrink:0;}
+  .footer-links{display:flex;gap:16px;}
+  .footer-links a{color:#BDBDBD;text-decoration:none;transition:.2s;}
+  .footer-links a:hover{color:var(--primary);}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:700px){
+    .main{grid-template-columns:1fr;}
+    .hero{padding:32px 24px;min-height:auto;}
+    .hero-steps{display:none;}
+    .form-panel{padding:32px 24px;}
+    .topbar-logo-sub{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── SVG SYMBOL LIBRARY ── -->
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="w-building" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+    <symbol id="w-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="w-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.6 3.48 2 2 0 0 1 3.54 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73A16 16 0 0 0 13 13.82l.91-.93a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+    <symbol id="w-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></symbol>
+    <symbol id="w-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="w-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="w-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
+    <symbol id="w-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+    <symbol id="w-arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+    <symbol id="w-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+    <symbol id="w-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+    <symbol id="w-slack" viewBox="0 0 24 24"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></symbol>
+    <symbol id="w-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <symbol id="w-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="w-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <symbol id="w-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="w-eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></symbol>
+  </defs>
+</svg>
+
+<!-- ── TOP BAR ── -->
+<div class="topbar">
+  <a href="#" class="topbar-logo">
+    <span class="ic" style="color:#CE93D8"><svg width="18" height="18"><use href="#w-building"/></svg></span>
+    <span class="topbar-logo-text">276홀딩스</span>
+    <span class="topbar-logo-sub">Welcome NewMember System</span>
+  </a>
+  <div class="topbar-right">
+    <a href="company.html" class="topbar-link">
+      <span class="ic"><svg width="13" height="13" style="stroke:currentColor"><use href="#w-building"/></svg></span>회사 정보
+    </a>
+    <a href="FinTech_Book.html" class="topbar-link">
+      <span class="ic"><svg width="13" height="13" style="stroke:currentColor"><use href="#w-book"/></svg></span>핀테크 교과서
+    </a>
+    <a href="index.html" class="topbar-link">
+      <span class="ic"><svg width="13" height="13" style="stroke:currentColor"><use href="#w-edit"/></svg></span>퀴즈 응시
+    </a>
+  </div>
+</div>
+
+<!-- ── MAIN SPLIT ── -->
+<div class="main">
+
+  <!-- ── LEFT HERO ── -->
+  <div class="hero">
+    <div class="hero-top">
+      <div class="hero-badge">
+        <span class="ic"><svg width="13" height="13" style="stroke:#CE93D8"><use href="#w-shield"/></svg></span>
+        온보딩 LMS v1.0 · 276홀딩스
+      </div>
+      <div class="hero-title">신입사원을 위한<br>스마트 온보딩 플랫폼</div>
+      <div class="hero-desc">계정을 발급받고 핀테크 도메인 학습,<br>역량 진단, 맞춤 보강 교육까지<br><strong style="opacity:.95">4주 온보딩 여정</strong>을 함께합니다.</div>
+      <div class="hero-slogan">
+        <span class="ic"><svg width="13" height="13" fill="rgba(255,255,255,.5)" stroke="none"><use href="#w-star"/></svg></span>
+        흐름 위에 기회를, 기회 위에 성장을!
+      </div>
+      <div class="hero-services">
+        <div class="svc-pill"><div class="svc-dot" style="background:#EF9A9A"></div>FlowPoint</div>
+        <div class="svc-pill"><div class="svc-dot" style="background:#90CAF9"></div>FlowPay</div>
+        <div class="svc-pill"><div class="svc-dot" style="background:#FFF176"></div>FlowScore</div>
+      </div>
+    </div>
+
+    <div class="hero-bottom">
+      <div style="font-size:10px;opacity:.45;letter-spacing:1px;margin-bottom:12px;text-transform:uppercase;">온보딩 플로우</div>
+      <div class="hero-steps">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <strong>계정 요청 (Sign-Up)</strong>
+            <span>이름·휴대폰·이메일 아이디 입력 → 관리자 승인 대기</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <strong>Slack DM 수신</strong>
+            <span>로그인 ID·임시 비밀번호·1주차 시작 모듈 안내</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <strong>학습 대시보드 접속</strong>
+            <span>핀테크 교과서 → O/X 퀴즈 → 취약점 분석 → 보강 교육</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-text">
+            <strong>온보딩 완료 (4주차)</strong>
+            <span>성과 발표 · 멘토 리뷰 · 실무 투입</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT FORM PANEL ── -->
+  <div class="form-panel">
+    <div class="panel-greeting">276홀딩스 온보딩 시스템</div>
+    <div class="panel-title">시작하기</div>
+
+    <!-- TABS -->
+    <div class="tab-row">
+      <div class="tab active" id="tab-signup" onclick="switchTab('signup')">
+        <span class="ic" style="font-size:13px;margin-right:4px"><svg width="14" height="14" style="stroke:currentColor"><use href="#w-user"/></svg></span>
+        계정 요청
+      </div>
+      <div class="tab" id="tab-login" onclick="switchTab('login')">
+        <span class="ic" style="font-size:13px;margin-right:4px"><svg width="14" height="14" style="stroke:currentColor"><use href="#w-lock"/></svg></span>
+        로그인
+      </div>
+    </div>
+
+    <!-- ──────────────── SIGN-UP VIEW ──────────────── -->
+    <div class="view active" id="view-signup">
+
+      <!-- 제출 성공 화면 (숨김) -->
+      <div id="signup-success" style="display:none">
+        <div class="status-screen">
+          <div class="status-icon">
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><use href="#w-check"/></svg>
+          </div>
+          <div class="status-title">계정 요청이 접수됐습니다</div>
+          <div class="status-desc">관리자가 정보를 확인 후 계정을 생성합니다.<br>완료되면 <strong>Slack DM</strong>으로 로그인 정보를 전달드립니다.</div>
+          <div class="status-detail" id="signup-summary"></div>
+          <div class="status-flow" style="margin-top:14px;justify-content:center;">
+            <span class="s-badge wait">
+              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"><use href="#w-info"/></svg>
+              관리자 확인 대기
+            </span>
+            <span class="s-arrow">→</span>
+            <span class="s-badge done">
+              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"><use href="#w-check"/></svg>
+              계정 발급 완료
+            </span>
+            <span class="s-arrow">→</span>
+            <span class="s-badge" style="background:#E3F2FD;color:#1565C0;">
+              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"><use href="#w-slack"/></svg>
+              Slack 전달
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 입력 폼 -->
+      <div id="signup-form">
+        <div class="form-group">
+          <div class="form-label">
+            <span class="ic" style="color:#9E9E9E"><svg width="13" height="13"><use href="#w-user"/></svg></span>
+            이름 <span class="req">*</span>
+          </div>
+          <input class="form-input" id="inp-name" type="text" placeholder="실명 입력 (2자 이상)"
+            oninput="clearErr('inp-name')" onblur="validateName()">
+          <div class="form-hint error" id="err-name" style="display:none">
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><use href="#w-info"/></svg>
+            2자 이상 실명을 입력해 주세요
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span class="ic" style="color:#9E9E9E"><svg width="13" height="13"><use href="#w-phone"/></svg></span>
+            휴대폰 <span class="req">*</span>
+          </div>
+          <input class="form-input" id="inp-phone" type="text" placeholder="010-XXXX-XXXX"
+            oninput="formatPhone(this);clearErr('inp-phone')" onblur="validatePhone()">
+          <div class="form-hint">숫자와 하이픈(-)만 허용됩니다</div>
+          <div class="form-hint error" id="err-phone" style="display:none">
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><use href="#w-info"/></svg>
+            올바른 휴대폰 번호를 입력해 주세요
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span class="ic" style="color:#9E9E9E"><svg width="13" height="13"><use href="#w-mail"/></svg></span>
+            이메일 아이디 <span class="req">*</span>
+          </div>
+          <div class="input-wrap">
+            <input class="form-input" id="inp-email" type="text" placeholder="영문+숫자 조합, 4자 이상"
+              oninput="clearErr('inp-email')" onblur="validateEmail()" style="flex:1">
+            <span class="input-suffix">@276holdings.com</span>
+          </div>
+          <div class="form-hint">회사 이메일 계정 생성에 사용됩니다</div>
+          <div class="form-hint error" id="err-email" style="display:none">
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><use href="#w-info"/></svg>
+            영문 소문자+숫자 조합 4자 이상 입력해 주세요
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="btn-signup" onclick="submitSignup()" style="margin-top:4px;">
+          <span class="ic"><svg width="15" height="15" style="stroke:#fff"><use href="#w-arrow"/></svg></span>
+          계정 요청 제출
+        </button>
+
+        <div class="info-box purple">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#w-slack"/></svg>
+          <div>
+            제출 후 관리자 승인이 완료되면 <strong>Slack DM</strong>으로 로그인 정보가 전달됩니다.<br>
+            문의: <strong>최병희 운영대리</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────── LOGIN VIEW ──────────────── -->
+    <div class="view" id="view-login">
+
+      <div class="form-group">
+        <div class="form-label">
+          <span class="ic" style="color:#9E9E9E"><svg width="13" height="13"><use href="#w-user"/></svg></span>
+          로그인 아이디
+        </div>
+        <input class="form-input" id="inp-lid" type="text" placeholder="Slack으로 전달받은 아이디">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">
+          <span class="ic" style="color:#9E9E9E"><svg width="13" height="13"><use href="#w-lock"/></svg></span>
+          비밀번호
+        </div>
+        <div class="input-wrap">
+          <input class="form-input" id="inp-pw" type="password" placeholder="임시 비밀번호 입력" style="flex:1;border-radius:8px 0 0 8px;border-right:none;">
+          <button onclick="togglePw()" style="padding:0 12px;height:40px;border:1.5px solid var(--border);
+            border-radius:0 8px 8px 0;background:#FAFAFA;cursor:pointer;color:#9E9E9E;
+            display:flex;align-items:center;" id="pw-toggle-btn">
+            <span class="ic" id="pw-eye"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#w-eye"/></svg></span>
+          </button>
+        </div>
+        <div class="form-hint">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#w-info"/></svg>
+          최초 로그인 후 비밀번호 변경이 필요합니다
+        </div>
+      </div>
+
+      <div id="login-err" style="display:none;background:#FFF5F5;border-radius:8px;
+        padding:9px 12px;font-size:12px;color:var(--danger);margin-bottom:12px;
+        display:flex;align-items:center;gap:6px;">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#w-info"/></svg>
+        아이디 또는 비밀번호를 확인해 주세요
+      </div>
+
+      <button class="btn btn-primary" onclick="submitLogin()" style="margin-top:4px;">
+        <span class="ic"><svg width="15" height="15" style="stroke:#fff"><use href="#w-arrow"/></svg></span>
+        학습 대시보드로 이동
+      </button>
+
+      <div class="or-divider">또는</div>
+
+      <button class="btn btn-outline" onclick="switchTab('signup')">
+        계정이 없으신가요? 요청하기
+      </button>
+
+      <div class="info-box blue">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#w-users"/></svg>
+        <div>
+          계정 관련 문의는 운영팀 버디 <strong>최병희 운영대리</strong>에게<br>
+          Slack 메시지를 보내주세요.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /form-panel -->
+</div><!-- /main -->
+
+<!-- ── FOOTER ── -->
+<div class="footer">
+  <span>ⓒ 2026 ㈜276홀딩스 · All rights reserved.</span>
+  <div class="footer-links">
+    <a href="company.html">회사 정보</a>
+    <a href="FinTech_Book.html">핀테크 교과서</a>
+    <a href="index.html">퀴즈 응시</a>
+    <a href="admin.html">관리자</a>
+  </div>
+</div>
+
+<script>
+  const APPS_URL = 'https://script.google.com/macros/s/AKfycbwVv93ic_VlKwnQvm2wUYHtNX44AbYBJCH2XiSJRMiWjoY892NCKftniF5ufUgv2B7s/exec';
+
+  /* ── TAB SWITCH ── */
+  function switchTab(mode) {
+    ['signup','login'].forEach(t => {
+      document.getElementById('tab-'+t).classList.toggle('active', t===mode);
+      document.getElementById('view-'+t).classList.toggle('active', t===mode);
+    });
+  }
+
+  /* ── PHONE FORMAT ── */
+  function formatPhone(el) {
+    let v = el.value.replace(/\D/g,'');
+    if(v.length>11) v=v.slice(0,11);
+    if(v.length>7) el.value = v.slice(0,3)+'-'+v.slice(3,7)+'-'+v.slice(7);
+    else if(v.length>3) el.value = v.slice(0,3)+'-'+v.slice(3);
+    else el.value = v;
+  }
+
+  /* ── VALIDATION ── */
+  function showErr(id, msg) {
+    const inp = document.getElementById(id);
+    const err = document.getElementById('err-'+id.replace('inp-',''));
+    inp.classList.add('error');
+    if(err){ err.style.display='flex'; if(msg) err.querySelector('span')||err; }
+    return false;
+  }
+  function clearErr(id) {
+    const inp = document.getElementById(id);
+    const errId = 'err-'+id.replace('inp-','');
+    inp.classList.remove('error');
+    const err = document.getElementById(errId);
+    if(err) err.style.display='none';
+  }
+  function markOk(id) {
+    const inp = document.getElementById(id);
+    inp.classList.remove('error'); inp.classList.add('ok');
+  }
+
+  function validateName() {
+    const v = document.getElementById('inp-name').value.trim();
+    if(v.length<2){ showErr('inp-name'); return false; }
+    markOk('inp-name'); return true;
+  }
+  function validatePhone() {
+    const v = document.getElementById('inp-phone').value.replace(/-/g,'');
+    if(!/^01[0-9]{8,9}$/.test(v)){ showErr('inp-phone'); return false; }
+    markOk('inp-phone'); return true;
+  }
+  function validateEmail() {
+    const v = document.getElementById('inp-email').value.trim();
+    if(!/^[a-z0-9]{4,}$/.test(v)){ showErr('inp-email'); return false; }
+    markOk('inp-email'); return true;
+  }
+
+  /* ── SIGN-UP SUBMIT ── */
+  function submitSignup() {
+    const vName = validateName();
+    const vPhone = validatePhone();
+    const vEmail = validateEmail();
+    if(!vName||!vPhone||!vEmail) return;
+
+    const name  = document.getElementById('inp-name').value.trim();
+    const phone = document.getElementById('inp-phone').value.trim();
+    const email = document.getElementById('inp-email').value.trim();
+    const btn   = document.getElementById('btn-signup');
+
+    btn.disabled = true;
+    btn.innerHTML = '<span style="opacity:.7">제출 중...</span>';
+
+    /* Google Apps Script POST */
+    fetch(APPS_URL, {
+      method:'POST',
+      body: JSON.stringify({ action:'account_request', name, phone, email_id: email }),
+    })
+    .catch(() => {})
+    .finally(() => showSuccessScreen(name, phone, email));
+  }
+
+  function showSuccessScreen(name, phone, email) {
+    document.getElementById('signup-form').style.display = 'none';
+    const s = document.getElementById('signup-success');
+    s.style.display = 'block';
+    const now = new Date().toLocaleString('ko-KR',{dateStyle:'short',timeStyle:'short'});
+    document.getElementById('signup-summary').innerHTML = `
+      <div class="sd-row"><span class="sd-key">이름</span><span class="sd-val">${name}</span></div>
+      <div class="sd-row"><span class="sd-key">휴대폰</span><span class="sd-val">${phone}</span></div>
+      <div class="sd-row"><span class="sd-key">이메일 아이디</span><span class="sd-val">${email}@276holdings.com</span></div>
+      <div class="sd-row"><span class="sd-key">요청 일시</span><span class="sd-val">${now}</span></div>
+      <div class="sd-row"><span class="sd-key">상태</span><span class="sd-val" style="color:#E65100">관리자 확인 대기</span></div>`;
+  }
+
+  /* ── PASSWORD TOGGLE ── */
+  let pwVisible = false;
+  function togglePw() {
+    pwVisible = !pwVisible;
+    const inp = document.getElementById('inp-pw');
+    inp.type = pwVisible ? 'text' : 'password';
+    const btn = document.getElementById('pw-toggle-btn');
+    btn.querySelector('svg use').setAttribute('href', pwVisible ? '#w-eye-off' : '#w-eye');
+  }
+
+  /* ── LOGIN (DEMO) ── */
+  function submitLogin() {
+    const lid = document.getElementById('inp-lid').value.trim();
+    const pw  = document.getElementById('inp-pw').value;
+    if(!lid||!pw) {
+      document.getElementById('login-err').style.display='flex';
+      return;
+    }
+    document.getElementById('login-err').style.display='none';
+    /* 실제 구현: 계정 검증 후 dashboard.html로 이동 */
+    window.location.href = 'dashboard.html';
+  }
+
+  /* ── ENTER KEY ── */
+  document.addEventListener('keydown', e => {
+    if(e.key==='Enter') {
+      if(document.getElementById('view-signup').classList.contains('active')) submitSignup();
+      else submitLogin();
+    }
+  });
+</script>
+</body>
+</html>
