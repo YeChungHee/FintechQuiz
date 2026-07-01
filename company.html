@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>276홀딩스 회사 정보 — Welcome NewMember</title>
+<style>
+  :root {
+    --primary:#673AB7; --primary-dark:#4527A0; --primary-light:#EDE7F6;
+    --accent:#FF6F00; --success:#2E7D32; --danger:#C62828; --info:#1565C0;
+    --text:#212121; --text-secondary:#616161; --border:#E0E0E0;
+    --bg:#F5F5F5; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Malgun Gothic','Malgun Gothic Semilight','맑은 고딕',
+    'Apple SD Gothic Neo','Nanum Gothic','나눔고딕',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;
+  }
+
+  /* ── SVG ICON BASE ── */
+  .ic{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .ic svg{display:block;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ── TOP BAR ── */
+  .topbar{background:var(--primary-dark);color:#fff;padding:0 28px;height:56px;
+    display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+  .topbar-left{display:flex;align-items:center;gap:10px;}
+  .topbar-logo{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;}
+  .topbar-subtitle{font-size:12px;opacity:.7;border-left:1px solid rgba(255,255,255,.3);padding-left:12px;}
+  .topbar-right{display:flex;gap:8px;}
+  .nav-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;
+    padding:6px 12px;border-radius:6px;font-size:13px;cursor:pointer;text-decoration:none;
+    transition:.2s;display:flex;align-items:center;gap:5px;font-family:inherit;}
+  .nav-btn:hover{background:rgba(255,255,255,.22);}
+
+  /* ── HERO ── */
+  .hero{background:linear-gradient(135deg,#4527A0 0%,#673AB7 55%,#9C27B0 100%);
+    color:#fff;padding:56px 40px;text-align:center;}
+  .hero-badge{display:inline-flex;align-items:center;gap:6px;
+    background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+    padding:5px 16px;border-radius:20px;font-size:12px;margin-bottom:18px;letter-spacing:.5px;}
+  .hero h1{font-size:34px;font-weight:700;margin-bottom:10px;}
+  .hero p{font-size:15px;opacity:.85;margin-bottom:32px;}
+  .hero-stats{display:flex;gap:44px;justify-content:center;flex-wrap:wrap;}
+  .hero-stat .num{font-size:26px;font-weight:700;}
+  .hero-stat .lbl{font-size:11px;opacity:.7;margin-top:3px;}
+  .slogan-pill{margin-top:24px;font-size:15px;font-weight:600;
+    background:rgba(255,255,255,.1);display:inline-flex;align-items:center;gap:8px;
+    padding:10px 28px;border-radius:30px;border:1px solid rgba(255,255,255,.25);}
+
+  /* ── SECTION NAV ── */
+  .section-nav{background:var(--white);border-bottom:1px solid var(--border);
+    display:flex;overflow-x:auto;padding:0 24px;position:sticky;top:56px;z-index:90;}
+  .section-nav a{padding:13px 16px;font-size:13px;font-weight:500;color:var(--text-secondary);
+    text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap;
+    transition:.2s;display:flex;align-items:center;gap:6px;}
+  .section-nav a:hover{color:var(--primary);}
+  .section-nav a.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600;}
+
+  /* ── LAYOUT ── */
+  .main{max-width:1100px;margin:0 auto;padding:32px 24px;}
+  .section{margin-bottom:48px;}
+  .section-title{font-size:20px;font-weight:700;color:var(--primary-dark);
+    margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+  .section-title .ic{color:var(--primary);}
+  .section-title::after{content:'';flex:1;height:2px;
+    background:linear-gradient(to right,var(--primary-light),transparent);}
+
+  /* ── CARD ── */
+  .card{background:var(--white);border-radius:12px;padding:24px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);border:1px solid var(--border);}
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+  .card-title{font-size:14px;font-weight:600;margin-bottom:12px;
+    display:flex;align-items:center;gap:6px;color:var(--text);}
+
+  /* ── SERVICE CARDS ── */
+  .service-card{background:var(--white);border-radius:14px;padding:26px;
+    box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid var(--border);
+    position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+  .service-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.12);}
+  .sc-stripe{position:absolute;top:0;left:0;right:0;height:4px;}
+  .sc-icon-wrap{width:48px;height:48px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+  .sc-name{font-size:18px;font-weight:700;margin-bottom:3px;}
+  .sc-en{font-size:12px;color:var(--text-secondary);margin-bottom:10px;}
+  .sc-desc{font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:14px;}
+  .sc-tag{display:inline-block;background:var(--bg);padding:3px 9px;
+    border-radius:12px;font-size:11px;color:var(--text-secondary);margin:2px;}
+
+  /* ── VALUE CARDS ── */
+  .value-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+  .value-card{background:var(--white);border-radius:10px;padding:20px;
+    border:1px solid var(--border);text-align:center;}
+  .vc-icon-wrap{width:44px;height:44px;border-radius:50%;background:var(--primary-light);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 10px;color:var(--primary);}
+  .vc-name{font-size:14px;font-weight:700;color:var(--primary-dark);margin-bottom:6px;}
+  .vc-desc{font-size:12px;color:var(--text-secondary);line-height:1.5;}
+
+  /* ── MISSION / VISION ── */
+  .mv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+  .mv-card{border-radius:12px;padding:22px;}
+  .mv-card.mission{background:#FFF8E1;border:1px solid #FFD54F;}
+  .mv-card.vision{background:#E3F2FD;border:1px solid #90CAF9;}
+  .mv-card.slogan-card{background:#EDE7F6;border:1px solid #B39DDB;}
+  .mv-label{font-size:11px;font-weight:700;letter-spacing:2px;margin-bottom:8px;
+    text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+  .mv-card.mission .mv-label{color:var(--accent);}
+  .mv-card.vision .mv-label{color:var(--info);}
+  .mv-card.slogan-card .mv-label{color:var(--primary);}
+  .mv-text{font-size:14px;font-weight:600;color:var(--text);line-height:1.65;}
+
+  /* ── CULTURE ── */
+  .culture-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;}
+  .culture-item{background:var(--white);border-radius:10px;padding:18px;
+    border-left:4px solid var(--primary);box-shadow:0 1px 5px rgba(0,0,0,.05);}
+  .ci-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+  .ci-icon{width:32px;height:32px;border-radius:8px;background:var(--primary-light);
+    display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0;}
+  .ci-title{font-size:13px;font-weight:600;color:var(--primary-dark);}
+  .ci-desc{font-size:12px;color:var(--text-secondary);line-height:1.6;}
+
+  /* ── TOOLS ── */
+  .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;}
+  .tool-item{background:var(--white);border-radius:10px;padding:14px;
+    border:1px solid var(--border);display:flex;gap:10px;align-items:center;}
+  .tool-icon-wrap{width:36px;height:36px;border-radius:8px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;}
+  .tool-name{font-size:13px;font-weight:600;margin-bottom:2px;}
+  .tool-desc{font-size:12px;color:var(--text-secondary);}
+
+  /* ── TABLE ── */
+  .info-table{width:100%;border-collapse:collapse;}
+  .info-table th,.info-table td{padding:10px 13px;text-align:left;font-size:13px;
+    border-bottom:1px solid var(--border);}
+  .info-table th{background:var(--primary-light);color:var(--primary-dark);font-weight:600;width:130px;}
+  .info-table tr:last-child td{border-bottom:none;}
+  .info-table tr:hover td{background:#FAFAFA;}
+
+  /* ── TIMELINE ── */
+  .timeline{position:relative;padding-left:28px;}
+  .timeline::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;
+    background:linear-gradient(to bottom,var(--primary),var(--primary-light));}
+  .tl-item{position:relative;margin-bottom:18px;}
+  .tl-item::before{content:'';position:absolute;left:-23px;top:5px;width:10px;height:10px;
+    border-radius:50%;background:var(--primary);border:2px solid var(--white);
+    box-shadow:0 0 0 2px var(--primary);}
+  .tl-year{font-size:11px;font-weight:700;color:var(--primary);margin-bottom:2px;}
+  .tl-event{font-size:13px;color:var(--text);font-weight:500;}
+  .tl-detail{font-size:12px;color:var(--text-secondary);margin-top:2px;}
+
+  /* ── CHECKLIST ── */
+  .checklist{list-style:none;}
+  .checklist li{padding:7px 0;font-size:13px;border-bottom:1px solid var(--border);
+    display:flex;align-items:flex-start;gap:8px;}
+  .checklist li:last-child{border-bottom:none;}
+  .cl-check{flex-shrink:0;margin-top:1px;color:var(--primary);}
+  .cl-week{font-weight:700;color:var(--primary-dark);margin-top:14px;margin-bottom:6px;
+    font-size:14px;display:flex;align-items:center;gap:6px;}
+
+  /* ── PEOPLE ── */
+  .people-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+  .person-card{background:var(--white);border-radius:10px;padding:14px;
+    border:1px solid var(--border);text-align:center;}
+  .person-avatar{width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    display:flex;align-items:center;justify-content:center;margin:0 auto 8px;color:#fff;}
+  .person-name{font-size:13px;font-weight:700;margin-bottom:2px;}
+  .person-role{font-size:11px;color:var(--primary);font-weight:600;margin-bottom:4px;}
+  .person-desc{font-size:11px;color:var(--text-secondary);line-height:1.4;}
+
+  /* ── FEATURED PERSON CARDS (이사진 상세) ── */
+  .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;margin-bottom:16px;}
+  .feat-card{background:var(--white);border-radius:12px;border:1px solid var(--border);overflow:hidden;}
+  .feat-top{padding:18px 20px;display:flex;gap:14px;align-items:flex-start;
+    border-bottom:1px solid var(--border);}
+  .feat-letter{width:52px;height:52px;border-radius:10px;display:flex;align-items:center;
+    justify-content:center;font-size:20px;font-weight:700;color:#fff;flex-shrink:0;}
+  .feat-meta{}
+  .feat-namerow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px;}
+  .feat-name{font-size:18px;font-weight:700;color:var(--text);}
+  .feat-badge{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;}
+  .feat-eng{font-size:12px;color:var(--text-secondary);margin-bottom:5px;}
+  .feat-spec{font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px;}
+  .feat-body{padding:14px 20px;}
+  .feat-bg{font-size:12px;color:var(--text-secondary);line-height:1.65;
+    padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--border);
+    display:flex;gap:7px;align-items:flex-start;}
+  .feat-bg svg{flex-shrink:0;margin-top:2px;color:var(--text-secondary);}
+  .feat-bullets{list-style:none;}
+  .feat-bullets li{font-size:12px;color:var(--text-secondary);padding:5px 0;
+    display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--border);}
+  .feat-bullets li:last-child{border-bottom:none;}
+  .feat-bullets li svg{flex-shrink:0;color:var(--text-secondary);}
+
+  /* ── DIVIDER LABEL ── */
+  .div-row{display:flex;align-items:center;gap:10px;margin:18px 0 12px;
+    font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--text-secondary);}
+  .div-row::before,.div-row::after{content:'';flex:1;height:1px;background:var(--border);}
+
+  /* ── FAQ ── */
+  .faq-item{background:var(--white);border-radius:8px;border:1px solid var(--border);margin-bottom:6px;}
+  .faq-q{padding:13px 16px;font-size:13px;font-weight:600;cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;user-select:none;}
+  .faq-q:hover{background:#FAFAFA;}
+  .faq-chevron{transition:transform .3s;color:var(--primary);}
+  .faq-chevron.open{transform:rotate(180deg);}
+  .faq-a{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s;}
+  .faq-a.open{max-height:200px;padding:0 16px 12px;}
+  .faq-a p{font-size:13px;color:var(--text-secondary);line-height:1.7;}
+  .faq-group-label{font-size:13px;font-weight:600;color:var(--text-secondary);
+    margin-bottom:8px;margin-top:14px;display:flex;align-items:center;gap:6px;}
+
+  /* ── HIGHLIGHT ── */
+  .highlight{background:linear-gradient(135deg,var(--primary-light),#F3E5F5);
+    border-left:4px solid var(--primary);border-radius:8px;padding:14px 18px;margin:14px 0;}
+  .highlight p{font-size:13px;color:var(--primary-dark);line-height:1.7;}
+
+  /* ── MANUAL GRID ── */
+  @media(min-width:640px){.manual-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}}
+
+  @media(max-width:599px){
+    .hero{padding:40px 20px;} .hero h1{font-size:26px;}
+    .hero-stats{gap:20px;} .main{padding:20px 16px;}
+    .topbar-subtitle{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── SVG SYMBOL LIBRARY ── -->
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <!-- building/home -->
+    <symbol id="ic-building" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+    <!-- settings/gear -->
+    <symbol id="ic-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <!-- target/crosshair -->
+    <symbol id="ic-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+    <!-- heart/culture -->
+    <symbol id="ic-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+    <!-- clipboard -->
+    <symbol id="ic-clipboard" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></symbol>
+    <!-- user-plus/onboarding -->
+    <symbol id="ic-userplus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></symbol>
+    <!-- users -->
+    <symbol id="ic-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <!-- help-circle / FAQ -->
+    <symbol id="ic-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <!-- compass / FlowPoint -->
+    <symbol id="ic-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+    <!-- credit-card / FlowPay -->
+    <symbol id="ic-card" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></symbol>
+    <!-- bar-chart / FlowScore -->
+    <symbol id="ic-chart" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></symbol>
+    <!-- check-circle / 정직 -->
+    <symbol id="ic-check" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+    <!-- arrow-up-right / 자기주도 -->
+    <symbol id="ic-arrow-up" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></symbol>
+    <!-- zap / 혁신 -->
+    <symbol id="ic-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    <!-- trending-up / 성장 -->
+    <symbol id="ic-trend" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+    <!-- shield / 자율 -->
+    <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <!-- cpu / AI -->
+    <symbol id="ic-cpu" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></symbol>
+    <!-- file-text / 문서화 -->
+    <symbol id="ic-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></symbol>
+    <!-- coffee / 웰컴런치 -->
+    <symbol id="ic-coffee" viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></symbol>
+    <!-- calendar / 휴가 -->
+    <symbol id="ic-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+    <!-- message / Slack -->
+    <symbol id="ic-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <!-- book / Notion -->
+    <symbol id="ic-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+    <!-- smartphone / NaverWorks -->
+    <symbol id="ic-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></symbol>
+    <!-- mail / Google -->
+    <symbol id="ic-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></symbol>
+    <!-- briefcase / 전략 -->
+    <symbol id="ic-brief" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+    <!-- code / 개발 -->
+    <symbol id="ic-code" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+    <!-- user / 개인 -->
+    <symbol id="ic-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <!-- link -->
+    <symbol id="ic-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+    <!-- sparkle / 슬로건 -->
+    <symbol id="ic-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+    <!-- award / IPO -->
+    <symbol id="ic-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></symbol>
+    <!-- globe -->
+    <symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <!-- chevron-down -->
+    <symbol id="ic-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></symbol>
+    <!-- square checkbox -->
+    <symbol id="ic-square" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></symbol>
+    <!-- dashboard / layout -->
+    <symbol id="ic-layout" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></symbol>
+  </defs>
+</svg>
+
+<!-- ── TOP BAR ── -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">
+      <span class="ic"><svg width="20" height="20"><use href="#ic-building"/></svg></span>
+      276홀딩스
+    </div>
+    <div class="topbar-subtitle">Welcome NewMember System</div>
+  </div>
+  <div class="topbar-right">
+    <a href="dashboard.html" class="nav-btn">
+      <span class="ic"><svg width="14" height="14"><use href="#ic-layout"/></svg></span>내 대시보드
+    </a>
+    <a href="FinTech_Book.html" class="nav-btn">
+      <span class="ic"><svg width="14" height="14"><use href="#ic-book"/></svg></span>핀테크 교과서
+    </a>
+    <a href="index.html" class="nav-btn">
+      <span class="ic"><svg width="14" height="14"><use href="#ic-file"/></svg></span>퀴즈 응시
+    </a>
+  </div>
+</div>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-badge">
+    <span class="ic"><svg width="14" height="14" style="fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><use href="#ic-building"/></svg></span>
+    COMPANY WIKI
+  </div>
+  <h1>㈜276홀딩스</h1>
+  <p>기업금융 전문 핀테크 스타트업 — 흐름 위에 기회를, 기회 위에 성장을</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">2019</div><div class="lbl">설립연도</div></div>
+    <div class="hero-stat"><div class="num">3</div><div class="lbl">핵심 서비스</div></div>
+    <div class="hero-stat"><div class="num">5년</div><div class="lbl">BNPL 시장 1위 목표</div></div>
+    <div class="hero-stat"><div class="num">IPO</div><div class="lbl">준비 중</div></div>
+  </div>
+  <div class="slogan-pill">
+    <span class="ic"><svg width="14" height="14" style="fill:rgba(255,255,255,.6);stroke:none"><use href="#ic-star"/></svg></span>
+    흐름 위에 기회를, 기회 위에 성장을!
+  </div>
+</div>
+
+<!-- ── SECTION NAV ── -->
+<div class="section-nav" id="sectionNav">
+  <a href="#intro" class="active" onclick="setTab(this)">
+    <span class="ic"><svg width="15" height="15"><use href="#ic-building"/></svg></span>회사 소개
+  </a>
+  <a href="#services" onclick="setTab(this)">
+    <span class="ic"><svg width="15" height="15"><use href="#ic-settings"/></svg></span>주요 서비스
+  </a>
+  <a href="#mission" onclick="setTab(this)">
+    <span class="ic"><svg width="15" height="15"><use href="#ic-target"/></svg></span>미션·비전·가치
+  </a>
+  <a href="#culture" onclick="setTab(this)">
+    <span class="ic"><svg width="15" height="15"><use href="#ic-heart"/></svg></span>조직 문화
+  </a>
+  <a href="#manual" onclick="setTab(this)">
+    <span class="ic"><svg width="15" height="15"><use href="#ic-clipboard"/></svg></span>업무 매뉴얼
+  </a>
+  <a href="#onboarding" onclick="setTab(this)">
+    <span class="ic"><svg width="15" height="15"><use href="#ic-userplus"/></svg></span>온보딩 가이드
+  </a>
+  <a href="#people" onclick="setTab(this)">
+    <span class="ic"><svg width="15" height="15"><use href="#ic-users"/></svg></span>담당자
+  </a>
+  <a href="#faq" onclick="setTab(this)">
+    <span class="ic"><svg width="15" height="15"><use href="#ic-help"/></svg></span>FAQ
+  </a>
+</div>
+
+<div class="main">
+
+  <!-- ① 회사 소개 -->
+  <div class="section" id="intro">
+    <div class="section-title">
+      <span class="ic" style="color:var(--primary)"><svg width="20" height="20"><use href="#ic-building"/></svg></span>
+      회사 소개
+    </div>
+    <div class="highlight">
+      <p>㈜276홀딩스는 2019년 12월에 설립된 <strong>기업금융 전문 핀테크 스타트업</strong>입니다.<br>
+      중소기업과 소상공인이 겪는 자금 흐름의 구조적 문제를 해결하고자, <strong>매출채권 전자화 및 유동화 기반의 금융 솔루션</strong>을 개발·운영하고 있습니다.</p>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div class="cl-week">
+        <span class="ic" style="color:var(--primary)"><svg width="15" height="15"><use href="#ic-award"/></svg></span>
+        276홀딩스 연혁
+      </div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-year">2019. 12</div><div class="tl-event">㈜276홀딩스 설립</div><div class="tl-detail">기업금융 핀테크 스타트업 출범 · 대표이사 신인근</div></div>
+        <div class="tl-item"><div class="tl-year">2021</div><div class="tl-event">FlowPoint 서비스 출시</div><div class="tl-detail">중소기업 매출채권 전자화·유동화 플랫폼</div></div>
+        <div class="tl-item"><div class="tl-year">2022</div><div class="tl-event">FlowPay (SNPL) 서비스 출시</div><div class="tl-detail">B2B 구매대행 공급망 금융 솔루션 론칭</div></div>
+        <div class="tl-item"><div class="tl-year">2023</div><div class="tl-event">FlowScore AI 신용평가 서비스 출시</div><div class="tl-detail">ML 기반 대안 신용평가 — 20등급 신용등급 산출</div></div>
+        <div class="tl-item"><div class="tl-year">2025</div><div class="tl-event">시리즈 A 투자유치 (한국투자AC)</div><div class="tl-detail">글로벌 시장 진출(싱가포르·ASEAN) 준비 본격화</div></div>
+        <div class="tl-item"><div class="tl-year">2026</div><div class="tl-event">SelectUSA Investment Summit 참가 (워싱턴 D.C.)</div><div class="tl-detail">IPO 추진 준비 · 글로벌 파트너십 확대</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="ic" style="color:var(--primary)"><svg width="16" height="16"><use href="#ic-globe"/></svg></span>
+        기본 정보
+      </div>
+      <table class="info-table">
+        <tr><th>회사명</th><td>주식회사 276홀딩스 (276Holdings Inc.)</td></tr>
+        <tr><th>설립일</th><td>2019년 12월</td></tr>
+        <tr><th>대표이사</th><td>신인근 (Jason Shin)</td></tr>
+        <tr><th>주소</th><td>서울특별시 영등포구 의사당대로 83길, 19층 104호 (오투타워)</td></tr>
+        <tr><th>대표번호</th><td>02-785-7080</td></tr>
+        <tr><th>홈페이지</th><td><a href="https://www.276holdings.com" target="_blank" style="color:var(--primary);display:inline-flex;align-items:center;gap:4px">www.276holdings.com <span class="ic"><svg width="12" height="12"><use href="#ic-link"/></svg></span></a></td></tr>
+        <tr><th>서비스 분야</th><td>기업금융 · SCF · BNPL/SNPL · AI 신용평가</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ② 주요 서비스 -->
+  <div class="section" id="services">
+    <div class="section-title">
+      <span class="ic" style="color:var(--primary)"><svg width="20" height="20"><use href="#ic-settings"/></svg></span>
+      주요 서비스
+    </div>
+    <div class="card-grid">
+      <div class="service-card">
+        <div class="sc-stripe" style="background:linear-gradient(to right,#E53935,#EF9A9A)"></div>
+        <div class="sc-icon-wrap" style="background:#FFEBEE;color:#E53935">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-compass"/></svg>
+        </div>
+        <div class="sc-name">FlowPoint</div>
+        <div class="sc-en">매출채권 유동화 플랫폼</div>
+        <div class="sc-desc">중소기업이 보유한 매출채권을 전자화·유동화하여 운전자본을 신속하게 확보할 수 있도록 지원하는 핀테크 플랫폼입니다.</div>
+        <span class="sc-tag">매출채권</span><span class="sc-tag">전자화</span><span class="sc-tag">유동화</span>
+      </div>
+      <div class="service-card">
+        <div class="sc-stripe" style="background:linear-gradient(to right,#1E88E5,#90CAF9)"></div>
+        <div class="sc-icon-wrap" style="background:#E3F2FD;color:#1E88E5">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-card"/></svg>
+        </div>
+        <div class="sc-name">FlowPay</div>
+        <div class="sc-en">B2B SNPL 공급망 금융</div>
+        <div class="sc-desc">Supply Now, Pay Later 구조의 B2B 구매대행 솔루션입니다. 플로우페이가 공급사에 먼저 결제하고, 고객사는 유예 기간 후 상환합니다.</div>
+        <span class="sc-tag">SNPL</span><span class="sc-tag">B2B</span><span class="sc-tag">SCF</span>
+      </div>
+      <div class="service-card">
+        <div class="sc-stripe" style="background:linear-gradient(to right,#F9A825,#FFF176)"></div>
+        <div class="sc-icon-wrap" style="background:#FFFDE7;color:#F9A825">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chart"/></svg>
+        </div>
+        <div class="sc-name">FlowScore</div>
+        <div class="sc-en">AI 기업 신용평가</div>
+        <div class="sc-desc">사업자번호 입력만으로 재무·비재무·거래 데이터를 종합 분석하여 20등급 신용등급을 산출하는 ML 기반 대안 신용평가 서비스입니다.</div>
+        <span class="sc-tag">AI/ML</span><span class="sc-tag">신용평가</span><span class="sc-tag">20등급</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <div class="card-title">
+        <span class="ic" style="color:var(--primary)"><svg width="16" height="16"><use href="#ic-chart"/></svg></span>
+        서비스 비교
+      </div>
+      <table class="info-table">
+        <tr><th style="width:100px">서비스</th><th>대상</th><th>핵심 기능</th><th>수익 모델</th></tr>
+        <tr><td><strong style="color:#E53935">FlowPoint</strong></td><td>중소기업 (매출채권 보유사)</td><td>매출채권 전자화 → 조기 현금화</td><td>팩토링 수수료</td></tr>
+        <tr><td><strong style="color:#1E88E5">FlowPay</strong></td><td>소·중형 사업자 (구매사)</td><td>공급사 대금 선결제 + 고객사 후불</td><td>구매대행 수수료 + 금융 마진</td></tr>
+        <tr><td><strong style="color:#F9A825">FlowScore</strong></td><td>금융사·핀테크 플랫폼</td><td>비재무 데이터 기반 기업 신용등급 산출</td><td>API 사용료</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ③ 미션·비전·가치 -->
+  <div class="section" id="mission">
+    <div class="section-title">
+      <span class="ic" style="color:var(--primary)"><svg width="20" height="20"><use href="#ic-target"/></svg></span>
+      미션·비전·핵심 가치
+    </div>
+    <div class="mv-grid" style="margin-bottom:14px;">
+      <div class="mv-card mission">
+        <div class="mv-label">
+          <span class="ic"><svg width="14" height="14" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-target"/></svg></span>
+          Mission
+        </div>
+        <div class="mv-text">성장하고 싶은 모든 기업과 사람을 위한<br><strong>흐름의 연결자</strong>가 된다.</div>
+      </div>
+      <div class="mv-card vision">
+        <div class="mv-label">
+          <span class="ic"><svg width="14" height="14" fill="none" stroke="var(--info)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-globe"/></svg></span>
+          Vision
+        </div>
+        <div class="mv-text">기업 성장의 필수적인 파트너로 국내는 물론 <strong>글로벌 중소기업들이 가장 신뢰하는 성장 인프라 기업</strong>이 된다.</div>
+      </div>
+      <div class="mv-card slogan-card">
+        <div class="mv-label">
+          <span class="ic"><svg width="14" height="14" fill="rgba(103,58,183,.5)" stroke="none"><use href="#ic-star"/></svg></span>
+          Slogan
+        </div>
+        <div class="mv-text" style="font-size:16px;"><strong>흐름 위에 기회를,<br>기회 위에 성장을!</strong></div>
+      </div>
+    </div>
+
+    <div class="value-grid">
+      <div class="value-card">
+        <div class="vc-icon-wrap"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-check"/></svg></div>
+        <div class="vc-name">정직</div>
+        <div class="vc-desc">내·외부 진실된 말과 행동, 투명한 업무로 상호 신뢰를 쌓는다</div>
+      </div>
+      <div class="value-card">
+        <div class="vc-icon-wrap"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-arrow-up"/></svg></div>
+        <div class="vc-name">자기주도</div>
+        <div class="vc-desc">스스로 일의 방향을 정의하고, 책임 있게 추진한다</div>
+      </div>
+      <div class="value-card">
+        <div class="vc-icon-wrap"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-zap"/></svg></div>
+        <div class="vc-name">혁신</div>
+        <div class="vc-desc">데이터와 AI로 관행을 가장 효율적으로 재구성한다</div>
+      </div>
+      <div class="value-card">
+        <div class="vc-icon-wrap"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-users"/></svg></div>
+        <div class="vc-name">함께함</div>
+        <div class="vc-desc">우리는 하나의 팀이며 역할은 달라도 목표는 하나다</div>
+      </div>
+      <div class="value-card">
+        <div class="vc-icon-wrap"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-trend"/></svg></div>
+        <div class="vc-name">성장</div>
+        <div class="vc-desc">일의 결과로 스스로 더 나아지도록 노력하며 즐거움을 찾는다</div>
+      </div>
+    </div>
+
+    <div class="highlight" style="margin-top:14px;">
+      <p>276홀딩스는 향후 <strong>5년 내 기업 SNPL 시장 1위 달성</strong>을 목표로, <strong>IPO 추진</strong>과 <strong>글로벌 시장 진출(싱가포르·ASEAN)</strong>을 적극적으로 준비하고 있습니다.</p>
+    </div>
+  </div>
+
+  <!-- ④ 조직 문화 -->
+  <div class="section" id="culture">
+    <div class="section-title">
+      <span class="ic" style="color:var(--primary)"><svg width="20" height="20"><use href="#ic-heart"/></svg></span>
+      조직 문화
+    </div>
+    <div class="culture-grid">
+      <div class="culture-item">
+        <div class="ci-header">
+          <div class="ci-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-shield"/></svg></div>
+          <div class="ci-title">자율과 책임</div>
+        </div>
+        <div class="ci-desc">대면 근무를 원칙으로 하며 자율 출퇴근을 지향합니다. 자유에는 명확한 책임이 따르며, 스스로 시스템을 만들고 결과로 증명합니다.</div>
+      </div>
+      <div class="culture-item">
+        <div class="ci-header">
+          <div class="ci-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-cpu"/></svg></div>
+          <div class="ci-title">AI 기반 업무 효율화</div>
+        </div>
+        <div class="ci-desc">ChatGPT·Claude 활용을 적극 장려합니다. 반복 업무는 AI에게, 창의적 판단은 사람에게 — AI 활용 능력이 핵심 역량입니다.</div>
+      </div>
+      <div class="culture-item">
+        <div class="ci-header">
+          <div class="ci-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-trend"/></svg></div>
+          <div class="ci-title">끊임없는 성장</div>
+        </div>
+        <div class="ci-desc">정체되는 사람이 아닌 항상 발전하는 사람을 지향합니다. 일의 결과를 통해 성장하고, 그 성장에서 즐거움을 찾는 문화입니다.</div>
+      </div>
+      <div class="culture-item">
+        <div class="ci-header">
+          <div class="ci-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-file"/></svg></div>
+          <div class="ci-title">문서화 문화</div>
+        </div>
+        <div class="ci-desc">"모든 정보는 문서화한다"가 핵심 업무 원칙입니다. 회의록·결정사항·공유사항은 반드시 Notion에 기록합니다.</div>
+      </div>
+      <div class="culture-item">
+        <div class="ci-header">
+          <div class="ci-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-coffee"/></svg></div>
+          <div class="ci-title">웰컴 런치</div>
+        </div>
+        <div class="ci-desc">온보딩 기간 중 매일 점심, 각 파트별 파트장 주관 웰컴 런치가 진행됩니다. 팀원들과 자연스럽게 인사를 나누는 시간입니다.</div>
+      </div>
+      <div class="culture-item">
+        <div class="ci-header">
+          <div class="ci-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-calendar"/></svg></div>
+          <div class="ci-title">자율 휴가</div>
+        </div>
+        <div class="ci-desc">연차 사용에 사유가 필요하지 않습니다. 자율적으로 일하는 만큼 자율적으로 쉬어가는 문화를 지향합니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ 업무 매뉴얼 -->
+  <div class="section" id="manual">
+    <div class="section-title">
+      <span class="ic" style="color:var(--primary)"><svg width="20" height="20"><use href="#ic-clipboard"/></svg></span>
+      업무 매뉴얼
+    </div>
+
+    <div class="manual-grid" style="margin-bottom:14px;">
+      <div class="card">
+        <div class="card-title">
+          <span class="ic" style="color:var(--primary)"><svg width="15" height="15"><use href="#ic-calendar"/></svg></span>
+          근무 시간
+        </div>
+        <table class="info-table">
+          <tr><th>출근</th><td>오전 8:00 ~ 10:00 (자율)</td></tr>
+          <tr><th>코어타임</th><td>오전 10:00 ~ 오후 5:00 (필수)</td></tr>
+          <tr><th>점심</th><td>오후 12:00 ~ 13:00 (기본 1시간)</td></tr>
+          <tr><th>퇴근</th><td>오후 5:00 ~ 7:00 (자율)</td></tr>
+          <tr><th>재택</th><td>대면 근무 원칙</td></tr>
+          <tr><th>복장</th><td>자유 (편한 복장 가능)</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">
+          <span class="ic" style="color:var(--primary)"><svg width="15" height="15"><use href="#ic-award"/></svg></span>
+          급여 및 복지
+        </div>
+        <table class="info-table">
+          <tr><th>급여일</th><td>매달 25일 (휴일 시 이전 영업일)</td></tr>
+          <tr><th>연차 발생</th><td>입사 1개월 후 월 1개씩 (최대 11일)</td></tr>
+          <tr><th>연차 사유</th><td>불필요 (자율 사용)</td></tr>
+          <tr><th>성장비</th><td>도서·강의 자기계발 비용 연간 지원</td></tr>
+          <tr><th>명함</th><td>입사 전 신청 → 입사 후 수령</td></tr>
+          <tr><th>법인카드</th><td>운영파트 공용 카드 (사전 문의)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="tools-grid" style="margin-bottom:14px;">
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#ECF0F1;color:#4A154B">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-message"/></svg>
+        </div>
+        <div class="tool-info"><div class="tool-name">슬랙 (Slack)</div><div class="tool-desc">팀 간 빠른 소통 · 채널 기반 커뮤니케이션</div></div>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#F0F0EF;color:#000">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-book"/></svg>
+        </div>
+        <div class="tool-info"><div class="tool-name">노션 (Notion)</div><div class="tool-desc">업무 문서화 · 지식 관리 · 표준 저장소</div></div>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#E8F5E9;color:#2E7D32">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-phone"/></svg>
+        </div>
+        <div class="tool-info"><div class="tool-name">네이버웍스</div><div class="tool-desc">출퇴근 기록 · 연차 기안 · 내부 소통</div></div>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#FFF3E0;color:#E65100">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-mail"/></svg>
+        </div>
+        <div class="tool-info"><div class="tool-name">Google Workspace</div><div class="tool-desc">이메일 · 캘린더 · 드라이브 · 외부 협업</div></div>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#E8F5E9;color:#1565C0">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-cpu"/></svg>
+        </div>
+        <div class="tool-info"><div class="tool-name">ChatGPT</div><div class="tool-desc">공통 계정 · 일반 업무 보조·자료 정리</div></div>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#EDE7F6;color:#673AB7">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-zap"/></svg>
+        </div>
+        <div class="tool-info"><div class="tool-name">Claude</div><div class="tool-desc">개인 계정 · 장문 분석·전문 영역 작업</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="ic" style="color:var(--primary)"><svg width="15" height="15"><use href="#ic-mail"/></svg></span>
+        이메일 서명 형식
+      </div>
+      <div style="background:#F5F5F5;border-radius:8px;padding:14px;font-size:13px;
+                  font-family:'Malgun Gothic','맑은 고딕','Courier New',monospace;line-height:1.8;color:#333;">
+        Warm regards,<br>감사합니다.<br>276홀딩스 [이름] 드림<br>
+        <span style="color:#999">——</span><br>
+        [이름] [직책] / [영문이름] [영문직책]<br>
+        (주)276홀딩스 | 276 Holdings Inc.<br>
+        M. 010-XXXX-XXXX / T. 02-785-7080<br>
+        E. [영문이름소문자]@276holdings.com<br>
+        A. 서울특별시 영등포구 의사당대로 83길, 19층 104호 (오투타워)
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ 온보딩 가이드 -->
+  <div class="section" id="onboarding">
+    <div class="section-title">
+      <span class="ic" style="color:var(--primary)"><svg width="20" height="20"><use href="#ic-userplus"/></svg></span>
+      온보딩 가이드 (4주 로드맵)
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:18px;">
+      <div class="card" style="border-top:4px solid #4CAF50;">
+        <div style="font-size:12px;font-weight:700;color:#4CAF50;margin-bottom:5px;display:flex;align-items:center;gap:5px;">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#4CAF50"><use href="#ic-calendar"/></svg>
+          입사 전 (D-5)
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);">계정·장비 사전 셋업 · 근로계약서 수신</div>
+      </div>
+      <div class="card" style="border-top:4px solid #FFC107;">
+        <div style="font-size:12px;font-weight:700;color:#F57F17;margin-bottom:5px;display:flex;align-items:center;gap:5px;">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#F57F17"><use href="#ic-calendar"/></svg>
+          1주차 (D1~7)
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);">회사 적응 + 협업툴 익히기 + 서류 제출</div>
+      </div>
+      <div class="card" style="border-top:4px solid #FF7043;">
+        <div style="font-size:12px;font-weight:700;color:#BF360C;margin-bottom:5px;display:flex;align-items:center;gap:5px;">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#BF360C"><use href="#ic-book"/></svg>
+          2~3주차 (D8~21)
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);">도메인 학습 + 업무 매뉴얼 숙지</div>
+      </div>
+      <div class="card" style="border-top:4px solid #42A5F5;">
+        <div style="font-size:12px;font-weight:700;color:#1565C0;margin-bottom:5px;display:flex;align-items:center;gap:5px;">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#1565C0"><use href="#ic-brief"/></svg>
+          4주차 (D22~28)
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);">실무 투입 + 온보딩 리뷰 면담</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="ic" style="color:var(--primary)"><svg width="15" height="15"><use href="#ic-check"/></svg></span>
+        입사 체크리스트
+      </div>
+
+      <div class="cl-week">
+        <span class="ic" style="color:#4CAF50"><svg width="14" height="14"><use href="#ic-calendar"/></svg></span>
+        입사 전 준비
+      </div>
+      <ul class="checklist">
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>근로계약서 수신 및 서명 (최병희 운영대리)</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>업무 장비 사전 조사 (노트북·모니터·키보드 등)</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>업무용 이메일 발급 (박충만 개발팀장)</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>슬랙·노션·구글 계정 생성 (박충만 개발팀장)</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>명함 신청 (박진용 영업이사)</li>
+      </ul>
+
+      <div class="cl-week">
+        <span class="ic" style="color:#F57F17"><svg width="14" height="14"><use href="#ic-calendar"/></svg></span>
+        1주차
+      </div>
+      <ul class="checklist">
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>입사 서류 제출 (주민등록등본·통장 사본·신분증 사본)</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>비밀유지·직업윤리·겸업 금지 서약서 서명</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>중소기업 취업자 소득세 감면 신청서 제출 (3개월 내 필수)</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>지문 등록 — 출퇴근 타각기 (입사 첫날)</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>이메일 서명 템플릿 설정</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>Claude 계정 추가 및 활용 안내 (윤재호 AX·R&D 리드)</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>회사 소개·조직 문화·복지 제도 학습</li>
+      </ul>
+
+      <div class="cl-week">
+        <span class="ic" style="color:#BF360C"><svg width="14" height="14"><use href="#ic-book"/></svg></span>
+        2~3주차
+      </div>
+      <ul class="checklist">
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>매출채권 및 금융 도메인 교육 이수 (예충희 영업이사)</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>FlowPay / FlowPoint / FlowScore 서비스 이해</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>핀테크 교과서 전 챕터 학습 완료</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>O/X 퀴즈 응시 (목표: B등급 이상 25점+)</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>소속 부서 사수와 1:1 미팅 진행</li>
+      </ul>
+
+      <div class="cl-week">
+        <span class="ic" style="color:#1565C0"><svg width="14" height="14"><use href="#ic-brief"/></svg></span>
+        4주차
+      </div>
+      <ul class="checklist">
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>소속 팀별 개별 온보딩 항목 완료</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>첫 실무 과제 배정 및 진행</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>운영팀 버디와 4주차 리뷰 미팅</li>
+        <li><span class="cl-check ic"><svg width="14" height="14"><use href="#ic-square"/></svg></span>온보딩 피드백 작성</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ⑦ 담당자 -->
+  <div class="section" id="people">
+    <div class="section-title">
+      <span class="ic" style="color:var(--primary)"><svg width="20" height="20"><use href="#ic-users"/></svg></span>
+      핵심 담당자
+    </div>
+
+    <!-- 이사진 상세 프로필 -->
+    <div class="div-row">이사진 상세 프로필</div>
+    <div class="feat-grid">
+
+      <!-- 송인탁 COO -->
+      <div class="feat-card">
+        <div class="feat-top">
+          <div class="feat-letter" style="background:#2959A8;">송</div>
+          <div class="feat-meta">
+            <div class="feat-namerow">
+              <span class="feat-name">송인탁</span>
+              <span class="feat-badge" style="background:#E3F2FD;color:#1565C0;">COO</span>
+            </div>
+            <div class="feat-eng">Song In-tak · 운영·심사 이사</div>
+            <div class="feat-spec" style="color:#1565C0;">
+              <span class="ic"><svg width="13" height="13"><use href="#ic-shield"/></svg></span>
+              재무·리스크 Co-Founder
+            </div>
+          </div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-bg">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-user"/></svg>
+            <span>한국어음중개 기업심사 팀장 | 우리투자증권 | LG이노텍 | 성균관대 경제학</span>
+          </div>
+          <ul class="feat-bullets">
+            <li>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-check"/></svg>
+              구조적 리스크 통제 시스템 설계
+            </li>
+            <li>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-check"/></svg>
+              운영 프로세스 최적화·자동화
+            </li>
+            <li>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-check"/></svg>
+              채권 관리 및 정산 시스템 총괄
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 임지훈 CIO -->
+      <div class="feat-card">
+        <div class="feat-top">
+          <div class="feat-letter" style="background:#2E7D32;">임</div>
+          <div class="feat-meta">
+            <div class="feat-namerow">
+              <span class="feat-name">임지훈</span>
+              <span class="feat-badge" style="background:#E8F5E9;color:#2E7D32;">CIO</span>
+            </div>
+            <div class="feat-eng">Lim Ji-hoon · AX·R&D 이사</div>
+            <div class="feat-spec" style="color:#2E7D32;">
+              <span class="ic"><svg width="13" height="13"><use href="#ic-cpu"/></svg></span>
+              해외사업·AI 개발
+            </div>
+          </div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-bg">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-user"/></svg>
+            <span>핀테크/에듀테크 창업 2회 | Data Science 석사 | 신사업 담당</span>
+          </div>
+          <ul class="feat-bullets">
+            <li>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-check"/></svg>
+              AI 기반 동적 리스크 스코어링
+            </li>
+            <li>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-check"/></svg>
+              해외 사업 및 R&D 총괄
+            </li>
+            <li>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-check"/></svg>
+              기술 혁신 로드맵 수립
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 전체 팀 -->
+    <div class="div-row">전체 팀</div>
+    <div class="people-grid">
+      <div class="person-card">
+        <div class="person-avatar" style="background:linear-gradient(135deg,#1565C0,#0D47A1);">
+          <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-user"/></svg>
+        </div>
+        <div class="person-name">신인근</div>
+        <div class="person-role">대표이사 · CEO</div>
+        <div class="person-desc">창업자 · 전략 방향 결정</div>
+      </div>
+      <div class="person-card">
+        <div class="person-avatar">
+          <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-brief"/></svg>
+        </div>
+        <div class="person-name">박진용</div>
+        <div class="person-role">전략이사 · CSO</div>
+        <div class="person-desc">전략·세일즈 총괄</div>
+      </div>
+      <div class="person-card" style="border-color:#90CAF9;">
+        <div class="person-avatar" style="background:#2959A8;">
+          <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-shield"/></svg>
+        </div>
+        <div class="person-name">송인탁</div>
+        <div class="person-role" style="color:#1565C0;">운영·심사 이사 · COO</div>
+        <div class="person-desc">심사·리스크·운영 총괄</div>
+      </div>
+      <div class="person-card" style="border-color:#A5D6A7;">
+        <div class="person-avatar" style="background:#2E7D32;">
+          <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-cpu"/></svg>
+        </div>
+        <div class="person-name">임지훈</div>
+        <div class="person-role" style="color:#2E7D32;">AX·R&D 이사 · CIO</div>
+        <div class="person-desc">AX·R&D·해외사업 총괄</div>
+      </div>
+      <div class="person-card">
+        <div class="person-avatar">
+          <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-trend"/></svg>
+        </div>
+        <div class="person-name">예충희</div>
+        <div class="person-role">영업이사</div>
+        <div class="person-desc">영업·채널 발굴 (금융도메인)</div>
+      </div>
+      <div class="person-card">
+        <div class="person-avatar">
+          <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-code"/></svg>
+        </div>
+        <div class="person-name">박충만</div>
+        <div class="person-role">개발팀장</div>
+        <div class="person-desc">플랫폼 개발 총괄 (계정 생성)</div>
+      </div>
+      <div class="person-card">
+        <div class="person-avatar">
+          <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-zap"/></svg>
+        </div>
+        <div class="person-name">윤재호</div>
+        <div class="person-role">AX·R&D 리드</div>
+        <div class="person-desc">Claude·AI 툴 가이드</div>
+      </div>
+      <div class="person-card">
+        <div class="person-avatar">
+          <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-clipboard"/></svg>
+        </div>
+        <div class="person-name">최병희</div>
+        <div class="person-role">운영대리</div>
+        <div class="person-desc">온보딩 버디 · 서류·복지</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑧ FAQ -->
+  <div class="section" id="faq">
+    <div class="section-title">
+      <span class="ic" style="color:var(--primary)"><svg width="20" height="20"><use href="#ic-help"/></svg></span>
+      자주 묻는 질문
+    </div>
+
+    <div class="faq-group-label">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary)"><use href="#ic-calendar"/></svg>
+      근무 관련
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>출퇴근 시간은 어떻게 되나요?</span><svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chevron"/></svg></div><div class="faq-a"><p>오전 8~10시 출근, 오후 5~7시 퇴근입니다. 코어타임(오전 10시 ~ 오후 5시)은 필수 근무 시간입니다. 출퇴근은 입구 타각기로 기록됩니다.</p></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>재택근무가 가능한가요?</span><svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chevron"/></svg></div><div class="faq-a"><p>대면 근무를 원칙으로 합니다. 별도 안내가 있을 경우 예외적으로 운영될 수 있습니다.</p></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>복장 규정이 있나요?</span><svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chevron"/></svg></div><div class="faq-a"><p>복장은 자유입니다. 편안한 복장으로 출근하셔도 됩니다.</p></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>주차가 가능한가요?</span><svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chevron"/></svg></div><div class="faq-a"><p>현재 배정 대수가 모두 차서 사무실 주차는 불가합니다. 대중교통 이용을 권장합니다.</p></div></div>
+
+    <div class="faq-group-label" style="margin-top:14px;">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary)"><use href="#ic-calendar"/></svg>
+      휴가 관련
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>연차는 언제부터 사용할 수 있나요?</span><svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chevron"/></svg></div><div class="faq-a"><p>입사 1개월 후부터 월 1개씩 발생(최대 11일). 1년 이상 근속 시 연간 15일 부여됩니다.</p></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>연차 사용 시 사유를 말해야 하나요?</span><svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chevron"/></svg></div><div class="faq-a"><p>아니요, 사유가 필요하지 않습니다. 자율적으로 일하는 만큼 자율적으로 쉬어가는 문화입니다. 네이버웍스 기안으로 부재만 알려주세요.</p></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>시간 단위 연차도 가능한가요?</span><svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chevron"/></svg></div><div class="faq-a"><p>네, 시간 단위 연차 사용이 가능합니다. 네이버웍스 기안을 통해 신청해 주세요.</p></div></div>
+
+    <div class="faq-group-label" style="margin-top:14px;">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary)"><use href="#ic-award"/></svg>
+      급여·복지 관련
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>급여는 언제 지급되나요?</span><svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chevron"/></svg></div><div class="faq-a"><p>매달 25일이며, 휴일인 경우 이전 영업일에 지급합니다. 입사 이후 만근을 가정하여 지급합니다.</p></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>소득세 감면 신청은 어떻게 하나요?</span><svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chevron"/></svg></div><div class="faq-a"><p>중소기업 취업자 소득세 감면 신청서를 입사 후 3개월 이내에 제출해야 합니다. 기한 초과 시 소급 적용 불가이므로 최병희 운영대리에게 조기 제출하세요.</p></div></div>
+
+    <div class="faq-group-label" style="margin-top:14px;">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary)"><use href="#ic-cpu"/></svg>
+      업무 도구 관련
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>AI 도구 사용이 가능한가요?</span><svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chevron"/></svg></div><div class="faq-a"><p>적극 권장합니다! ChatGPT(공통 계정)와 Claude(개인 계정)를 활용해 주세요. AI 활용은 276홀딩스의 핵심 역량 중 하나입니다.</p></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>모르는 것이 생기면 누구에게 물어봐야 하나요?</span><svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chevron"/></svg></div><div class="faq-a"><p>일반 사항 → 운영팀 버디(최병희 운영대리) | 업무 사항 → 소속 부서 사수. 어떤 질문도 환영하는 문화입니다.</p></div></div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+function setTab(el) {
+  document.querySelectorAll('.section-nav a').forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
+}
+function toggleFaq(btn) {
+  const ans = btn.nextElementSibling;
+  const chev = btn.querySelector('.faq-chevron');
+  const isOpen = ans.classList.contains('open');
+  document.querySelectorAll('.faq-a.open').forEach(a => {
+    a.classList.remove('open');
+    a.previousElementSibling.querySelector('.faq-chevron').classList.remove('open');
+  });
+  if (!isOpen) { ans.classList.add('open'); chev.classList.add('open'); }
+}
+window.addEventListener('scroll', () => {
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.section-nav a');
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+});
+</script>
+</body>
+</html>
